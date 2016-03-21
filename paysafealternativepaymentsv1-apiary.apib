@@ -70,6 +70,8 @@ our API, but rather can use the returned url for the specific purpose as defined
 
 ## authorization
 
+#Authorization Base
+    
 |Element                 |Type                   |Description|
 |---                     |---                    |---|
 |merchantRefNum          |string<br/>`length=5`  ||
@@ -133,100 +135,34 @@ The following payment methods are supported:
 
 ### Create Auth [POST /accounts/{accountId}/auths]
 
-+ Relation: self
 + Request Create iDeal authorization (application/json)
 
-    + Attributes
-        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
-        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
-        + amount (number, required) - This is the amount of the request, in minor units.
-        + descriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
-        + profile (object, optional) - These are some details about the customer.
-        + shopperUrl (string, required)
-        + ideal (object, required)
-        
+    + Attributes (Ideal Payment)
+        + Include Authorization Base
+
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
             
-    + Body
-    
-            {
-                "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
-                "dupCheck": true,
-                "amount": 100,
-                "descriptor": "test descriptor",
-                "profile": {
-                    "firstName": "Stan",
-                    "lastName": "Smith",
-                    "email": "stan.smith@fox.com",
-                    "ip": "127.0.0.1"   
-                },
-                "returnLinks": [{
-                    "rel": "default",
-                    "href": "https://amazon.com/"
-                ],
-                "ideal": {
-                    "bankName": "ING",
-                    "accountCountry": "NL"
-                }
-            }    
-
 + Response 201 (application/json)
 
-    + Headers
-    
-            Location: /v1/accounts/0b0ceaa3-42ad-442d-b85b-c3b70f24835d/auths/25f6dadf-176a-415f-95c9-6ff39ff697ba
+    + Attributes (Ideal Payment)
+        + Include Authorization Response Base
 
-    + Attributes
-    
-        + id (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
-        + liveMode (string, required)
-        + merchantRefNum (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-        + dupCheck (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
-        + amount (number, required) - This is the amount of the request, in minor units.
-        + descriptor (object, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
-        + txnTime (string, required) - This is the date and time the transaction was processed.
-        + currencyCode (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
-        + status (string, required) - This is the status of the transaction request.
-        + profile (object, optional) - These are some details about the customer.
-        + paymentMethod (object, required)
-        + links ([string], required) - This is an array of self-referencing links.
-
-            {
-                "id": "25f6dadf-176a-415f-95c9-6ff39ff697ba",
-                "liveMode": false,
-                "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
-                "dupCheck": false,
-                "amount": 100,
-                "descriptor": "test descriptor",
-                "txnTime": "2015-12-11T16:33:49Z",
-                "currencyCode": "EUR",
-                "status": "INITIATED",
-                "profile": {
-                    "firstName": "Stan",
-                    "lastName": "Smith",
-                    "email": "stan.smith@fox.com",
-                    "ip": "127.0.0.1"
-                },
-                "ideal": {
-                    "bankName": "ING",
-                    "accountCountry": "NL"
-                },
-                "returnLinks": [{
-                    "rel": "default",
-                    "href": "https://amazon.com/"
-                ],
-                "links": [{ 
-                    "rel": "self",
-                    "href": "http: //localhost:8011/v1/accounts/0b0ceaa3-42ad-442d-b85b-c3b70f24835d/auths/469bd933-fac0-4880-a913-50a3b6e48acb"
-                }]
-            }
 
 + Request Create China Union Pay authorization (application/json)
 
+    + Attributes (CUP Payment)
+        + Include Authorization Base
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+            
 + Response 201 (application/json)
 
+    + Attributes (CUP Payment)
+        + Include Authorization Response Base
 
 + Request Sofort authorization (application/json)
 
@@ -234,7 +170,6 @@ The following payment methods are supported:
 
 ### Lookup Auth by authid [GET /accounts/{accountId}/auths/{authId}]
 
-+ Relation: auth
 + Request (application/json)
 
 + Response 200 (application/json)
@@ -265,3 +200,56 @@ The following payment methods are supported:
 + Request (application/json)
 
 + Response 200 (application/json)
+
+
+# Data Structures
+
+## Authorization Base (object)
++ merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
++ dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
++ amount: `100` (number, required) - This is the amount of the request, in minor units.
++ descriptor: `Test description` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
++ Include Profile
+
+## Authorization Response Base (object)
++ id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
++ liveMode: `false` (string, required)
++ merchantRefNum: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
++ dupCheck: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
++ amount: `100` (number, required) - This is the amount of the request, in minor units.
++ descriptor: `test descriptor` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
++ txnTime: `2015-12-11T16:33:49Z` (string, required) - This is the date and time the transaction was processed.
++ currencyCode: `EUR` (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
++ status: `INITIATED` (string, required) - This is the status of the transaction request.
++ Include Profile
++ returnLinks (array) - This is an array of return links.
+   + (object) 
+        + rel: default
+        + href: ...
++ links (array) - This is an array of self-referencing links. 
+   + (object) 
+        + rel: self
+        + href: ...
+
+## Ideal Payment (object)
++ ideal (object) - Parameters required for an iDeal payment request.
+
+    + Properties
+        + bankName: `ING` (string, required)
+        + accountCountry: `NL` (string, required)
+        
+## CUP Payment (object)
++ cup (object) - Parameters required for an China Union Pay payment request.
+
+    + Properties
+        + bankName: `ING` (string, required)
+        + accountCountry: `NL` (string, required)     
+
+## Profile (object)        
++ profile (object, optional) - These are some details about the customer.
+
+    + Properties
+        + firstName: `Stan` (string, required)
+        + lastName: `Smith` (string, required)
+        + email: `stan.smith@fox.com` (string, required)
+        + ip: `127.0.0.1` (string, optional)
