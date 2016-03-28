@@ -269,8 +269,7 @@ These errors are specific to the Alternative Payments API.
 |HTTP Status |Code   |Message                            |Description|
 |---         |---    |---                                |---|
 |401         |20000  |Unsupported API request            |You are not registered to use this API|
-|401         |20001  |Account closed                     |The account is closed|
-|400         |20002  |Merchant account inactive          |Your merchant account is currently inactive. |
+
 
 
 # Complex JSON Objects
@@ -408,11 +407,20 @@ As merchantRefNum could be used for multiple auths, a collection of authorizatio
 
 ## Refunds [/refunds]
 
-### Create Refund [POST]
+### Create Refund [POST /accounts/{accountId}/auths/{authId}/refunds]
 
 + Request (application/json)
 
-+ Response 200 (application/json)
+    + Parameters
+        + accountId: `1234567891` (string, required) - Your unique account identifer.
+        + authId: `1111111` (string, required) - The unique identifier for the authorization.
+
+    + Attributes (Refund Request)
+
++ Response 201 (application/json)
+
+    + Attributes (Refund Response)
+
 
 ### Lookup Refund by id [GET /refunds/{id}]
 
@@ -420,12 +428,17 @@ As merchantRefNum could be used for multiple auths, a collection of authorizatio
 
 + Response 200 (application/json)
 
+    + Attributes (Refund Response)
+
 ### Lookup Refund by merchantRefNum [GET /refunds/]
 
 + Request (application/json)
 
 + Response 200 (application/json)
 
+    + Attributes
+        + refunds (array)
+            + (Refund Response)
 
 # Data Structures
 
@@ -478,3 +491,23 @@ As merchantRefNum could be used for multiple auths, a collection of authorizatio
         + lastName: `Smith` (string, required)
         + email: `stan.smith@fox.com` (string, required)
         + ip: `127.0.0.1` (string, optional)
+        
+## Refund Request (object)
++ merchantRefNum: `xyz` (string, optional) - The merchant reference number.
++ dupCheck: `false` (boolean, required) - The duplication check flag.
++ amount: `100` (number, required) - This is the amount in minor units.
+
+## Refund Response (object)
++ id: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string, required) - The refund id.
++ liveMode: `false` (boolean, required)
++ merchantRefNum: `xyz` (string, required)
++ dupCheck: `true` (boolean, required)
++ amount: `400` (number, required)
++ txnTime: `2016-02-24T08:39:39Z` (string, required)
++ status: `COMPLETED` (string, required)
++ Include Gateway Response
+
+## Gateway Response (object)
++ code: `000.100.110` (string, required)
++ description: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string, required)
++ paymentType: `RF` (string, required)
