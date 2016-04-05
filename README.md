@@ -1,2 +1,2 @@
-# paysafe_api_alternative_payments
-Paysafe Alternative Payments API
+# paysafe_api_alternate_payments
+Paysafe Alternate Payments API
