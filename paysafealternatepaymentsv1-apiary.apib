@@ -29,9 +29,9 @@ credentials.
 
 The following endpoints form the basis of a resource URI:
 
-    Sandbox (Testing) endpoint - https://api.test.paysafe.com/alternatepayments
+    Sandbox (Testing) endpoint - https://api.test.paysafe.com/alternatepayments/v1/
 
-    Production endpoint - https://api.paysafe.com/alternatepayments
+    Production endpoint - https://api.paysafe.com/alternatepayments/v1/
 
 As the sandbox environment is completely isolated, any changes you perform on your sandbox accounts configuration
 (such as secure IP registration, APP registration) may have to be repeated in your production account.
@@ -321,15 +321,12 @@ These errors are specific to the Alternate Payments API.
 
 Description TBD
 
-## Authorizations [/auths]
+## Payments [/payments]
 
-An authorization request initates a payment request and responds with a appropriate information for you to redirect
-your customer to complete their payment.  You must pass ONE of the available payment options in your request.
-Refer to [paymentMethods](#paymentMethods) for details around the required values for each option.
+### Create Payment [POST /accounts/{accountId}/payments]
 
-> Please contact Paysafe Merchant Support to enable additional options for your account.
-
-### Create Auth [POST /accounts/{accountId}/auths]
+Your accountId has been setup for a specific payment method.  When initiating an payment for an account
+you must pass any additional required parameters for that payment method.
 
 The following payment methods are supported:
 
@@ -339,15 +336,16 @@ The following payment methods are supported:
 |China Union Pay |cup         | 
 |Sofort          |sofort      |
 
-You MUST pass one of the payment method objects as part of your auth request.
+> Please contact Paysafe Merchant Support to enable additional options for your account.
 
-+ Request Create iDeal authorization (application/json)
+Chang+ Request Create iDeal payment (application/json)
 
     + Parameters
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
     + Attributes (Ideal Payment)
-        + Include Authorization Base
+        + paymentType: `ideal` (string, required)
+        + Include Payment Request Base
 
     + Headers
     
@@ -356,7 +354,7 @@ You MUST pass one of the payment method objects as part of your auth request.
 + Response 201 (application/json)
 
     + Attributes (Ideal Payment)
-        + Include Authorization Response Base
+        + Include Payment Response Base
 
 + Request Create China Union Pay authorization (application/json)
 
@@ -364,7 +362,7 @@ You MUST pass one of the payment method objects as part of your auth request.
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
     + Attributes (CUP Payment)
-        + Include Authorization Base
+        + Include Payment Request Base
 
     + Headers
     
@@ -373,45 +371,45 @@ You MUST pass one of the payment method objects as part of your auth request.
 + Response 201 (application/json)
 
     + Attributes (CUP Payment)
-        + Include Authorization Response Base
+        + Include Payment Response Base
 
 + Request Sofort authorization (application/json)
 
 + Response 201 (application/json)
 
-### Lookup Auth by authid [GET /accounts/{accountId}/auths/{authId}]
+### Lookup Payment by paymentId [GET /accounts/{accountId}/payments/{paymentId}]
 
-Returns an individual authorization.
+Returns an individual payment detail.
 
 + Request (application/json)
 
 + Response 200 (application/json)
 
     + Attributes (CUP Payment)
-        + Include Authorization Response Base
+        + Include Payment Response Base
 
-### Lookup Auth by merchantRefNum [GET /accounts/{accountId}/auths/?merchantRefNum={merchantRefNum}]
+### Lookup Payment by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 
-As merchantRefNum could be used for multiple auths, a collection of authorizations is returned.
+As merchantRefNum could be used for multiple payments, a collection of payments is returned.
 
 + Request (application/json)
 
 + Response 200 (application/json)
 
     + Attributes
-        + auths (array)
-            + (Authorization Response Base)
+        + payments (array)
+            + (Payment Response Base)
 
 
 ## Refunds [/refunds]
 
-### Create Refund [POST /accounts/{accountId}/auths/{authId}/refunds]
+### Create Refund [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 
 + Request (application/json)
 
     + Parameters
         + accountId: `1234567891` (string, required) - Your unique account identifer.
-        + authId: `1111111` (string, required) - The unique identifier for the authorization.
+        + paymentId: `1111111` (string, required) - The unique identifier for the payment.
 
     + Attributes (Refund Request)
 
@@ -440,17 +438,18 @@ As merchantRefNum could be used for multiple auths, a collection of authorizatio
 
 # Data Structures
 
-## Authorization Base (object)
+## Payment Request Base (object)
 + merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
 + dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + descriptor: `Test description` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
 + Include Profile
 
-## Authorization Response Base (object)
+## Payment Response Base (object)
 + id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 + liveMode: `false` (string, required)
 + merchantRefNum: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
++ paymentType: `ideal`(string, required)
 + dupCheck: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + descriptor: `test descriptor` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
@@ -467,19 +466,34 @@ As merchantRefNum could be used for multiple auths, a collection of authorizatio
         + rel: self
         + href: ...
 
+## Payment Type (object)
++ paymentType (object) - Payment specific parameters
+
+    + One Of
+        + `ideal`
+        + `sofort`
+        + `cup`
+
 ## Ideal Payment (object)
-+ ideal (object) - Parameters required for an iDeal payment request.
++ ideal (object) - Parameters required for a iDeal payment request.
 
     + Properties
         + bankName: `ING` (string, required)
         + accountCountry: `NL` (string, required)
         
 ## CUP Payment (object)
-+ cup (object) - Parameters required for an China Union Pay payment request.
++ cup (object) - Parameters required for a China Union Pay payment request.
 
     + Properties
         + bankName: `ING` (string, required)
         + accountCountry: `NL` (string, required)     
+
+## Sofort Payment (object)
++ sofort (object) - Parameters required for a Sofort payment request.
+
+    + Properties
+        + productId: `3453453` (string, required)
+        + key: `ajklj9alksj98gah4l34jg9` (string, required)
 
 ## Profile (object)        
 + profile (object, optional) - These are some details about the customer.
