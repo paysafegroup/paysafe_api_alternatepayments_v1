@@ -14,9 +14,7 @@ Request and response payloads are formatted as JSON.
 
 |Version   |Date            |Details|
 |---       |---             |---|
-|1.3.X     |March 14 2015   |<ul><li>Added support for Ideal</li></ul>|
-|1.3.X     |March 22 2015   |<ul><li>Added support for China Union Pay</li></ul>|
-|1.3.X     |March XX 2015   |<ul><li>Added support for Sofort</li></ul>|
+|1.3.X     |June  14 2015   |<ul><li>Initial release with support for Ideal, Sofort, Giropay</li></ul>|
 
 # Technical introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API. 
@@ -38,8 +36,8 @@ As the sandbox environment is completely isolated, any changes you perform on yo
 
 ## Pagination
 
-API calls that return multiple resources will wrap the response as a named JSON array.  For example a collection of 'auth' objects would
-be returned as 'auths'. By default, 10 items will be returned at a time and you can navigate to the next set of resources using the 
+API calls that return multiple resources will wrap the response as a named JSON array.  For example a collection of 'payment' objects would
+be returned as 'payments'. By default, 10 items will be returned at a time and you can navigate to the next set of resources using the 
 supplied HATEOAS links.  List responses will also include a meta data section that will identify the number of records included in the collection,
 the number of records per page (limit) and current page number.
 <br/><br/>
@@ -58,56 +56,51 @@ Sample Response with List Data
 
 ```apib
 {
-    "meta": {
-        "numberOfRecords": 77,
-        "limit": 10,
-        "page": 2
-    },
-    "plans": [
-        {
-            "planId": "MONTHLYGREENPLAN",
-            "planName": "Sample Premier Monthly Membership",
-            "interval": 3,
-            "intervalType": "monthly",
-            "intervalCount": 4,
-            "amount": 2995,
-            "currency": "EUR",
-            "status": "active"
+    "payments": [{
+        "id": "044e3915-b612-40c7-b652-283bb288521f",
+        "merchantRefNum": "xyz",
+        "amount": 100,
+        "currencyCode": "EUR",
+        "profile": {
+            "firstName": "Stan",
+            "lastName": "Smith",
+            "email": "stan.smith@fox.com",
+            "ip": "localhost"
         },
-        {
-            ...
+        "ideal": {
+            "bankName": "ING",
+            "accountCountry": "NL"
         },
-        {
-            ...
-        },
-        
-    ],
-    "links": [
-        {
-            "url": "https://api.neteller.com/v1/plans?sessionid=234243242&limit=10&offset=10",
-            "rel": "self",
-            "method": "GET"
-        },
-        {
-            "url": "https://api.neteller.com/v1/plans?sessionid=234243242&limit=10&offset=0",
-            "rel": "prev",
-            "method": "GET"
-        },
-        {
-            "url": "https://api.neteller.com/v1/plans?sessionid=234243242&limit=10&offset=20",
-            "rel": "next",
-            "method": "GET"
-        }
-    ]
+        "returnLinks": [{
+            "rel": "default",
+            "href": "http://amazon.com/"
+        }],
+        "descriptor": "test descriptor",
+        "liveMode": true,
+        "txnTime": "2016-05-05T20:34:06Z",
+        "status": "INITIATED",
+        "gatewayResponse": {
+            "code": "000.200.000",
+            "description": "transaction pending",
+            "paymentType": "DB"
+        }]
+    }],
+    "links": [{
+        "rel": "self",
+        "href": "https://api.paysafe.com/admin/v1/accounts/99000/payments"
+    }, {
+        "rel": "prev",
+        "href": "https://api.paysafe.com/admin/v1/accounts/99000/payments?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=2&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+    }, {
+        "rel": "next",
+        "href": "https://api.paysafe.com/admin/v1/accounts/99000/payments?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=2&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+    }]
 }
 ```
 
 ## HTTP Responses
 
-HTTP response codes are used to indicate the status of a request.To ease integration and support for developers 
-integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.  
-The error structure contains a 4–5 digit code as well as a human readable message. Additionally, the application 
-error code will be returned in the header so it can be easily used by an application without parsing the body.
+HTTP response codes are used to indicate the status of a request.
 
 **HTTP Status Code Summary**
 
@@ -137,6 +130,15 @@ error code will be returned in the header so it can be easily used by an applica
 |429 TOO MANY REQUESTS|The application is sending too many simultaneous requests|
 |500 INTERNAL SERVER ERROR|An error occurred with an internal server|
 |502 EXTERNAL SERVER ERROR|We received an invalid response from the upstream gateway in attempting to fulfill the request|
+
+
+## Errors
+
+To ease integration and support for developers 
+integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.  
+
+The error structure contains a 4–5 digit code as well as a human readable message. Additionally, the application 
+error code will be returned in the header so it can be easily used by an application without parsing the body.
 
 **Error Attributes**
 
@@ -191,6 +193,55 @@ error code will be returned in the header so it can be easily used by an applica
     }
 ```
 
+
+These are the error codes common to all subsystems
+
+|HTTP Status   |Code     |Message                                 |Description|
+|---           |---      |---                                     |---|
+|400           |5001     |Invalid currency                        |The submitted currency code is invalid or your account does not support this currency.|
+|              |5010     |Invalid country                         |The submitted country code is invalid.|
+|              |5016     |Account not found                       |The account you provided cannot be found.|
+|              |5017     |Account disabled                        |The account you provided is disabled.|
+|              |5023     |Bad request                             |The request is not parseable.|
+|              |5042     |Invalid merchant reference              |This error usually indicates that a transaction was attempted with the merchant reference field missing. This value is mandatory and must be included with your request.|
+|              |5068     |Invalid field                           |Either you submitted a request that is missing a mandatory  field or the value of a field does not match the format expected.|
+|401           |5275     |Authentication credentials expired      |The authentication credentials provided with the request have expired.|
+|              |5276     |Authentication credentials disabled     |The authentication credentials provided with the request provided have been disabled.|
+|              |5277     |Authentication credentials locked       |The authentication credentials provided with the request have been locked due to multiple authentication failures.|
+|              |5278     |Cannot authenticate                     |The authentication credentials provided with the request were not accepted for an unknown reason.| 
+|              |5279     |Authentication credentials are invalid  |The authentication credentials are invalid.|
+|              |5280     |Authentication credentials not provided |The required authentication credentials were not provided.|
+|403           |5270     |Unauthorized access                     |The credentials provided with the request do not have permission to access the requested data.|
+|404           |5269     |Entity not found                        |The ID\(s\) specified in the URL do not correspond to the values in the system.|
+|              |5273     |URI not found                           |Your client reached our application but we were unable to service your request due to an invalid URL.|
+|405           |5281     |Method not supported                    |The request uses an action (e.g., GET, POST, or PUT) that is not supported by the resource.|
+|406           |5271     |Unsupported 'Accept' header             |You requested a response in the 'Accept' header that is in an unsupported format.|
+|415           |5272     |Unsupported 'Content-Type'              |The 'Content-Type' you specified in request header was submitted in an unsupported format.|
+|429           |1200     |API call rate exceeded                  |The API call has been denied as it has exceeded the permissible call rate limit.|
+|500           |1000     |Internal error                          |An internal error occurred.|
+|              |1001     |Activity Timed Out                      |Your request timed out before it could be completed.  If you receive this error, it is still possible that your request will be successfully processed and you should use the API to verify the status of your request.|
+|              |1002     |Database Error                          |An internal error occurred.|
+|              |1003     |Decryption Error                        |An internal error occurred.|
+|              |1007     |Gateway Error                           |An internal error occurred.|
+
+These errors are specific to the Alternate Payments API.
+
+|Code                       |Message|                                 
+|---                        |---|
+|ALTERNATE-PAYMENTS-INT-1   |Gateway Not Provisioned Error|
+|ALTERNATE-PAYMENTS-INT-2   |Gateway Authentication Error|
+|ALTERNATE-PAYMENTS-INT-3   |Resource not found GatewayService Error|
+|ALTERNATE-PAYMENTS-INT-4   |Transaction declined by the Gateway|
+|ALTERNATE-PAYMENTS-INT-5   |Auth status not successful|
+|ALTERNATE-PAYMENTS-INT-6   |Over refund|
+|ALTERNATE-PAYMENTS-INT-7   |Auth expired|
+|ALTERNATE-PAYMENTS-INT-8   |Invalid Parameter Gateway Error|
+|ALTERNATE-PAYMENTS-INT-9   |Risk Gateway Error|
+|ALTERNATE-PAYMENTS-INT-10  |Setup Gateway Error|
+|ALTERNATE-PAYMENTS-INT-11  |Gateway Error|
+|ALTERNATE-PAYMENTS-INT-12  |Gateway Conditional Success|
+
+
 ### HATEOAS
 
 The Alternate Payments API uses a RESTful endpoint structure and relies on HTTP verbs (GET, PUT, POST, DELETE)
@@ -230,51 +281,12 @@ are provided to navigate through the set of resources in the collection.
 
 ```
 
-### Error Codes
-
-These are the error codes common to all subsystems
-
-|HTTP Status   |Code     |Message                                 |Description|
-|---           |---      |---                                     |---|
-|400           |5001     |Invalid currency                        |The submitted currency code is invalid or your account does not support this currency.|
-|              |5010     |Invalid country                         |The submitted country code is invalid.|
-|              |5016     |Account not found                       |The account you provided cannot be found.|
-|              |5017     |Account disabled                        |The account you provided is disabled.|
-|              |5023     |Bad request                             |The request is not parseable.|
-|              |5042     |Invalid merchant reference              |This error usually indicates that a transaction was attempted with the merchant reference field missing. This value is mandatory and must be included with your request.|
-|              |5068     |Invalid field                           |Either you submitted a request that is missing a mandatory  field or the value of a field does not match the format expected.|
-|401           |5275     |Authentication credentials expired      |The authentication credentials provided with the request have expired.|
-|              |5276     |Authentication credentials disabled     |The authentication credentials provided with the request provided have been disabled.|
-|              |5277     |Authentication credentials locked       |The authentication credentials provided with the request have been locked due to multiple authentication failures.|
-|              |5278     |Cannot authenticate                     |The authentication credentials provided with the request were not accepted for an unknown reason.| 
-|              |5279     |Authentication credentials are invalid  |The authentication credentials are invalid.|
-|              |5280     |Authentication credentials not provided |The required authentication credentials were not provided.|
-|403           |5270     |Unauthorized access                     |The credentials provided with the request do not have permission to access the requested data.|
-|404           |5269     |Entity not found                        |The ID\(s\) specified in the URL do not correspond to the values in the system.|
-|              |5273     |URI not found                           |Your client reached our application but we were unable to service your request due to an invalid URL.|
-|405           |5281     |Method not supported                    |The request uses an action (e.g., GET, POST, or PUT) that is not supported by the resource.|
-|406           |5271     |Unsupported 'Accept' header             |You requested a response in the 'Accept' header that is in an unsupported format.|
-|415           |5272     |Unsupported 'Content-Type'              |The 'Content-Type' you specified in request header was submitted in an unsupported format.|
-|429           |1200     |API call rate exceeded                  |The API call has been denied as it has exceeded the permissible call rate limit.|
-|500           |1000     |Internal error                          |An internal error occurred.|
-|              |1001     |Activity Timed Out                      |Your request timed out before it could be completed.  If you receive this error, it is still possible that your request will be successfully processed and you should use the API to verify the status of your request.|
-|              |1002     |Database Error                          |An internal error occurred.|
-|              |1003     |Decryption Error                        |An internal error occurred.|
-|              |1007     |Gateway Error                           |An internal error occurred.|
-
-These errors are specific to the Alternate Payments API.
-
-|HTTP Status |Code   |Message                            |Description|
-|---         |---    |---                                |---|
-|401         |20000  |Unsupported API request            |You are not registered to use this API|
-
-
 
 # Complex JSON Objects
 
 <a name="apAuthorization"></a>
 
-## authorization
+## payment
 
 |Element                 |Type                   |Description|
 |---                     |---                    |---|
@@ -312,29 +324,28 @@ These errors are specific to the Alternate Payments API.
 }
 ```
   
-### boleto (Boleto)
+### sofort (Sofort)
 
-### cup (China Union Pay)
+### giropay (Giropay)
 
 
-# Alternate Payments API
+
+# Payments [/payments]
 
 Description TBD
 
-## Payments [/payments]
+## Create Payment [POST /accounts/{accountId}/payments]
 
-### Create Payment [POST /accounts/{accountId}/payments]
-
-Your accountId has been setup for a specific payment method.  When initiating an payment for an account
-you must pass any additional required parameters for that payment method.
+Your account has been setup for a specific payment method.  When initiating an payment for an account
+you must pass any additional parameters (if required) for that payment method.
 
 The following payment methods are supported:
 
-|Payment Method  |JSON Object |
-|---             |---         |
-|iDeal           |ideal       | 
-|China Union Pay |cup         | 
-|Sofort          |sofort      |
+|Payment Type  |Additional inputs required |
+|---             |---     |
+|ideal           |Y       | 
+|sofort          |N       |
+|giropay         |N       |
 
 > Please contact Paysafe Merchant Support to enable additional options for your account.
 
@@ -356,12 +367,13 @@ The following payment methods are supported:
     + Attributes (Ideal Payment)
         + Include Payment Response Base
 
-+ Request Create China Union Pay authorization (application/json)
++ Request Create Sofort payment (application/json)
 
     + Parameters
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
-    + Attributes (CUP Payment)
+    + Attributes (Sofort Payment)
+        + paymentType: `sofort` (string, required)    
         + Include Payment Request Base
 
     + Headers
@@ -370,14 +382,29 @@ The following payment methods are supported:
             
 + Response 201 (application/json)
 
-    + Attributes (CUP Payment)
+    + Attributes (Sofort Payment)
         + Include Payment Response Base
 
-+ Request Sofort authorization (application/json)
++ Request Create Giropay payment (application/json)
+
+    + Parameters
+        + accountId: `1234567891` (string, required) - Your unique account identifer.
+
+    + Attributes
+        + paymentType: `giropay` (string, required)    
+        + Include Payment Request Base
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 201 (application/json)
 
-### Lookup Payment by paymentId [GET /accounts/{accountId}/payments/{paymentId}]
+    + Attributes
+        + paymentType: `giropay`
+        + Include Payment Response Base
+        
+## Lookup Payment by paymentId [GET /accounts/{accountId}/payments/{paymentId}]
 
 Returns an individual payment detail.
 
@@ -388,7 +415,7 @@ Returns an individual payment detail.
     + Attributes (CUP Payment)
         + Include Payment Response Base
 
-### Lookup Payment by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
+## Lookup Payment by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 
 As merchantRefNum could be used for multiple payments, a collection of payments is returned.
 
@@ -401,9 +428,9 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
             + (Payment Response Base)
 
 
-## Refunds [/refunds]
+# Refunds [/refunds]
 
-### Create Refund [POST /accounts/{accountId}/payments/{paymentId}/refunds]
+## Create Refund [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 
 + Request (application/json)
 
@@ -418,7 +445,7 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
     + Attributes (Refund Response)
 
 
-### Lookup Refund by id [GET /refunds/{id}]
+## Lookup Refund by id [GET /refunds/{id}]
 
 + Request (application/json)
 
@@ -426,7 +453,7 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
 
     + Attributes (Refund Response)
 
-### Lookup Refund by merchantRefNum [GET /refunds/]
+## Lookup Refund by merchantRefNum [GET /refunds/]
 
 + Request (application/json)
 
@@ -438,14 +465,14 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
 
 # Data Structures
 
-## Payment Request Base (object)
+## Payment Request Base
 + merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
 + dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + descriptor: `Test description` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
 + Include Profile
 
-## Payment Response Base (object)
+## Payment Response Base
 + id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 + liveMode: `false` (string, required)
 + merchantRefNum: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
@@ -466,36 +493,36 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
         + rel: self
         + href: ...
 
-## Payment Type (object)
+## Payment Type
 + paymentType (object) - Payment specific parameters
 
     + One Of
         + `ideal`
         + `sofort`
-        + `cup`
+        + `giropay`
 
-## Ideal Payment (object)
+## Ideal Payment
 + ideal (object) - Parameters required for a iDeal payment request.
 
     + Properties
         + bankName: `ING` (string, required)
         + accountCountry: `NL` (string, required)
         
-## CUP Payment (object)
+## CUP Payment
 + cup (object) - Parameters required for a China Union Pay payment request.
 
     + Properties
         + bankName: `ING` (string, required)
         + accountCountry: `NL` (string, required)     
 
-## Sofort Payment (object)
+## Sofort Payment
 + sofort (object) - Parameters required for a Sofort payment request.
 
     + Properties
         + productId: `3453453` (string, required)
         + key: `ajklj9alksj98gah4l34jg9` (string, required)
 
-## Profile (object)        
+## Profile    
 + profile (object, optional) - These are some details about the customer.
 
     + Properties
@@ -504,12 +531,12 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
         + email: `stan.smith@fox.com` (string, required)
         + ip: `127.0.0.1` (string, optional)
         
-## Refund Request (object)
+## Refund Request
 + merchantRefNum: `xyz` (string, optional) - The merchant reference number.
 + dupCheck: `false` (boolean, required) - The duplication check flag.
 + amount: `100` (number, required) - This is the amount in minor units.
 
-## Refund Response (object)
+## Refund Response
 + id: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string, required) - The refund id.
 + liveMode: `false` (boolean, required)
 + merchantRefNum: `xyz` (string, required)
@@ -519,7 +546,7 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
 + status: `COMPLETED` (string, required)
 + Include Gateway Response
 
-## Gateway Response (object)
+## Gateway Response
 + code: `000.100.110` (string, required)
 + description: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string, required)
 + paymentType: `RF` (string, required)
