@@ -98,6 +98,84 @@ Sample Response with List Data
 }
 ```
 
+## Resource Expansion
+
+Resource expansion can be compared to eager loading in the database realm. It offers a way to load a specific resource as well as other resources related to it.  You are encouraged to use resource expansion when you know you are going to need the extra information. This will reduce the amount of API calls as well as the amount of traffic to and from your server. You should avoid resource expansion when you want to reduce the amount of information returned or if you are unsure if you will need the additional resource object.
+<br/><br/>
+By adding an **expand** query parameter to the query you are effectively telling the server to include the details for the reference object in-line, in a expand single response.  Anytime you encounter an object whose only child attribute is a link, you can consider that object expandable. Passing that object name as part of your expand parameter list will automatically substitute the link with the relevant details.
+<br/><br/>
+
+For resources that have multiple expandable children, you can specify which resources to expand in a comma separated list. <br />
+Eg. <strong>?expand=resource1,resource2</strong>
+
+<br/>
+
+> _Resource expansion does not apply to API requests that return a list._
+
+<br/>
+Below is a sample subscription lookup. By default the events resource is not expanded and instead includes a 
+reference link that would provide the relevant details. If you would rather have the full subscription plan object returned, 
+then add the **'expand=events'** parameter to your request and you will see the second example result.
+<br/>
+
+*Result without resource expansion*
+
+```apib
+GET /admin/v1/accounts/<accountId>
+{
+         "id": "987001112",
+         "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
+         "processorCode": "PAYON",
+         "paymentType": "IDEAL",
+         "currencyCode": "EUR",
+         "status": "ENABLED",
+         "creationTime": "2016-04-05T15:17:57Z",
+         "lastModificationTime": "2016-04-06T15:24:17Z",
+         "allowTestTransaction": false,
+         "events": {
+                 "href": "https://api.paysafe.com/admin/v1/accounts/987001112/events"
+         },
+         "links": [{
+                 "rel": "self",
+                 "href": "https://api.paysafe.com/admin/v1/accounts/987001112"
+         }]
+}
+```
+
+*Result with the plan resource expanded*
+
+```apib
+GET /admin/v1/accounts/<accountId>?expand=events
+{
+        "id": "987001112",esource 
+        "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
+        "processorCode": "PAYON",
+        "paymentType": "IDEAL",
+        "currencyCode": "EUR",
+        "status": "ENABLED",
+        "creationTime": "2016-04-05T15:17:57Z",
+        "lastModificationTime": "2016-04-06T15:24:17Z",
+        "allowTestTransaction": false,
+        "events": [{
+               "id": "deadbeef-aec8-41a5-94d7-446bc3999426",
+               "type": "ap_auths_completed"
+        }, {
+               "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
+               "type": "ap_auths_declined"
+        }, {
+               "id": "6ddbc05a-ff40-4dc1-b2d3-f20091234567",
+               "type": "ap_refunds_complete"
+        }, {
+               "id": "12345eef-aec8-41a5-94d7-446bc3999426",
+               "type": "ap_refunds_complete"
+        }],
+        "links": [{
+               "rel": "self",
+               "href": "https://paysafe-psp-alternatepayments-core.dev.mtl.oneplatform.io/admin/v1/accounts/987001112"
+        }]
+}dde
+```
+
 ## HTTP Responses
 
 HTTP response codes are used to indicate the status of a request.
@@ -153,44 +231,48 @@ error code will be returned in the header so it can be easily used by an applica
 **Error message example with details**
 
 ```apib
-    {
-        "error": {
-            "code": "5023",
-            "message": "Bad request",
-            "details": [
-                "Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]"
-            ]
-        }
+{
+    "error": {
+        "code": 5023,
+        "message": "Bad Request",
+        "details": [
+            "Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]"
+        ],
+        "links": [{
+            "rel": "errorinfo",
+            "href": "http://54.186.215.106/en/documentation/accountmanagement/error-5023"
+        }]
     }
+}
 ```
  
  
 **Error message example with field errors**
 
 ```apib
-    {
-       "error":{
-          "code":5068,
-          "message":"Field Error(s)",
-          "fieldErrors":[
-             {
-                "field":"recipientEmail",
-                "error":"john@hi@you.c.c.c.c is not a valid e-mail address."
-             },
-             {
-                "field":"transaction.amount",
-                "error":"A transaction amount is required."
-             },
-             {
-                "field":"transaction.currency",
-                "error":"Currency with value [USD] exceeds the maximum size of [3]."
-             }
-          ],
-          "details":[
-               "There are invalid or missing fields in your request."
-            ]
-       }
+{
+    "error": {
+        "code": 5068,
+        "message": "Field Error(s)",
+        "fieldErrors": [{
+            "field": "recipientEmail",
+            "error": "john@hi@you.c.c.c.c is not a valid e-mail address."
+        }, {
+            "field": "transaction.amount",
+            "error": "A transaction amount is required."
+        }, {
+            "field": "transaction.currency",
+            "error": "Currency with value [USD] exceeds the maximum size of [3]."
+        }],
+        "details": [
+            "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
+        ],
+        "links": [{
+            "rel": "errorinfo",
+            "href": "http://54.186.215.106/en/documentation/accountmanagement/error-5023"
+        }]
     }
+}
 ```
 
 
