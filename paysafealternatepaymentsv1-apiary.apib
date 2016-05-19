@@ -41,7 +41,7 @@ be returned as 'payments'. By default, 10 items will be returned at a time and y
 supplied HATEOAS links.  List responses will also include a meta data section that will identify the number of records included in the collection,
 the number of records per page (limit) and current page number.
 <br/><br/>
-For example, if a request to look up subscriptions identifies that there are 134 subscriptions and you have set your limit to 15, the first 15 items will be returned with navigation links to the next 15 items in the list \(items 16-30\). If you navigate to the next page using the provided HATEOAS link, you will now retrieve items 16-30 with a new navigation link provided to return to the previous page, as well as a link to continue to the next page of items._
+For example, if a request to look up payments identifies that there are 134 payments and you have set your limit to 15, the first 15 items will be returned with navigation links to provide the next 15 items in the list. If you navigate to the next page using the provided HATEOAS link, you will now retrieve items 16-30 with a new navigation link provided to return to the previous page, as well as a link to continue to the next page of items._
 
 > _You can change the default list page size by defining a **limit** parameter value._
 
@@ -102,20 +102,17 @@ Sample Response with List Data
 
 Resource expansion can be compared to eager loading in the database realm. It offers a way to load a specific resource as well as other resources related to it.  You are encouraged to use resource expansion when you know you are going to need the extra information. This will reduce the amount of API calls as well as the amount of traffic to and from your server. You should avoid resource expansion when you want to reduce the amount of information returned or if you are unsure if you will need the additional resource object.
 <br/><br/>
-By adding an **expand** query parameter to the query you are effectively telling the server to include the details for the reference object in-line, in a expand single response.  Anytime you encounter an object whose only child attribute is a link, you can consider that object expandable. Passing that object name as part of your expand parameter list will automatically substitute the link with the relevant details.
+By adding an **expand** query parameter to the query you are effectively telling the server to include the details for the reference object in-line.  Anytime you encounter an object that contains an "_expandable" section, you will know that the resources
+identified are expandable. Passing that resource name as part of your expand parameter list will automatically include the associated resource details in your response.
 <br/><br/>
 
 For resources that have multiple expandable children, you can specify which resources to expand in a comma separated list. <br />
 Eg. <strong>?expand=resource1,resource2</strong>
 
 <br/>
-
-> _Resource expansion does not apply to API requests that return a list._
-
-<br/>
-Below is a sample subscription lookup. By default the events resource is not expanded and instead includes a 
-reference link that would provide the relevant details. If you would rather have the full subscription plan object returned, 
-then add the **'expand=events'** parameter to your request and you will see the second example result.
+Below is a sample account lookup. By default the events resource is not expanded and instead includes a 
+reference link that would provide the relevant details. If you would rather have the full account object returned, 
+then add the **'expand=events'** parameter to your request and you will see the second events returned inline.
 <br/>
 
 *Result without resource expansion*
@@ -123,26 +120,26 @@ then add the **'expand=events'** parameter to your request and you will see the 
 ```apib
 GET /admin/v1/accounts/<accountId>
 {
-         "id": "987001112",
-         "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
-         "processorCode": "PAYON",
-         "paymentType": "IDEAL",
-         "currencyCode": "EUR",
-         "status": "ENABLED",
-         "creationTime": "2016-04-05T15:17:57Z",
-         "lastModificationTime": "2016-04-06T15:24:17Z",
-         "allowTestTransaction": false,
-         "events": {
-                 "href": "https://api.paysafe.com/admin/v1/accounts/987001112/events"
-         },
-         "links": [{
-                 "rel": "self",
-                 "href": "https://api.paysafe.com/admin/v1/accounts/987001112"
-         }]
+    "id": "987001112",
+    "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
+    "processorCode": "PAYON",
+    "paymentType": "IDEAL",
+    "currencyCode": "EUR",
+    "status": "ENABLED",
+    "creationTime": "2016-04-05T15:17:57Z",
+    "lastModificationTime": "2016-04-06T15:24:17Z",
+    "allowTestTransaction": false,
+    "_expandable": {
+        "events": "https://api.paysafe.com/admin/v1/accounts/987001112/events"
+    },
+    "links": [{
+        "rel": "self",
+        "href": "https://api.paysafe.com/admin/v1/accounts/987001112"
+    }]
 }
 ```
 
-*Result with the plan resource expanded*
+*Result with events expanded*
 
 ```apib
 GET /admin/v1/accounts/<accountId>?expand=events
@@ -169,11 +166,14 @@ GET /admin/v1/accounts/<accountId>?expand=events
                "id": "12345eef-aec8-41a5-94d7-446bc3999426",
                "type": "ap_refunds_complete"
         }],
+        "_expandable": {
+            "events": "https://api.paysafe.com/admin/v1/accounts/987001112/events"
+        },        
         "links": [{
                "rel": "self",
-               "href": "https://paysafe-psp-alternatepayments-core.dev.mtl.oneplatform.io/admin/v1/accounts/987001112"
+               "href": "https://api.paysafe.com/admin/v1/accounts/987001112"
         }]
-}dde
+}
 ```
 
 ## HTTP Responses
@@ -237,11 +237,7 @@ error code will be returned in the header so it can be easily used by an applica
         "message": "Bad Request",
         "details": [
             "Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]"
-        ],
-        "links": [{
-            "rel": "errorinfo",
-            "href": "http://54.186.215.106/en/documentation/accountmanagement/error-5023"
-        }]
+        ]
     }
 }
 ```
@@ -254,6 +250,9 @@ error code will be returned in the header so it can be easily used by an applica
     "error": {
         "code": 5068,
         "message": "Field Error(s)",
+        "details": [
+            "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
+        ],        
         "fieldErrors": [{
             "field": "recipientEmail",
             "error": "john@hi@you.c.c.c.c is not a valid e-mail address."
@@ -263,13 +262,6 @@ error code will be returned in the header so it can be easily used by an applica
         }, {
             "field": "transaction.currency",
             "error": "Currency with value [USD] exceeds the maximum size of [3]."
-        }],
-        "details": [
-            "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
-        ],
-        "links": [{
-            "rel": "errorinfo",
-            "href": "http://54.186.215.106/en/documentation/accountmanagement/error-5023"
         }]
     }
 }
@@ -348,17 +340,15 @@ Eg. Below are sample HATEOAS links from a API rsponse that returns a collection 
 are provided to navigate through the set of resources in the collection.
 ```
 "links": [{
-    "url": "https://api.paysafe.com/v1/auths/234243242?limit=10&offset=10",
     "rel": "self",
-    "method": "GET"
+    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=1"
 },  {
-    "url": "https://api.paysafe.com/v1/auths/234243242?limit=10&offset=0",
     "rel": "prev",
-    "method": "GET"
+    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=0"
+
 }, {
-    "url": "https://api.paysafe.com/v1/auths/234243242?limit=10&offset=20",
     "rel": "next",
-    "method": "GET"
+    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=2"
 }]
 
 ```
@@ -425,9 +415,9 @@ The following payment methods are supported:
 
 |Payment Type  |Additional inputs required |
 |---             |---     |
-|ideal           |Y       | 
-|sofort          |N       |
-|giropay         |N       |
+|IDEAL           |Y       | 
+|SOFORT          |N       |
+|GIROPAY         |N       |
 
 > Please contact Paysafe Merchant Support to enable additional options for your account.
 
@@ -437,7 +427,7 @@ The following payment methods are supported:
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
     + Attributes (Ideal Payment)
-        + paymentType: `ideal` (string, required)
+        + paymentType: `IDEAL` (string, required)
         + Include Payment Request Base
 
     + Headers
@@ -455,7 +445,7 @@ The following payment methods are supported:
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
     + Attributes (Sofort Payment)
-        + paymentType: `sofort` (string, required)    
+        + paymentType: `SOFORT` (string, required)    
         + Include Payment Request Base
 
     + Headers
@@ -473,7 +463,7 @@ The following payment methods are supported:
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
     + Attributes
-        + paymentType: `giropay` (string, required)    
+        + paymentType: `GIROPAY` (string, required)    
         + Include Payment Request Base
 
     + Headers
@@ -483,7 +473,7 @@ The following payment methods are supported:
 + Response 201 (application/json)
 
     + Attributes
-        + paymentType: `giropay`
+        + paymentType: `GIROPAY`
         + Include Payment Response Base
         
 ## Lookup Payment by paymentId [GET /accounts/{accountId}/payments/{paymentId}]
@@ -553,12 +543,16 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + descriptor: `Test description` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
 + Include Profile
++ returnLinks (array) - This is an array of return links.
+   + (object) 
+        + rel: default
+        + href: ...
 
 ## Payment Response Base
 + id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 + liveMode: `false` (string, required)
 + merchantRefNum: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ paymentType: `ideal`(string, required)
++ paymentType: `IDEAL`(string, required)
 + dupCheck: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + descriptor: `test descriptor` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
@@ -579,9 +573,9 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
 + paymentType (object) - Payment specific parameters
 
     + One Of
-        + `ideal`
-        + `sofort`
-        + `giropay`
+        + `IDEAL`
+        + `SOFORT`
+        + `GIROPAY`
 
 ## Ideal Payment
 + ideal (object) - Parameters required for a iDeal payment request.
