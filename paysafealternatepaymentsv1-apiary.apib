@@ -1,5 +1,5 @@
 RenFORMAT: 1A
-HOST: http://paysafe.api.com/alternatepayments/v1/
+HOST: http://api.paysafe.com/alternatepayments/v1/
 
 # Paysafe Alternate Payments API
 
@@ -388,8 +388,6 @@ are provided to navigate through the set of resources in the collection.
 
 ```
 
-## Webhooks
-
 
 
 # Payments [/payments]
@@ -414,10 +412,10 @@ see the below table to identify the additional values your should pass as part o
 
 <table>
 <tr><th>Payment Attributes</th><th>Description</th></tr>
-<tr bgcolor='#B5F4BA'><td colspan='2'>"ideal": { ... }</td></tr>
+<tr bgcolor='#69cc95'><td colspan='2'>"ideal": { ... }</td></tr>
 <tr><td>ideal.bankName</td><td>The bank name</td></tr>
 <tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr>
-<tr bgcolor='#B5F4BA'><td colspan='2'>"sofort": { ... }</td></tr>
+<tr bgcolor='#69cc95'><td colspan='2'>"sofort": { ... }</td></tr>
 <tr><td>ideal.bankName</td><td>The bank name</td></tr>
 <tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr>
 </table>
@@ -539,7 +537,7 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
 # Data Structures
 
 ## Payment Request Base
-+ merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
++ merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set dupCheck to false
 + dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + descriptor: `Test description` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
