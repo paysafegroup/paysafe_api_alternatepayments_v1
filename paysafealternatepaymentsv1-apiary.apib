@@ -140,7 +140,11 @@ identified are expandable. Passing that resource name as part of your expand par
 For resources that have multiple expandable children, you can specify which resources to expand in a comma separated list. <br />
 Eg. <strong>?expand=resource1,resource2</strong>
 
-> Resource Expansion is only available when a single resource is involved.  When you lookup resources that could return collections of results, the _expandable option will not be present.  For example, if you query a payment by a specific payment id, then _expandable will be available if there are related resources such as refunds.  If you query a payment by merchantRefNum, then since a collection of payment resources could be returned, the _expandable option will not show.
+> Resource Expansion is only available when a single resource is involved.  When you lookup resources that could return collections of 
+> results, _expandable option will not be present. (ie: if you query for a specific subscription, then _expandable will be available 
+> for related resources such as the customer profile and associate plan for the subscription).  When a collection of related resources 
+> relates to the particular resource you are looking at, a HATEOAS link will be provided instead.  A good example of this would be a
+> plan and its related subscriptions.  
 
 <br/>
 Below is a sample account lookup. By default the events resource is not expanded and instead includes a 
@@ -151,24 +155,26 @@ then add the **'expand=events'** parameter to your request and you will see the 
 *Result without resource expansion*
 
 ```apib
-GET /admin/v1/accounts/<accountId>
 {
-    "id": "987001112",
-    "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
-    "processorCode": "PAYON",
-    "paymentType": "IDEAL",
-    "currencyCode": "EUR",
-    "status": "ENABLED",
-    "creationTime": "2016-04-05T15:17:57Z",
-    "lastModificationTime": "2016-04-06T15:24:17Z",
-    "allowTestTransaction": false,
-    "_expandable": {
-        "events": "https://api.paysafe.com/admin/v1/accounts/987001112/events"
-    },
+    
+    "id": "382d5b82-5e3f-40b7-a36d-eb982116c2b3",
+    "merchantRefNum": "sub-1",
+    "accountId": "88919000",
+    "paymentToken": "CNjEzMTM4NDg1",
+    "itemQuantity": 1,
+    "status": "ACTIVE",
+    "creationTime": "2015-10-10T12:12:18Z",
+    "startDate": "2015-10-10",
+    "currentPeriodStartDate": "2015-10-10",
+    "currentPeriodEndDate": "2015-11-09",
     "links": [{
         "rel": "self",
-        "href": "https://api.paysafe.com/admin/v1/accounts/987001112"
-    }]
+        "href": "https://api.netbanx.com/recurringpayments/v1/subscriptions/382d5b82-5e3f-40b7-a36d-eb982116c2b3"
+    }],
+    "_expandable": {
+        "plan": "https://api.netbanx.com/recurringpayments/v1/plans/e067d83f-add7-4b6b-8884-dfa8693dde1f",
+        "profile": "https://api.netbanx.com/customervault/v1/profiles/a5f1889d-f1be-4bbf-941d-fd9b8d09d5b1"
+    }
 }
 ```
 
@@ -206,7 +212,7 @@ GET /admin/v1/accounts/<accountId>?expand=events
                "rel": "self",
                "href": "https://api.paysafe.com/admin/v1/accounts/987001112"
         }]
-}
+} re
 ```
 
 ## HTTP Responses
