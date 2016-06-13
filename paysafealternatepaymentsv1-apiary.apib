@@ -573,14 +573,15 @@ is disabled.
 
 ## Payment Request Base
 + merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set dupCheck to false
++ paymentType: `IDEAL`, `SOFORT`, `GIROPAY` (enum, required)
 + dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request. Default is true.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
-+ descriptor: `Test description` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
++ descriptor: `Test description` (string, optional) - This is the merchant descriptor that will be displayed on the customer's statement.
 + Include Profile
 + returnLinks (array) - This is an array of return links.
    + (object) 
-        + rel: default
-        + href: ...
+        + rel: `default`
+        + href: `https:\\mysite.com\return`
 
 ## Payment Response Base
 + id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
@@ -596,8 +597,8 @@ is disabled.
 + Include Profile
 + returnLinks (array) - This is an array of return links.
    + (object) 
-        + rel: default
-        + href: ...
+        + rel: `default`
+        + href: `https:\\mysite.com\return`
 
 ## Payment Response Ideal Links
 + links (array) - This is an array of related links. 
@@ -609,7 +610,7 @@ is disabled.
         + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
 
 ## Payment Type
-+ paymentType (object) - Payment specific parameters
++ paymentType (object) - Specifies the payment type of the transac
 
     + One Of
         + `IDEAL`
