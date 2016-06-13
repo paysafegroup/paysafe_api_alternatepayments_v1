@@ -1,20 +1,18 @@
-RenFORMAT: 1A
-HOST: http://api.paysafe.com/alternatepayments/v1/
+FORMAT: 1A
+HOST: https://api.paysafe.com/alternatepayments/v1/
 
 # Paysafe Alternate Payments API
 
 The Paysafe Alternate Payments API allows you to collect payments from your customers using a
 variety of methods.
 
-The API in SAQ (TBD) compliant.
-
 Request and response payloads are formatted as JSON.
 
 # Release Notes
 
-|Version   |Date            |Details|
-|---       |---             |---|
-|1.3.X     |June  14 2015   |<ul><li>Initial release with support for Ideal, Sofort, Giropay</li></ul>|
+|MajorVersion   |Patch Date            |Details|
+|---            |---                   |---|
+|v1             |2016-06-24            |<ul><li>Initial release with support for Ideal, Sofort</li></ul>|
 
 # Technical introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API. 
@@ -35,7 +33,6 @@ As the sandbox environment is completely isolated, any changes you perform on yo
 (such as secure IP registration, APP registration) may have to be repeated in your production account.
 
 ## Versioning
-
 
 The API version will influence the request/response object structure as well as the functionality that is available through the API.   A new version of the API will only be introduced if we roll out a backwards incompatible change that may impact your existing integrations.  As your API version can be maintained through the merchant portal, you can manage when to upgrade to the latest version, helping ensure your integration is not disrupted as new functionality becomes available.
 
@@ -215,6 +212,23 @@ GET /admin/v1/accounts/<accountId>?expand=events
 } re
 ```
 
+## Global Invalid Characters
+
+You must not include any of the characters in the following table as values in any of your request parameters. If you do, your request will result in an error.
+
+|    Character    |    HEX    |    Description                     |
+|-----------------|-----------|------------------------------------|
+| "               | 22        | Double quotes (or speech marks)    |
+| ;               | 3B        | Semicolon                          |
+| ^               | 5E        | Caret, circumflex                  |
+| *               | 2A        | Asterisk                           |
+| <               | 3C        | Less than (or open angled bracket) |
+| /               | 2F        | Slash or divide                    |
+| [               | 5B        | Opening bracket                    |
+| ]               | 5D        | Closing bracket                    |
+| \               | 5C        | Backslash                          |
+
+
 ## HTTP Responses
 
 HTTP response codes are used to indicate the status of a request.
@@ -254,8 +268,8 @@ HTTP response codes are used to indicate the status of a request.
 To ease integration and support for developers 
 integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.  
 
-The error structure contains a 4–5 digit code as well as a human readable message. Additionally, the application 
-error code will be returned in the header so it can be easily used by an application without parsing the body.
+The error structure contains a 4–5 digit code as well as a human readable message. 
+Additionally, the application error code will be returned in the header so it can be easily used by an application without parsing the body.
 <br/>
 
 **Error Attributes**
@@ -281,7 +295,6 @@ error code will be returned in the header so it can be easily used by an applica
     }
 }
 ```
- 
  
 **Error message example with field errors**
 
@@ -341,20 +354,20 @@ These are the error codes common to all subsystems
 
 These errors are specific to the Alternate Payments API.
 
-|Code                       |Message|                                 
-|---                        |---|
-|ALTERNATE-PAYMENTS-INT-1   |Gateway Not Provisioned Error|
-|ALTERNATE-PAYMENTS-INT-2   |Gateway Authentication Error|
-|ALTERNATE-PAYMENTS-INT-3   |Resource not found GatewayService Error|
-|ALTERNATE-PAYMENTS-INT-4   |Transaction declined by the Gateway|
-|ALTERNATE-PAYMENTS-INT-5   |Auth status not successful|
-|ALTERNATE-PAYMENTS-INT-6   |Over refund|
-|ALTERNATE-PAYMENTS-INT-7   |Auth expired|
-|ALTERNATE-PAYMENTS-INT-8   |Invalid Parameter Gateway Error|
-|ALTERNATE-PAYMENTS-INT-9   |Risk Gateway Error|
-|ALTERNATE-PAYMENTS-INT-10  |Setup Gateway Error|
-|ALTERNATE-PAYMENTS-INT-11  |Gateway Error|
-|ALTERNATE-PAYMENTS-INT-12  |Gateway Conditional Success|
+|Code                           |Message|                                 
+|---                            |---|
+|ALTERNATE-PAYMENTS-GATEWAY-1   |Gateway Not Provisioned Error|
+|ALTERNATE-PAYMENTS-GATEWAY-2   |Gateway Authentication Error|
+|ALTERNATE-PAYMENTS-GATEWAY-3   |Resource not found GatewayService Error|
+|ALTERNATE-PAYMENTS-GATEWAY-4   |Transaction declined by the Gateway|
+|ALTERNATE-PAYMENTS-GATEWAY-5   |Auth status not successful|
+|ALTERNATE-PAYMENTS-GATEWAY-6   |Over refund|
+|ALTERNATE-PAYMENTS-GATEWAY-7   |Auth expired|
+|ALTERNATE-PAYMENTS-GATEWAY-8   |Invalid Parameter Gateway Error|
+|ALTERNATE-PAYMENTS-GATEWAY-9   |Risk Gateway Error|
+|ALTERNATE-PAYMENTS-GATEWAY-10  |Setup Gateway Error|
+|ALTERNATE-PAYMENTS-GATEWAY-11  |Gateway Error|
+|ALTERNATE-PAYMENTS-GATEWAY-12  |Gateway Conditional Success|
 
 
 ## HATEOAS
@@ -398,7 +411,7 @@ are provided to navigate through the set of resources in the collection.
 
 # Payments [/payments]
 
-Description TBD
+You can submit a payment request using local payment methods that your customers are familiar with.
 
 ## Create Payment [POST /accounts/{accountId}/payments]
 
@@ -406,22 +419,25 @@ Your account is setup to allow payments for a specific payment method and curren
 
 > Please contact Paysafe Merchant Support to enable additional options for your account.
 
-The following payment methods are supported, if additional attributes are required for the payment method,
-see the below table to identify the additional values your should pass as part of your payment request.
+The following payment methods are supported:
 
-|Payment Type  |Additional attributes required |
+|Payment Type    |Additional attributes required |
 |---             |---     |
 |IDEAL           |Y       | 
 |SOFORT          |Y       |
 |GIROPAY         |N       |
 
 
+> If the desired payment method requires additional attributes passed in the request, pleaes refer to 
+> the below table for the specific payment structure.  These additional attributes should be passed as a
+> nested object in the root of your payment request.
+
 <table>
-<tr><th>Payment Attributes</th><th>Description</th></tr>
-<tr bgcolor='#69cc95'><td colspan='2'>"ideal": { ... }</td></tr>
+<tr><th>Payment Type / Attributes</th><th>Description</th></tr>
+<tr bgcolor='#69cc95'><td colspan='2'>IDEAL - "ideal": { ... }</td></tr>
 <tr><td>ideal.bankName</td><td>The bank name</td></tr>
 <tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr>
-<tr bgcolor='#69cc95'><td colspan='2'>"sofort": { ... }</td></tr>
+<tr bgcolor='#69cc95'><td colspan='2'>SOFORT - "sofort": { ... }</td></tr>
 <tr><td>ideal.bankName</td><td>The bank name</td></tr>
 <tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr>
 </table>
@@ -443,7 +459,9 @@ see the below table to identify the additional values your should pass as part o
 
     + Attributes (Ideal Payment)
         + Include Payment Response Base
-
+        + Include Payment Response Ideal Links
+        
+    
 + Request Create Sofort payment (application/json)
 
     + Parameters
@@ -483,7 +501,7 @@ see the below table to identify the additional values your should pass as part o
         
 ## Lookup Payment by paymentId [GET /accounts/{accountId}/payments/{paymentId}]
 
-Returns an individual payment detail.
+Returns an individual payments detail.
 
 + Request (application/json)
 
@@ -494,7 +512,8 @@ Returns an individual payment detail.
 
 ## Lookup Payment by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 
-As merchantRefNum could be used for multiple payments, a collection of payments is returned.
+Returns a collection of payment details, as merchantRefNum could be used for multiple requests when dupeCheck
+is disabled.
 
 + Request (application/json)
 
@@ -508,6 +527,10 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
 # Refunds [/refunds]
 
 ## Create Refund [POST /accounts/{accountId}/payments/{paymentId}/refunds]
+
+You can issue a refund request against an already completed payment.  It is possible to issue either a full or a 
+partial refunds or series of refunds against the intial payment, however ther combined refund amount cannot
+exceed the original charge amount.
 
 + Request (application/json)
 
@@ -524,6 +547,8 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
 
 ## Lookup Refund by id [GET /accounts/{accountID}/refunds/{id}]
 
+Returns an individual refund detail.
+
 + Request (application/json)
 
 + Response 200 (application/json)
@@ -531,6 +556,9 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
     + Attributes (Refund Response)
 
 ## Lookup Refund by merchantRefNum [GET /accounts/{accountID}/refunds/?merchantRefNum={merchantRefNum}]
+
+Returns a collection of refund details, as merchantRefNum could be used for multiple requests when dupeCheck 
+is disabled.
 
 + Request (application/json)
 
@@ -569,10 +597,15 @@ As merchantRefNum could be used for multiple payments, a collection of payments 
    + (object) 
         + rel: default
         + href: ...
-+ links (array) - This is an array of self-referencing links. 
-   + (object) 
-        + rel: self
-        + href: ...
+
+## Payment Response Ideal Links
++ links (array) - This is an array of related links. 
+    + (object)
+        + rel: `self`
+        + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+    + (object)
+        + rel: `redirect_payment`
+        + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
 
 ## Payment Type
 + paymentType (object) - Payment specific parameters
