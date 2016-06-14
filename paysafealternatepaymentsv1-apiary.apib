@@ -460,7 +460,14 @@ The following payment methods are supported:
 
     + Attributes (Ideal Payment)
         + Include Payment Response Base
-        + Include Payment Response Ideal Links
+        + links (array) - This is an array of related links. 
+            + (object)
+                + rel: `self`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+            + (object)
+                + rel: `redirect_payment`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
+
         
     
 + Request Create Sofort payment (application/json)
@@ -480,6 +487,14 @@ The following payment methods are supported:
 
     + Attributes (Sofort Payment)
         + Include Payment Response Base
+        + links (array) - This is an array of related links. 
+            + (object)
+                + rel: `self`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+            + (object)
+                + rel: `redirect_payment`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
+        
 
 + Request Create Giropay payment (application/json)
 
@@ -499,6 +514,14 @@ The following payment methods are supported:
     + Attributes
         + paymentType: `GIROPAY`
         + Include Payment Response Base
+        + links (array) - This is an array of related links. 
+            + (object)
+                + rel: `self`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+            + (object)
+                + rel: `redirect_payment`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
+
         
 ## Lookup Payment by paymentId [GET /accounts/{accountId}/payments/{paymentId}]
 
@@ -510,6 +533,11 @@ Returns an individual payments detail.
 
     + Attributes (CUP Payment)
         + Include Payment Response Base
+        + links (array) - This is an array of related links. 
+            + (object)
+                + rel: `self`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+
 
 ## Lookup Payment by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 
@@ -523,6 +551,13 @@ is disabled.
     + Attributes
         + payments (array)
             + (Payment Response Base)
+        + links (array) - This is an array of related links. 
+            + (object)
+                + rel: `self`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/?merchantRefNum=ABC123"`
+            + (object)
+                + rel: `next`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/?merchantRefNum=merchantRef_2014_03_10_01&limit=15&offset=10&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z`
 
 
 # Refunds [/refunds]
@@ -576,12 +611,10 @@ is disabled.
 + paymentType: `IDEAL`, `SOFORT`, `GIROPAY` (enum, required)
 + dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request. Default is true.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
++ currencyCode: `EUR` (string, required) - This is the currency of the payment.
 + descriptor: `Test description` (string, optional) - This is the merchant descriptor that will be displayed on the customer's statement.
 + Include Profile
-+ returnLinks (array) - This is an array of return links.
-   + (object) 
-        + rel: `default`
-        + href: `https:\\mysite.com\return`
++ Include Return Links
 
 ## Payment Response Base
 + id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
@@ -590,24 +623,12 @@ is disabled.
 + paymentType: `IDEAL`(string, required)
 + dupCheck: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request.  Default is true.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
++ currencyCode: `EUR` (string, required) - This is the currency of the payment.
 + descriptor: `test descriptor` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
 + txnTime: `2015-12-11T16:33:49Z` (string, required) - This is the date and time the transaction was processed.
-+ currencyCode: `EUR` (string, required) - This is the currency of the merchant account, e.g., USD or CAD, returned in the request response.
 + status: `INITIATED` (string, required) - This is the status of the transaction request.
 + Include Profile
-+ returnLinks (array) - This is an array of return links.
-   + (object) 
-        + rel: `default`
-        + href: `https:\\mysite.com\return`
-
-## Payment Response Ideal Links
-+ links (array) - This is an array of related links. 
-    + (object)
-        + rel: `self`
-        + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
-    + (object)
-        + rel: `redirect_payment`
-        + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
++ Include Return Links
 
 ## Payment Type
 + paymentType (object) - Specifies the payment type of the transac
@@ -666,3 +687,9 @@ is disabled.
 + code: `000.100.110` (string, required)
 + description: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string, required)
 + paymentType: `RF` (string, required)
+
+## Return Links
++ returnLinks (array) - This is an array of return links.
+   + (object) 
+        + rel: `default` (enum, required)
+        + href: `https:\\mysite.com\return`
