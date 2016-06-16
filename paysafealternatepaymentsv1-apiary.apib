@@ -12,7 +12,7 @@ Request and response payloads are formatted as JSON.
 
 |MajorVersion   |Patch Date            |Details|
 |---            |---                   |---|
-|v1             |2016-06-24            |<ul><li>Initial release with support for Ideal, Sofort</li></ul>|
+|v1             |2016-06-24            |<ul><li>Initial release with support for iDeal, Sofort</li></ul>|
 
 # Technical introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API. 
@@ -69,7 +69,7 @@ be returned as 'payments'. By default, 10 items will be returned at a time and y
 supplied HATEOAS links.  List responses will also include a meta data section that will identify the number of records included in the collection,
 the number of records per page (limit) and current page number.
 <br/><br/>
-For example, if a request to look up payments identifies that there are 134 payments and you have set your limit to 15, the first 15 items will be returned with navigation links to provide the next 15 items in the list. If you navigate to the next page using the provided HATEOAS link, you will now retrieve items 16-30 with a new navigation link provided to return to the previous page, as well as a link to continue to the next page of items._
+For example, if a request to look up payments identifies that there are 134 payments and you have set your limit to 15, the first 15 items will be returned with navigation links to provide the next 15 items in the list. If you navigate to the next page using the provided HATEOAS link, you will now retrieve items 16-30 with a new navigation link provided to return to the previous page, as well as a link to continue to the next page of items.
 
 > _You can change the default list page size by defining a **limit** parameter value._
 
@@ -180,7 +180,7 @@ then add the **'expand=events'** parameter to your request and you will see the 
 ```apib
 GET /admin/v1/accounts/<accountId>?expand=events
 {
-        "id": "987001112",esource 
+        "id": "987001112", 
         "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
         "processorCode": "PAYON",
         "paymentType": "IDEAL",
@@ -209,7 +209,7 @@ GET /admin/v1/accounts/<accountId>?expand=events
                "rel": "self",
                "href": "https://api.paysafe.com/admin/v1/accounts/987001112"
         }]
-} re
+}
 ```
 
 ## Global Invalid Characters
@@ -269,36 +269,55 @@ To ease integration and support for developers
 integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.  
 
 The error structure contains a 4–5 digit code as well as a human readable message. 
-Additionally, the application error code will be returned in the header so it can be easily used by an application without parsing the body.
+Additionally, the application error code will be returned in the header as *x-application-status-code* 
+so it can be easily used by an application without parsing the body.
 <br/>
 
 **Error Attributes**
 
-|Element|Type|Description|
-|---|---|---|
-|Element|Type|Description|
-|code|String|This is the error code|
-|message|String|This is a description of the error|
-|details|Array|This is a detailed description|
-|fieldErrors|Array|This is a list of fields that have problems|
+|Element            |Type                |Description|
+|---                |---                 |---|
+|error.code         |String              |This is the error code.|
+|error.message      |String              |This is a description of the error.|
+|error.details      |Array of String     |*if applicable* This is a collection of detailed description.|
+|error.fieldErrors  |Array of fieldError |*if applicable* This is a list of fields that have problems.|
+|error.links        |Array of link       |*if applicable* Links to the error documentation.|
+|id                 |String              |*if applicable* The is the unique identifier for the related resource.|
+|merchantRefNum     |String              |*if applicable* The identifier provided by the merchant for a transaction.|
+|links              |Array of link       |*if applicable* The link to the related resource.|
+
 
 **Error message example with details**
 
 ```apib
+Status-Code: 402
+x-application-status-code: 3009
+ 
 {
     "error": {
-        "code": 5023,
-        "message": "Bad Request",
-        "details": [
-            "Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]"
-        ]
-    }
+        "code": "3009",
+        "message": "Your request has been declined by the issuing bank.",
+        "links": [{
+            "rel": "errorinfo",
+            "href": "http://54.186.215.106/en/documentation/card-payments-api/error-3009"
+        }]
+    },
+    "id": "3a406cc6-f9f5-47dd-a2e0-41ffbbf0de3e",
+    "merchantRefNum": "abc123",
+    "riskReasonCode": 1005,
+    "links": [{
+        "rel": "self",
+        "href": "https://api.qa.netbanx.com/cardpayments/v1/accounts/1000057082/auths/3a406cc6-f9f5-47dd-a2e0-41ffbbf0de3e"
+    }]
 }
 ```
  
 **Error message example with field errors**
 
 ```apib
+Status-Code: 400
+x-application-status-code: 5068
+
 {
     "error": {
         "code": 5068,
@@ -422,11 +441,11 @@ Your account is setup to allow payments for a specific payment method and curren
 
 The following payment methods are supported:
 
-|Payment Type    |Additional attributes required |
-|---             |---     |
-|IDEAL           |Y       | 
-|SOFORT          |Y       |
-|GIROPAY         |N       |
+|Payment Type    |Attributes Required |Refunds Supported?|
+|---             |---                 |---|
+|IDEAL           |Y                   |Y| 
+|SOFORT          |Y                   |Y|
+|GIROPAY         |N                   |Y|
 
 
 > If the desired payment method requires additional attributes passed in the request, pleaes refer to 
@@ -439,8 +458,8 @@ The following payment methods are supported:
 <tr><td>ideal.bankName</td><td>The bank name</td></tr>
 <tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr>
 <tr bgcolor='#69cc95'><td colspan='2'>SOFORT - "sofort": { ... }</td></tr>
-<tr><td>ideal.bankName</td><td>The bank name</td></tr>
-<tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr>
+<tr><td>sofort.bankName</td><td>The bank name</td></tr>
+<tr><td>sofort.accountCurrency</td><td>The currency of the bank account</td></tr>
 </table>
 
 + Request Create iDeal payment (application/json)
@@ -618,17 +637,17 @@ is disabled.
 
 ## Payment Response Base
 + id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
-+ liveMode: `false` (string, required)
 + merchantRefNum: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ paymentType: `IDEAL`(string, required)
-+ dupCheck: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request.  Default is true.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + currencyCode: `EUR` (string, required) - This is the currency of the payment.
-+ descriptor: `test descriptor` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
-+ txnTime: `2015-12-11T16:33:49Z` (string, required) - This is the date and time the transaction was processed.
-+ status: `INITIATED` (string, required) - This is the status of the transaction request.
++ paymentType: `IDEAL`(string, required)
 + Include Profile
 + Include Return Links
++ descriptor: `test descriptor` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
++ liveMode: `false` (string, required)
++ txnTime: `2015-12-11T16:33:49Z` (string, required) - This is the date and time the transaction was processed.
++ status: `INITIATED` (string, required) - This is the status of the transaction request.
++ Include Payon Gateway Response
 
 ## Payment Type
 + paymentType (object) - Specifies the payment type of the transac
@@ -681,9 +700,9 @@ is disabled.
 + amount: `400` (number, required)
 + txnTime: `2016-02-24T08:39:39Z` (string, required)
 + status: `COMPLETED` (string, required)
-+ Include Gateway Response
++ Include Payon Gateway Response
 
-## Gateway Response
+## Payon Gateway Response
 + code: `000.100.110` (string, required)
 + description: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string, required)
 + paymentType: `RF` (string, required)
@@ -692,4 +711,4 @@ is disabled.
 + returnLinks (array) - This is an array of return links.
    + (object) 
         + rel: `default` (enum, required)
-        + href: `https:\\mysite.com\return`
+        + href: `https://mysite.com/return`
