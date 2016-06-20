@@ -652,17 +652,17 @@ is disabled.
 + Include Return Links
 
 ## Payment Response Base
-+ id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string, required) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
-+ merchantRefNum: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ amount: `100` (number, required) - This is the amount of the request, in minor units.
-+ currencyCode: `EUR` (string, required) - This is the currency of the payment.
-+ paymentType: `IDEAL`(string, required)
++ id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
++ merchantRefNum: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
++ amount: `100` (number) - This is the amount of the request, in minor units.
++ currencyCode: `EUR` (string) - This is the currency of the payment.
++ paymentType: `IDEAL`(string)
 + Include Profile
 + Include Return Links
-+ descriptor: `test descriptor` (string, optional) - This is the merchant descriptor that will be displayed on the customer's card statement.
-+ liveMode: `false` (string, required)
-+ txnTime: `2015-12-11T16:33:49Z` (string, required) - This is the date and time the transaction was processed.
-+ status: `INITIATED` (string, required) - This is the status of the transaction request.
++ descriptor: `test descriptor` (string) - This is the merchant descriptor that will be displayed on the customer's card statement.
++ liveMode: `false` (string)
++ txnTime: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
++ status: `INITIATED` (string) - This is the status of the transaction request.
 + Include Payon Gateway Response
 
 ## Ideal Payment
@@ -690,13 +690,13 @@ is disabled.
 
 ## Refund Response
 + id: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - The refund id.  *\*\*Assigned by Paysafe* 
-+ liveMode: `true` (boolean, required) - Indicate whether this is a live or test transaction
-+ merchantRefNum: `xyz` (string, required) - Your unique idenitfier for this request
-+ amount: `400` (number, required) - The amount of the refund in minor units.  (ie: $50.00 USD => 5000, 50 YEN -> 50)
-+ currencyCode: `EUR` (string, required) - This is the currency of the payment.
-+ paymentType: `IDEAL` (string, required)
-+ txnTime: `2016-02-24T08:39:39Z` (string, required) - The datetime of the transaction in UTC. *\*\*Assigned by Paysafe*
-+ status: `COMPLETED` (string, required) - The current state of the transaction. *\*\*Assigned by Paysafe*
++ liveMode: `true` (boolean) - Indicate whether this is a live or test transaction
++ merchantRefNum: `xyz` (string) - Your unique idenitfier for this request
++ amount: `400` (number) - The amount of the refund in minor units.  (ie: $50.00 USD => 5000, 50 YEN -> 50)
++ currencyCode: `EUR` (string) - This is the currency of the payment.
++ paymentType: `IDEAL` (string)
++ txnTime: `2016-02-24T08:39:39Z` (string) - The datetime of the transaction in UTC. *\*\*Assigned by Paysafe*
++ status: `COMPLETED` (string) - The current state of the transaction. *\*\*Assigned by Paysafe*
 + Include Payon Gateway Response
 + links (array) - This is an array of links related to the resource. 
     + ([object])
@@ -707,12 +707,12 @@ is disabled.
 + gatewayResponse (object)
 
     + Properties
-        + code: `000.100.110` (string, required)
-        + description: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string, required)
-        + paymentType: `RF` (string, required)
+        + code: `000.100.110` (string)
+        + description: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
+        + paymentType: `RF` (string)
 
 ## Return Links
 + returnLinks (array) - This is an array of return links.
    + (object) 
-        + rel: `default` (enum, required)
+        + rel: `default` (enum)
         + href: `https://mysite.com/return`
