@@ -441,26 +441,16 @@ Your account is setup to allow payments for a specific payment method and curren
 
 The following payment methods are supported:
 
-|Payment Type    |Attributes Required |Refunds Supported?|
-|---             |---                 |---|
-|IDEAL           |Y                   |Y| 
-|SOFORT          |Y                   |Y|
-|GIROPAY         |N                   |Y|
+|Payment Type|Brand Logo                                                                                           |Additional Payment Specific Attributes |Refunds Supported?|
+|---         |---                                                                                                  |---                 |---|
+ |IDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr></table>|Y| 
+|SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |N                   |Y|
+|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|N                   |Y|
 
 
-> If the desired payment method requires additional attributes passed in the request, pleaes refer to 
-> the below table for the specific payment structure.  These additional attributes should be passed as a
-> nested object in the root of your payment request.
+> If the desired payment method requires additional attributes passed in the request, these should be passed as a
+> nested object in the root of your payment request.  See iDeal example request.
 
-<table>
-<tr><th>Payment Type / Attributes</th><th>Description</th></tr>
-<tr bgcolor='#69cc95'><td colspan='2'>IDEAL - "ideal": { ... }</td></tr>
-<tr><td>ideal.bankName</td><td>The bank name</td></tr>
-<tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr>
-<tr bgcolor='#69cc95'><td colspan='2'>SOFORT - "sofort": { ... }</td></tr>
-<tr><td>sofort.bankName</td><td>The bank name</td></tr>
-<tr><td>sofort.accountCurrency</td><td>The currency of the bank account</td></tr>
-</table>
 
 + Request Create iDeal payment (application/json)
 
@@ -693,19 +683,22 @@ is disabled.
 + amount: `100` (number, required) - This is the amount in minor units.
 
 ## Refund Response
-+ id: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string, required) - The refund id.
-+ liveMode: `false` (boolean, required)
-+ merchantRefNum: `xyz` (string, required)
++ id: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - The refund id.  *\*\*Assigned by Paysafe* 
++ liveMode: `false` (boolean, required) - Indicate whether this is a live or test transaction
++ merchantRefNum: `xyz` (string, required) - Your unique idenitfier for this request
 + dupCheck: `true` (boolean, required)
-+ amount: `400` (number, required)
-+ txnTime: `2016-02-24T08:39:39Z` (string, required)
-+ status: `COMPLETED` (string, required)
++ amount: `400` (number, required) - The amount of the refund in minor units.  (ie: $50.00 USD => 5000, 50 YEN -> 50)
++ txnTime: `2016-02-24T08:39:39Z` (string, required) - The datetime of the transaction in UTC. *\*\*Assigned by Paysafe*
++ status: `COMPLETED` (string, required) - The current state of the transaction. *\*\*Assigned by Paysafe*
 + Include Payon Gateway Response
 
 ## Payon Gateway Response
-+ code: `000.100.110` (string, required)
-+ description: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string, required)
-+ paymentType: `RF` (string, required)
++ gatewayResponse (object)
+
+    + Properties
+        + code: `000.100.110` (string, required)
+        + description: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string, required)
+        + paymentType: `RF` (string, required)
 
 ## Return Links
 + returnLinks (array) - This is an array of return links.
