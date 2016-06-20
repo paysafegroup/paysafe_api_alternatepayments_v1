@@ -19,7 +19,7 @@ This section provides a technical introduction to the Paysafe Alternate Payments
 
 ## API Endpoints
 
-The Paysafe Alternate Paymenes API is available in the sandbox environment for integration testing purposes. 
+The Paysafe Alternate Payments API is available in the sandbox environment for integration testing purposes. 
 To switch between the sandbox and the live production system you only need to change the endpoint URI and the 
 credentials.
 
@@ -443,14 +443,26 @@ The following payment methods are supported:
 
 |Payment Type|Brand Logo                                                                                           |Additional Payment Specific Attributes |Refunds Supported?|
 |---         |---                                                                                                  |---                 |---|
- |IDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr></table>|Y| 
-|SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |N                   |Y|
-|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|N                   |Y|
+|IDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr></table>|Y| 
+|SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Y|
+|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|none                |Y|
 
 
-> If the desired payment method requires additional attributes passed in the request, these should be passed as a
-> nested object in the root of your payment request.  See iDeal example request.
-
+> In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
+> these should be passed as a nested object in the root of your payment request.  
+> <br/>
+> For Example:
+>>
+```
+{
+    "paymentType": "IDEAL",
+    "ideal": {
+       "bankName": "XYZ Commerce",
+       "accountCurrency": "EUR"
+    }
+    ... other payment attributes here ...
+|
+```
 
 + Request Create iDeal payment (application/json)
 
@@ -484,7 +496,7 @@ The following payment methods are supported:
     + Parameters
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
-    + Attributes (Sofort Payment)
+    + Attributes
         + paymentType: `SOFORT` (string, required)    
         + Include Payment Request Base
 
@@ -494,7 +506,7 @@ The following payment methods are supported:
             
 + Response 201 (application/json)
 
-    + Attributes (Sofort Payment)
+    + Attributes
         + Include Payment Response Base
         + links (array) - This is an array of related links. 
             + (object)
@@ -540,7 +552,7 @@ Returns an individual payments detail.
 
 + Response 200 (application/json)
 
-    + Attributes (CUP Payment)
+    + Attributes
         + Include Payment Response Base
         + links (array) - This is an array of related links. 
             + (object)
@@ -583,7 +595,12 @@ exceed the original charge amount.
         + accountId: `1234567891` (string, required) - Your unique account identifer.
         + paymentId: `1111111` (string, required) - The unique identifier for the payment.
 
-    + Attributes (Refund Request)
+    + Attributes
+        + Include Refund Request
+        
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY        
 
 + Response 201 (application/json)
 
@@ -639,34 +656,12 @@ is disabled.
 + status: `INITIATED` (string, required) - This is the status of the transaction request.
 + Include Payon Gateway Response
 
-## Payment Type
-+ paymentType (object) - Specifies the payment type of the transac
-
-    + One Of
-        + `IDEAL`
-        + `SOFORT`
-        + `GIROPAY`
-
 ## Ideal Payment
 + ideal (object) - Parameters required for a iDeal payment request.
 
     + Properties
         + bankName: `ING` (string, required)
         + accountCountry: `NL` (string, required)
-        
-## CUP Payment
-+ cup (object) - Parameters required for a China Union Pay payment request.
-
-    + Properties
-        + bankName: `ING` (string, required)
-        + accountCountry: `NL` (string, required)     
-
-## Sofort Payment
-+ sofort (object) - Parameters required for a Sofort payment request.
-
-    + Properties
-        + productId: `3453453` (string, required)
-        + key: `ajklj9alksj98gah4l34jg9` (string, required)
 
 ## Profile    
 + profile (object, optional) - These are some details about the customer.
@@ -678,16 +673,19 @@ is disabled.
         + ip: `127.0.0.1` (string, optional)
         
 ## Refund Request
-+ merchantRefNum: `xyz` (string, optional) - The merchant reference number.
-+ dupCheck: `false` (boolean, required) - The duplication check flag.
++ merchantRefNum: `xyz` (string, required) - The merchant reference number.
++ dupCheck: `false` (boolean, optional) - The duplication check flag.
++ paymentType: `IDEAL` (string, required) - Specifies the payment type of the transaction.
++ currencyCode: `EUR` (string, required) - This is the currency of the payment.
 + amount: `100` (number, required) - This is the amount in minor units.
 
 ## Refund Response
 + id: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - The refund id.  *\*\*Assigned by Paysafe* 
-+ liveMode: `false` (boolean, required) - Indicate whether this is a live or test transaction
++ liveMode: `true` (boolean, required) - Indicate whether this is a live or test transaction
 + merchantRefNum: `xyz` (string, required) - Your unique idenitfier for this request
-+ dupCheck: `true` (boolean, required)
 + amount: `400` (number, required) - The amount of the refund in minor units.  (ie: $50.00 USD => 5000, 50 YEN -> 50)
++ currencyCode: `EUR` (string, required) - This is the currency of the payment.
++ paymentType: `IDEAL` (string, required)
 + txnTime: `2016-02-24T08:39:39Z` (string, required) - The datetime of the transaction in UTC. *\*\*Assigned by Paysafe*
 + status: `COMPLETED` (string, required) - The current state of the transaction. *\*\*Assigned by Paysafe*
 + Include Payon Gateway Response
