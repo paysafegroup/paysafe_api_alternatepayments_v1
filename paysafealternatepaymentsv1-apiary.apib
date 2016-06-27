@@ -410,19 +410,19 @@ our API, but rather can use the returned url for the specific purpose as defined
 |href     |URL of the related HATEOAS link you can use for subsequent calls.|
 
 
-Eg. Below are sample HATEOAS links from a API rsponse that returns a collection of auths. Links
+Eg. Below are sample HATEOAS links from a API rsponse that returns a collection of payments. Links
 are provided to navigate through the set of resources in the collection.
 ```
 "links": [{
     "rel": "self",
-    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=1"
+    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=10"
 },  {
     "rel": "prev",
     "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=0"
 
 }, {
     "rel": "next",
-    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=2"
+    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=20"
 }]
 
 ```
@@ -618,9 +618,9 @@ Returns an individual refund detail.
     + Attributes 
         + Include Refund Response
         + links (array) - This is an array of related links.
-                + (object)
-                    + rel: `self`
-                    + href: `https://api.paysafe.com/v1/accounts/1466458515/refunds?merchantRefNum=1466458777&limit=10&offset=0&startDate=2016-05-21T22:17:47Z&endDate=2016-06-20T22:17:47Z`
+            + (object)
+                + rel: `self`
+                + href: `https://api.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
 
 ## Lookup Refund by merchantRefNum [GET /accounts/{accountID}/refunds/?merchantRefNum={merchantRefNum}]
 
@@ -647,8 +647,8 @@ is disabled.
 + dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request. Default is true.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + currencyCode: `EUR` (string, required) - This is the currency of the payment.
-+ descriptor: `Test description` (string, optional) - This is the merchant descriptor that will be displayed on the customer's statement.
-+ Include Profile
++ descriptor: `Test description` (string, required) - This is the merchant descriptor that will be displayed on the customer's statement.
++ Include Profile Request
 + Include Return Links
 
 ## Payment Response Base
@@ -657,7 +657,7 @@ is disabled.
 + amount: `100` (number) - This is the amount of the request, in minor units.
 + currencyCode: `EUR` (string) - This is the currency of the payment.
 + paymentType: `IDEAL`(string)
-+ Include Profile
++ Include Profile Response
 + Include Return Links
 + descriptor: `test descriptor` (string) - This is the merchant descriptor that will be displayed on the customer's card statement.
 + liveMode: `false` (string)
@@ -672,7 +672,7 @@ is disabled.
         + bankName: `ING` (string, required)
         + accountCountry: `NL` (string, required)
 
-## Profile    
+## Profile Request 
 + profile (object, optional) - These are some details about the customer.
 
     + Properties
@@ -680,7 +680,16 @@ is disabled.
         + lastName: `Smith` (string, required)
         + email: `stan.smith@fox.com` (string, required)
         + ip: `127.0.0.1` (string, optional)
-        
+
+## Profile Response 
++ profile (object, optional) - These are some details about the customer.
+
+    + Properties
+        + firstName: `Stan` (string)
+        + lastName: `Smith` (string)
+        + email: `stan.smith@fox.com` (string)
+        + ip: `127.0.0.1` (string)
+
 ## Refund Request
 + merchantRefNum: `xyz` (string, required) - The merchant reference number.
 + dupCheck: `false` (boolean, optional) - The duplication check flag.
@@ -714,5 +723,5 @@ is disabled.
 ## Return Links
 + returnLinks (array) - This is an array of return links.
    + (object) 
-        + rel: `default` (enum)
-        + href: `https://mysite.com/return`
+        + rel: `default` (enum, required)
+        + href: `https://mysite.com/return` (string, required)
