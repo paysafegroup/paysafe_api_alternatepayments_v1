@@ -443,7 +443,7 @@ The following payment methods are supported:
 
 |Payment Type|Brand Logo                                                                                           |Additional Payment Specific Attributes |Refunds Supported?|
 |---         |---                                                                                                  |---                 |---|
-|IDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCurrency</td><td>The currency of the bank account</td></tr></table>|Y| 
+|IDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Y| 
 |SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Y|
 |GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|none                |Y|
 
@@ -454,11 +454,11 @@ The following payment methods are supported:
 > For Example:
 >>
 ```
-{
+{Update
     "paymentType": "IDEAL",
     "ideal": {
        "bankName": "XYZ Commerce",
-       "accountCurrency": "EUR"
+       "accountCountry": "EUR"
     }
     ... other payment attributes here ...
 |
