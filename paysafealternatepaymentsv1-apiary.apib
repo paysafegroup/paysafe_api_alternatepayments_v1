@@ -342,9 +342,10 @@ x-application-status-code: 5068
 
 These are the error codes common to all subsystems
 
-|HTTP Status   |Code     |Message                                 |Description|
+|HTTP Status   |Code     |Message                                 |Details|
 |---           |---      |---                                     |---|
 |400           |5001     |Invalid currency                        |The submitted currency code is invalid or your account does not support this currency.|
+|              |5005     |Unsupported operation                   |You submitted an an invalid or unsupported operation type with your request.         |
 |              |5010     |Invalid country                         |The submitted country code is invalid.|
 |              |5016     |Account not found                       |The account you provided cannot be found.|
 |              |5017     |Account disabled                        |The account you provided is disabled.|
@@ -374,20 +375,14 @@ These are the error codes common to all subsystems
 
 These errors are specific to the Alternate Payments API.
 
-|Code                           |Message|                                 
-|---                            |---|
-|ALTERNATE-PAYMENTS-GATEWAY-1   |Gateway Not Provisioned Error|
-|ALTERNATE-PAYMENTS-GATEWAY-2   |Gateway Authentication Error|
-|ALTERNATE-PAYMENTS-GATEWAY-3   |Resource not found GatewayService Error|
-|ALTERNATE-PAYMENTS-GATEWAY-4   |Transaction declined by the Gateway|
-|ALTERNATE-PAYMENTS-GATEWAY-5   |Auth status not successful|
-|ALTERNATE-PAYMENTS-GATEWAY-6   |Over refund|
-|ALTERNATE-PAYMENTS-GATEWAY-7   |Auth expired|
-|ALTERNATE-PAYMENTS-GATEWAY-8   |Invalid Parameter Gateway Error|
-|ALTERNATE-PAYMENTS-GATEWAY-9   |Risk Gateway Error|
-|ALTERNATE-PAYMENTS-GATEWAY-10  |Setup Gateway Error|
-|ALTERNATE-PAYMENTS-GATEWAY-11  |Gateway Error|
-|ALTERNATE-PAYMENTS-GATEWAY-12  |Gateway Conditional Success|
+|HTTP Status                   |Code    |Message                                 |Details|                                 
+|---                           |---     |---                                     |---|
+|ALTERNATE-PAYMENTS-GATEWAY-1  |402     |Transaction cancelled at the gateway    |The transaction was cancelled at the gateway.|
+|ALTERNATE-PAYMENTS-GATEWAY-4  |402     |Transaction declined by the gateway     |The transaction declined by the gateway |
+|ALTERNATE-PAYMENTS-GATEWAY-5  |402     |Cannot refund an incomplete transaction |The transaction cannot be refunded as the payment status is not finalized.|
+|ALTERNATE-PAYMENTS-GATEWAY-6  |402     |Over refund                             |The total refund amount cannot exceed the original payment amount.|
+|ALTERNATE-PAYMENTS-GATEWAY-7  |402     |Payment expired                         |The payment has expired.|
+|ALTERNATE-PAYMENTS-GATEWAY-9  |402     |Risk gateway error                      |A risk issue was reported by the gateway.|
 
 
 ## HATEOAS
@@ -454,11 +449,11 @@ The following payment methods are supported:
 > For Example:
 >>
 ```
-{Update
+{
     "paymentType": "IDEAL",
     "ideal": {
        "bankName": "XYZ Commerce",
-       "accountCountry": "EUR"
+       "accountCountry": "DK"
     }
     ... other payment attributes here ...
 |
