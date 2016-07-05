@@ -428,19 +428,13 @@ are provided to navigate through the set of resources in the collection.
 
 You can submit a payment request using local payment methods that your customers are familiar with.
 
-## Create Payment [POST /accounts/{accountId}/payments]
-
-Your account is setup to allow payments for a specific payment method and currency. 
-
-> Please contact Paysafe Merchant Support to enable additional options for your account.
-
 The following payment methods are supported:
 
 |Payment Type|Brand Logo                                                                                           |Additional Payment Specific Attributes |Refunds Supported?|
 |---         |---                                                                                                  |---                 |---|
-|IDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Y| 
-|SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Y|
-|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|none                |Y|
+|IDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Yes| 
+|SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Yes|
+|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|none                |Yes|
 
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
@@ -459,14 +453,28 @@ The following payment methods are supported:
 |
 ```
 
+## Create Payment [POST /accounts/{accountId}/payments]
+
+Your account is setup to allow payments for a specific payment method and currency. 
+
+> Please contact Paysafe Merchant Support to enable additional options for your account.
+
 + Request Create iDeal payment (application/json)
 
     + Parameters
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
-    + Attributes (Ideal Payment)
-        + paymentType: `IDEAL` (string, required)
-        + Include Payment Request Base
+    + Attributes (Payment Request Base)
+    
+        + paymentType: `IDEAL` (enum[string], required) - Type of payment
+            + Members
+                + `IDEAL`
+                + `SOFORT`
+                + `GIROPAY`
+        + ideal (object) - Parameters required for a iDeal payment request.
+            + Properties
+                + bankName: `ING` (string, required)
+                + accountCountry: `NL` (string, required)
 
     + Headers
     
@@ -474,8 +482,13 @@ The following payment methods are supported:
             
 + Response 201 (application/json)
 
-    + Attributes (Ideal Payment)
-        + Include Payment Response Base
+    + Attributes (Payment Response Base)
+    
+        + paymentType: `IDEAL` (string) - Type of payment
+        + ideal (object) - Parameters required for a iDeal payment request.
+            + Properties
+                + bankName: `ING` (string)
+                + accountCountry: `NL` (string)   
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
@@ -485,15 +498,18 @@ The following payment methods are supported:
                 + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
 
         
-    
 + Request Create Sofort payment (application/json)
 
     + Parameters
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
-    + Attributes
-        + paymentType: `SOFORT` (string, required)    
-        + Include Payment Request Base
+    + Attributes (Payment Request Base)
+    
+        + paymentType: `SOFORT` (enum[string], required) - Type of payment
+            + Members
+                + `SOFORT`
+                + `IDEAL`
+                + `GIROPAY`
 
     + Headers
     
@@ -502,7 +518,9 @@ The following payment methods are supported:
 + Response 201 (application/json)
 
     + Attributes
+    
         + Include Payment Response Base
+        + paymentType: `SOFORT` (string) - Type of payment
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
@@ -518,7 +536,12 @@ The following payment methods are supported:
         + accountId: `1234567891` (string, required) - Your unique account identifer.
 
     + Attributes
-        + paymentType: `GIROPAY` (string, required)    
+    
+        + paymentType: `GIROPAY` (enum[string], required) - Type of payment
+            + Members
+                + `GIROPAY`
+                + `SOFORT`
+                + `IDEAL`
         + Include Payment Request Base
 
     + Headers
@@ -528,7 +551,8 @@ The following payment methods are supported:
 + Response 201 (application/json)
 
     + Attributes
-        + paymentType: `GIROPAY`
+    
+        + paymentType: `GIROPAY` (string) - Type of payment
         + Include Payment Response Base
         + links (array) - This is an array of related links. 
             + (object)
@@ -548,6 +572,7 @@ Returns an individual payments detail.
 + Response 200 (application/json)
 
     + Attributes
+    
         + Include Payment Response Base
         + links (array) - This is an array of related links. 
             + (object)
@@ -573,7 +598,7 @@ is disabled.
                 + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/?merchantRefNum=ABC123"`
             + (object)
                 + rel: `next`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/?merchantRefNum=merchantRef_2014_03_10_01&limit=15&offset=10&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z`
+                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/?merchantRefNum=merchantRef_2014_03_10_01&limit=10&offset=10&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z`
 
 
 # Refunds [/refunds]
@@ -611,6 +636,7 @@ Returns an individual refund detail.
 + Response 200 (application/json)
 
     + Attributes 
+    
         + Include Refund Response
         + links (array) - This is an array of related links.
             + (object)
@@ -627,6 +653,7 @@ is disabled.
 + Response 200 (application/json)
 
     + Attributes
+    
         + refunds (array)
             + (Refund Response)
         + links (array) - This is an array of related links.
@@ -638,7 +665,6 @@ is disabled.
 
 ## Payment Request Base
 + merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set dupCheck to false
-+ paymentType: `IDEAL`, `SOFORT`, `GIROPAY` (enum, required)
 + dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request. Default is true.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + currencyCode: `EUR` (string, required) - This is the currency of the payment.
@@ -651,7 +677,6 @@ is disabled.
 + merchantRefNum: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
 + amount: `100` (number) - This is the amount of the request, in minor units.
 + currencyCode: `EUR` (string) - This is the currency of the payment.
-+ paymentType: `IDEAL`(string)
 + Include Profile Response
 + Include Return Links
 + descriptor: `test descriptor` (string) - This is the merchant descriptor that will be displayed on the customer's card statement.
@@ -659,13 +684,6 @@ is disabled.
 + txnTime: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 + status: `INITIATED` (string) - This is the status of the transaction request.
 + Include Payon Gateway Response
-
-## Ideal Payment
-+ ideal (object) - Parameters required for a iDeal payment request.
-
-    + Properties
-        + bankName: `ING` (string, required)
-        + accountCountry: `NL` (string, required)
 
 ## Profile Request 
 + profile (object, optional) - These are some details about the customer.
@@ -703,6 +721,7 @@ is disabled.
 + status: `COMPLETED` (string) - The current state of the transaction. *\*\*Assigned by Paysafe*
 + Include Payon Gateway Response
 + links (array) - This is an array of links related to the resource. 
+
     + ([object])
         + rel: `self`
         + href: `https://api.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
@@ -717,6 +736,7 @@ is disabled.
 
 ## Return Links
 + returnLinks (array) - This is an array of return links.
-   + (object) 
+
+    + (object)
         + rel: `default` (enum, required)
         + href: `https://mysite.com/return` (string, required)
