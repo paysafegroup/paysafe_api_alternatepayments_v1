@@ -89,11 +89,12 @@ Sample Response with List Data
         "merchantRefNum": "xyz",
         "amount": 100,
         "currencyCode": "EUR",
+        "paymentType": "IDEAL",
         "profile": {
             "firstName": "Stan",
-            "lastName": "Smith",
+            "lastName": "Smith",    
             "email": "stan.smith@fox.com",
-            "ip": "localhost"
+            "ip": "100.0.0.1"   
         },
         "ideal": {
             "bankName": "ING",
@@ -101,7 +102,7 @@ Sample Response with List Data
         },
         "returnLinks": [{
             "rel": "default",
-            "href": "http://amazon.com/"
+            "href": "http://yoursite.com/"
         }],
         "descriptor": "test descriptor",
         "liveMode": true,
@@ -111,17 +112,18 @@ Sample Response with List Data
             "code": "000.200.000",
             "description": "transaction pending",
             "paymentType": "DB"
+        },
+        "links": [{
+            "rel": "self",
+            "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1000203713/payments/9769f140-0bd2-4fe7-b79b-338ccf8433fc"
         }]
     }],
     "links": [{
-        "rel": "self",
-        "href": "https://api.paysafe.com/admin/v1/accounts/99000/payments?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=2&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
-    }, {
-        "rel": "prev",
-        "href": "https://api.paysafe.com/admin/v1/accounts/99000/payments?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=0&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
-    }, {
         "rel": "next",
-        "href": "https://api.paysafe.com/admin/v1/accounts/99000/payments?merchantRefNum=merchantRef_2014_03_10_01&limit=2&offset=4&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z"
+        "href": "https://api.paysafe.com/ alternatepayments/v1/accounts/1000203713/payments?merchantRefNum=xyz&limit=1&offset=1&startDate=2016-06-06T19:04:43Z&endDate=2016-07-06T19:04:43Z"
+    }, {
+        "rel": "self",
+        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1000203713/payments?merchantRefNum=xyz&limit=1&offset=0&startDate=2016-06-06T19:04:43Z&endDate=2016-07-06T19:04:43Z"
     }]
 }
 ```
@@ -152,63 +154,61 @@ then add the **'expand=events'** parameter to your request and you will see the 
 *Result without resource expansion*
 
 ```apib
+GET /alternatepayments/admin/v1/accounts/987001112
 {
-    
-    "id": "382d5b82-5e3f-40b7-a36d-eb982116c2b3",
-    "merchantRefNum": "sub-1",
-    "accountId": "88919000",
-    "paymentToken": "CNjEzMTM4NDg1",
-    "itemQuantity": 1,
-    "status": "ACTIVE",
-    "creationTime": "2015-10-10T12:12:18Z",
-    "startDate": "2015-10-10",
-    "currentPeriodStartDate": "2015-10-10",
-    "currentPeriodEndDate": "2015-11-09",
-    "links": [{
-        "rel": "self",
-        "href": "https://api.netbanx.com/recurringpayments/v1/subscriptions/382d5b82-5e3f-40b7-a36d-eb982116c2b3"
-    }],
+    "id": "987001112", 
+    "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
+    "processorCode": "PAYON",
+    "paymentType": "IDEAL",
+    "currencyCode": "EUR",
+    "status": "ENABLED",
+    "creationTime": "2016-04-05T15:17:57Z",
+    "lastModificationTime": "2016-04-06T15:24:17Z",
+    "allowTestTransaction": false,
     "_expandable": {
-        "plan": "https://api.netbanx.com/recurringpayments/v1/plans/e067d83f-add7-4b6b-8884-dfa8693dde1f",
-        "profile": "https://api.netbanx.com/customervault/v1/profiles/a5f1889d-f1be-4bbf-941d-fd9b8d09d5b1"
-    }
+        "events": "https://api.paysafe.com/alternatepayments/admin/v1/accounts/987001112/events"
+    },        
+    "links": [{
+       "rel": "self",
+       "href": "https://api.paysafe.com/alternatepayments/admin/v1/accounts/987001112"
+    }]
 }
 ```
 
 *Result with events expanded*
 
 ```apib
-GET /admin/v1/accounts/<accountId>?expand=events
+GET /alternatepayments/admin/v1/accounts/987001112?expand=events
 {
-        "id": "987001112", 
-        "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
-        "processorCode": "PAYON",
-        "paymentType": "IDEAL",
-        "currencyCode": "EUR",
-        "status": "ENABLED",
-        "creationTime": "2016-04-05T15:17:57Z",
-        "lastModificationTime": "2016-04-06T15:24:17Z",
-        "allowTestTransaction": false,
-        "events": [{
-               "id": "deadbeef-aec8-41a5-94d7-446bc3999426",
-               "type": "ap_auths_completed"
-        }, {
-               "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
-               "type": "ap_auths_declined"
-        }, {
-               "id": "6ddbc05a-ff40-4dc1-b2d3-f20091234567",
-               "type": "ap_refunds_complete"
-        }, {
-               "id": "12345eef-aec8-41a5-94d7-446bc3999426",
-               "type": "ap_refunds_complete"
-        }],
-        "_expandable": {
-            "events": "https://api.paysafe.com/admin/v1/accounts/987001112/events"
-        },        
-        "links": [{
-               "rel": "self",
-               "href": "https://api.paysafe.com/admin/v1/accounts/987001112"
-        }]
+    "id": "987001112", 
+    "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
+    "processorCode": "PAYON",
+    "paymentType": "IDEAL",
+    "currencyCode": "EUR",
+    "status": "ENABLED",
+    "creationTime": "2016-04-05T15:17:57Z",
+    "lastModificationTime": "2016-04-06T15:24:17Z",
+    "allowTestTransaction": false,
+    "events": [{
+           "id": "deadbeef-aec8-41a5-94d7-446bc3999426",
+           "type": "ap_auths_completed"
+    }, {
+           "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
+           "type": "ap_auths_declined"
+    }, {
+           "id": "6ddbc05a-ff40-4dc1-b2d3-f20091234567",
+           "type": "ap_refunds_complete"
+    }, {
+           "id": "12345eef-aec8-41a5-94d7-446bc3999426",
+           "type": "ap_refunds_complete"
+    }],
+    "_expandable": {
+        "events": "https://api.paysafe.com/alternatepayments/admin/v1/accounts/987001112/events"
+    },        
+    "links": [{
+       "rel": "self",
+       "href": "https://api.paysafe.com/alternatepayments/admin/v1/accounts/987001112?expand=events"
+    }]
 }
 ```
 
@@ -268,7 +268,7 @@ HTTP response codes are used to indicate the status of a request.
 To ease integration and support for developers 
 integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.  
 
-The error structure contains a 4–5 digit code as well as a human readable message. 
+The error structure contains a code as well as a human readable message. 
 Additionally, the application error code will be returned in the header as *x-application-status-code* 
 so it can be easily used by an application without parsing the body.
 <br/>
@@ -407,14 +407,14 @@ are provided to navigate through the set of resources in the collection.
 ```
 "links": [{
     "rel": "self",
-    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=10"
+    "href": "https://api.paysafe.com/alternatepayments/v1/payments/234243242?limit=10&offset=10"
 },  {
     "rel": "prev",
-    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=0"
+    "href": "https://api.paysafe.com/alternatepayments/v1/payments/234243242?limit=10&offset=0"
 
 }, {
     "rel": "next",
-    "href": "https://api.paysafe.com/v1/payments/234243242?limit=10&offset=20"
+    "href": "https://api.paysafe.com/alternatepayments/v1/payments/234243242?limit=10&offset=20"
 }]
 
 ```
@@ -489,10 +489,10 @@ Your account is setup to allow payments for a specific payment method and curren
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
             + (object)
                 + rel: `redirect_payment`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
 
         
 + Request Create Sofort payment (application/json)
@@ -521,10 +521,10 @@ Your account is setup to allow payments for a specific payment method and curren
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
             + (object)
                 + rel: `redirect_payment`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
         
 
 + Request Create Giropay payment (application/json)
@@ -554,10 +554,10 @@ Your account is setup to allow payments for a specific payment method and curren
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
             + (object)
                 + rel: `redirect_payment`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
 
         
 ## Lookup Payment by paymentId [GET /accounts/{accountId}/payments/{paymentId}]
@@ -569,12 +569,12 @@ Returns an individual payments detail.
 + Response 200 (application/json)
 
     + Attributes
-    
+        + paymentType: `SOFORT` (string) - Type of payment    
         + Include Payment Response Base
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
 
 
 ## Lookup Payment by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
@@ -588,14 +588,15 @@ is disabled.
 
     + Attributes
         + payments (array)
+            + paymentType: `GIROPAY` (string) - Type of payment
             + (Payment Response Base)
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/?merchantRefNum=ABC123"`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/?merchantRefNum=ABC123`
             + (object)
                 + rel: `next`
-                + href: `https://api.paysafe.com/v1/accounts/1465330102/payments/?merchantRefNum=merchantRef_2014_03_10_01&limit=10&offset=10&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/?merchantRefNum=merchantRef_2014_03_10_01&limit=10&offset=10&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z`
 
 
 # Refunds [/refunds]
