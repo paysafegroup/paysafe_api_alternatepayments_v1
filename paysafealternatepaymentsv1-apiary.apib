@@ -668,6 +668,7 @@ is disabled.
 + currencyCode: `EUR` (string, required) - This is the currency of the payment.
 + descriptor: `Test description` (string, required) - This is the merchant descriptor that will be displayed on the customer's statement.
 + Include Profile Request
++ Include Billing Address
 + Include Return Links
 
 ## Payment Response Base
@@ -676,6 +677,7 @@ is disabled.
 + amount: `100` (number) - This is the amount of the request, in minor units.
 + currencyCode: `EUR` (string) - This is the currency of the payment.
 + Include Profile Response
++ Include Billing Address
 + Include Return Links
 + descriptor: `test descriptor` (string) - This is the merchant descriptor that will be displayed on the customer's card statement.
 + liveMode: `false` (string)
@@ -700,6 +702,17 @@ is disabled.
         + lastName: `Smith` (string)
         + email: `stan.smith@fox.com` (string)
         + ip: `127.0.0.1` (string)
+
+## Billing Address
++ billingAddress (object, optional) = The billing address of the customer
+
+    + Properties
+        + street1: `Street line 1` (string)
+        + street2: `Street line 2` (string)
+        + city: `Calgary` (string)
+        + state: `AB` (string)
+        + country: `CA` (string)
+        + zip: `T3H3L3` (string)
 
 ## Refund Request
 + merchantRefNum: `xyz` (string, required) - The merchant reference number.
