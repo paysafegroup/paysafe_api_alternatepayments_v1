@@ -12,15 +12,15 @@ Request and response payloads are formatted as JSON.
 
 |MajorVersion   |Patch Date            |Details|
 |---            |---                   |---|
-|v1             |2016-06-24            |<ul><li>Initial release with support for iDeal, Sofort</li></ul>|
+|v1             |2016-06-24            |<ul><li>Initial release with support for iDEAL, SOFORT</li></ul>|
 
-# Technical introduction
+# Technical Introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API. 
 
 ## API Endpoints
 
-The Paysafe Alternate Payments API is available in the test environment for integration testing purposes. 
-To switch between the test and the live production system you only need to change the endpoint URI and the 
+The Paysafe Alternate Payments API is available in the Test environment for integration testing purposes. 
+To switch between the Test and the live Production systems you  need only to change the endpoint URI and the 
 credentials.
 
 The following endpoints form the basis of a resource URI:
@@ -29,36 +29,36 @@ The following endpoints form the basis of a resource URI:
 
     Production endpoint - https://api.paysafe.com/alternatepayments/v1/
 
-As the test environment is completely isolated, any changes you perform on your test accounts configuration
-(such as secure IP registration, APP registration) may have to be repeated in your production account.
+Because the Test environment is completely isolated, any changes you perform on your Test accounts configuration
+(such as secure IP registration, APP registration, etc.) may have to be repeated in your Production account.
 
 
 ## Versioning
 
-The API version will influence the request/response object structure as well as the functionality that is available through the API.   A new version of the API will only be introduced if we roll out a backwards incompatible change that may impact your existing integrations.  As your API version can be maintained through the merchant portal, you can manage when to upgrade to the latest version, helping ensure your integration is not disrupted as new functionality becomes available.
+The API version will influence the request/response object structure as well as the functionality that is available through the API. A new version of the API will  be introduced only if we roll out a backwards-incompatible change that may impact your existing integrations.  As your API version can be maintained through the merchant portal, you can manage when to upgrade to the latest version, helping ensure your integration is not disrupted as new functionality becomes available.
 
 ### Major Version
 
-The major version \(ie: /v1/ \) represents a major technology shift between versions of the API. Changes in the 
-major version are reserved for large scale changes to the API that fundamentally change integration requirements
-from the previous version.  Modified business domain models, re-design of functional flows or change in API 
-resource patterns are all considered major changes.  Changes to major version are rare and typically require 
+The major version \(i.e., /v1/ \) represents a major technology shift between versions of the API. Changes in the 
+major version are reserved for large-scale changes to the API that fundamentally change integration requirements
+from the previous version.  Modified business domain models, re-design of functional flows, or change in API 
+resource patterns are all considered major changes.  Changes to a major version are rare and typically require 
 an extended deprecation cycle \(~2 years\) from prior versions to allow all consumers of the API to adapt.
 
-> Your integration should take the below backwards compatible changes into consideration so as not to break when additional fields are added to the API.
+> Your integration should take the following backwards-compatible changes into consideration so as not to break when additional fields are added to the API.
 
-**What is considered a backwards compatible change?**
+**What is considered a backwards-compatible change?**
 
 * Adding API resources or adding new properties to existing API resources
 * Modification to the order of parameters or JSON object elements
 * Adding optional request parameters to API methods
 * Adding webhook event types
 
-**What is considered a backwards incompatible change?**
+**What is considered a backwards-incompatible change?**
 
-* Removal of a API resource
-* Removal of an API Resources object attribute
-* Changes to required parameter / JSON object elements
+* Removal of an API resource
+* Removal of an API resources object attribute
+* Changes to required parameter/JSON object elements
 * Removal of previously supported API call
 
 ***
@@ -87,12 +87,12 @@ For additional details, please refer to [http://en.wikipedia.org/wiki/Basic_acce
 
 ## Pagination
 
-API calls that return multiple resources will wrap the response as a named JSON array.  For example a collection of 'payment' objects would
-be returned as 'payments'. By default, 10 items will be returned at a time and you can navigate to the next set of resources using the 
+API calls that return multiple resources will wrap the response as a named JSON array.  For example, a collection of "payment" objects would
+be returned as "payments". By default, 10 items at a time will be returned and you can navigate to the next set of resources using the 
 supplied HATEOAS links.  List responses will also include a meta data section that will identify the number of records included in the collection,
-the number of records per page (limit) and current page number.
+the number of records per page (limit), and the current page number.
 <br/><br/>
-For example, if a request to look up payments identifies that there are 134 payments and you have set your limit to 15, the first 15 items will be returned with navigation links to provide the next 15 items in the list. If you navigate to the next page using the provided HATEOAS link, you will now retrieve items 16-30 with a new navigation link provided to return to the previous page, as well as a link to continue to the next page of items.
+For example, if a request to look up payments identifies that there are 134 payments and you have set your limit to 15, the first 15 items will be returned with navigation links to provide the next 15 items in the list. If you navigate to the next page using the provided HATEOAS link, you will then retrieve items 16-30 with a new navigation link provided to return to the previous page, as well as a link to continue to the next page of items.
 
 > _You can change the default list page size by defining a **limit** parameter value._
 
@@ -153,25 +153,25 @@ Sample Response with List Data
 
 ## Resource Expansion
 
-Resource expansion can be compared to eager loading in the database realm. It offers a way to load a specific resource as well as other resources related to it.  You are encouraged to use resource expansion when you know you are going to need the extra information. This will reduce the amount of API calls as well as the amount of traffic to and from your server. You should avoid resource expansion when you want to reduce the amount of information returned or if you are unsure if you will need the additional resource object.
+Resource expansion can be compared to eager loading in the database realm. It offers a way to load a specific resource as well as other resources related to it. You are encouraged to use resource expansion when you know you are going to need the extra information. This will reduce the number of API calls as well as the amount of traffic to and from your server. You should avoid resource expansion when you want to reduce the amount of information returned or if you are unsure if you will need the additional resource object.
 <br/><br/>
-By adding an **expand** query parameter to the query you are effectively telling the server to include the details for the reference object in-line.  Anytime you encounter an object that contains an "_expandable" section, you will know that the resources
-identified are expandable. Passing that resource name as part of your expand parameter list will automatically include the associated resource details in your response.
+By adding an **expand** query parameter to the query you are effectively telling the server to include the details for the reference object in-line.  Any time you encounter an object that contains an "_expandable" section, you will know that the resources
+identified are expandable. Passing that resource name as part of your **expand** parameter list will automatically include the associated resource details in your response.
 <br/><br/>
 
-For resources that have multiple expandable children, you can specify which resources to expand in a comma separated list. <br />
-Eg. <strong>?expand=resource1,resource2</strong>
+For resources that have multiple expandable children, you can specify which resources to expand in a comma-separated list. <br />
+For example, <strong>?expand=resource1,resource2</strong>
 
-> Resource Expansion is only available when a single resource is involved.  When you lookup resources that could return collections of 
-> results, _expandable option will not be present. (ie: if you query for a specific subscription, then _expandable will be available 
-> for related resources such as the customer profile and associate plan for the subscription).  When a collection of related resources 
-> relates to the particular resource you are looking at, a HATEOAS link will be provided instead.  A good example of this would be a
+> Resource Expansion is available only when a single resource is involved. When you look up resources that could return collections of 
+> results, the **_expandable** option will not be present. (I.e., if you query for a specific subscription, then **_expandable** will be available 
+> for related resources such as the customer profile and associated plan for the subscription).  When a collection of related resources 
+> relates to the particular resource you are looking at, a HATEOAS link will be provided instead. A good example of this would be a
 > plan and its related subscriptions.  
 
 <br/>
 Below is a sample account lookup. By default the events resource is not expanded and instead includes a 
 reference link that would provide the relevant details. If you would rather have the full account object returned, 
-then add the **'expand=events'** parameter to your request and you will see the second events returned inline.
+then add the **'expand=events'** parameter to your request and you will see the second events returned in-line.
 <br/>
 
 *Result without resource expansion*
@@ -271,19 +271,19 @@ HTTP response codes are used to indicate the status of a request.
 |HTTP Status Code|Description|
 |---|---|
 |200 OK|Everything worked as expected|
-|201 CREATED|The request was successful. NETBANX created a new resource and the response body contains the representation|
-|202 ACCEPTED|This indicates that the client’s request will be handled asynchronously. It tells the client that the request appears valid, but it still may have problems once it is processed|
-|204 NO CONTENT|This is usually returned in response to a PUT, POST, or DELETE request, when the REST API declines to send back any status message or representation in the body of the response message|
-|304 NOT MODIFIED|The client's cached version of the representation is still up to date|
-|400 BAD REQUEST|This often indicates that a required parameter is missing or that a parameter is invalid. This is a generic client-side error status, used when no other 4xx error code is appropriate|
-|401 UNAUTHORIZED|This indicates that the client tried to operate on a protected resource without providing the proper authorization. They may have provided the wrong credentials or none at all|
-|402 PAYMENT REQUIRED|The parameters were valid but the request failed|
-|404 NOT FOUND|The requested resource does not exist|
-|405 METHOD NOT ALLOWED|The client tried to POST or PUT to a resource that would not accept it|
-|415 UNSUPPORTED MEDIA TYPE|The request is in a format not supported by the requested resource for the requested method|
-|429 TOO MANY REQUESTS|The application is sending too many simultaneous requests|
-|500 INTERNAL SERVER ERROR|An error occurred with an internal server|
-|502 EXTERNAL SERVER ERROR|We received an invalid response from the upstream gateway in attempting to fulfill the request|
+|201 CREATED|The request was successful. Paysafe created a new resource and the response body contains the representation.|
+|202 ACCEPTED|This indicates that the client’s request will be handled asynchronously. It tells the client that the request appears valid, but it still may have problems once it is processed.|
+|204 NO CONTENT|This is usually returned in response to a PUT, POST, or DELETE request, when the REST API declines to send back any status message or representation in the body of the response message.|
+|304 NOT MODIFIED|The client's cached version of the representation is still up to date.|
+|400 BAD REQUEST|This often indicates that a required parameter is missing or that a parameter is invalid. This is a generic client-side error status, used when no other 4xx error code is appropriate.|
+|401 UNAUTHORIZED|This indicates that the client tried to operate on a protected resource without providing the proper authorization. They may have provided the wrong credentials or none at all.|
+|402 PAYMENT REQUIRED|The parameters were valid but the request failed.|
+|404 NOT FOUND|The requested resource does not exist.|
+|405 METHOD NOT ALLOWED|The client tried to POST or PUT to a resource that would not accept it.|
+|415 UNSUPPORTED MEDIA TYPE|The request is in a format not supported by the requested resource for the requested method.|
+|429 TOO MANY REQUESTS|The application is sending too many simultaneous requests.|
+|500 INTERNAL SERVER ERROR|An error occurred with an internal server.|
+|502 EXTERNAL SERVER ERROR|We received an invalid response from the upstream gateway in attempting to fulfill the request.|
 
 
 ## Errors
@@ -302,11 +302,11 @@ so it can be easily used by an application without parsing the body.
 |---                |---                 |---|
 |error.code         |String              |This is the error code.|
 |error.message      |String              |This is a description of the error.|
-|error.details      |Array of String     |*if applicable* This is a collection of detailed description.|
+|error.details      |Array of String     |*if applicable* This is a collection of detailed descriptions.|
 |error.fieldErrors  |Array of fieldError |*if applicable* This is a list of fields that have problems.|
 |error.links        |Array of link       |*if applicable* Links to the error documentation.|
-|id                 |String              |*if applicable* The is the unique identifier for the related resource.|
-|merchantRefNum     |String              |*if applicable* The identifier provided by the merchant for a transaction.|
+|id                 |String              |*if applicable* This is the is the unique identifier for the related resource.|
+|merchantRefNum     |String              |*if applicable* This is the identifier provided by the merchant for a transaction.|
 |links              |Array of link       |*if applicable* The link to the related resource.|
 
 
@@ -398,7 +398,7 @@ These errors are specific to the Alternate Payments API.
 |HTTP Status   |Error Code                    |Message                                 |Details|                                 
 |---           |---                           |---                                     |---|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-1  |Transaction cancelled at the gateway    |The transaction was cancelled at the gateway.|
-|402           |ALTERNATE-PAYMENTS-GATEWAY-4  |Transaction declined by the gateway     |The transaction declined by the gateway |
+|402           |ALTERNATE-PAYMENTS-GATEWAY-4  |Transaction declined by the gateway     |The transaction declined by the gateway. |
 |402           |ALTERNATE-PAYMENTS-GATEWAY-5  |Cannot refund an incomplete transaction |The transaction cannot be refunded as the payment status is not finalized.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-6  |Over refund                             |The total refund amount cannot exceed the original payment amount.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-7  |Payment expired                         |The payment has expired.|
@@ -414,18 +414,18 @@ Each API call response includes an array of HATEOAS (Hypermedia as the Engine of
 These links can be used to integrate subsequent flows and typically they will provide you information as to
 what you can do next.
 
-By using these links, you no longer need to hardcode your integration to call specific endpoint urls to utilize
-our API, but rather can use the returned url for the specific purpose as defined by the 'rel' definition.
+By using these links, you no longer need to hardcode your integration to call specific endpoint URLs to utilize
+our API, but rather can use the returned URL for the specific purpose as defined by the 'rel' definition.
 
 #### HATEOAS Link Structure
 
 |Element  |Description|
 |---      |---|
-|rel      |Link relation that describes how this link relates to the previous call. Examples include self (get details of the current call), parent_payment (get details of the parent payment), or a related call such as execute or refund.|
+|rel      |Link relation that describes how this link relates to the previous call. Examples include self (get details of the current call), parent_payment (get details of the parent payment), or a related call such as to execute a refund on the payment.|
 |href     |URL of the related HATEOAS link you can use for subsequent calls.|
 
 
-Eg. Below are sample HATEOAS links from a API rsponse that returns a collection of payments. Links
+Below are sample HATEOAS links from an API rsponse that returns a collection of payments. Links
 are provided to navigate through the set of resources in the collection.
 ```
 "links": [{
@@ -452,16 +452,16 @@ The following payment methods are supported:
 
 |Payment Type|Brand Logo                                                                                           |Additional Payment Specific Attributes |Refunds Supported?|
 |---         |---                                                                                                  |---                 |---|
-|IDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Yes| 
+|iDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Yes| 
 |SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Yes|
-|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|none                |Yes|
+|Giropay     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|none                |Yes|
 
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
 > these should be passed as a nested object in the root of your payment request.  
 > <br/>
-> For Example:
->>
+> For example, an iDeal payment requires the following attributes are included in your request:
+>
 ```
 {
     "paymentType": "IDEAL",
@@ -475,23 +475,23 @@ The following payment methods are supported:
 
 ## Create Payment [POST /accounts/{accountId}/payments]
 
-Your account is setup to allow payments for a specific payment method and currency. 
+Your account is set up to allow payments for a specific payment method and currency. 
 
 > Please contact Paysafe Merchant Support to enable additional options for your account.
 
 + Request Create iDeal payment (application/json)
 
     + Parameters
-        + accountId: `1234567891` (string, required) - Your unique account identifer.
+        + accountId: `1234567891` (string, required) - This is your unique account identifier.
 
     + Attributes (Payment Request Base)
     
-        + paymentType: `IDEAL` (enum[string], required) - Type of payment
+        + paymentType: `IDEAL` (enum[string], required) - This is the type of payment.
             + Members
                 + `IDEAL`
                 + `SOFORT`
                 + `GIROPAY`
-        + ideal (object) - Parameters required for a iDeal payment request.
+        + ideal (object) - Parameters required for an iDEAL payment request.
             + Properties
                 + bankName: `ING` (string, required)
                 + accountCountry: `NL` (string, required)
@@ -504,8 +504,8 @@ Your account is setup to allow payments for a specific payment method and curren
 
     + Attributes (Payment Response Base)
     
-        + paymentType: `IDEAL` (string) - Type of payment
-        + ideal (object) - Parameters required for a iDeal payment request.
+        + paymentType: `IDEAL` (string) - This is the type of payment.
+        + ideal (object) - Parameters required for an iDEAL payment request.
             + Properties
                 + bankName: `ING` (string)
                 + accountCountry: `NL` (string)   
@@ -521,11 +521,11 @@ Your account is setup to allow payments for a specific payment method and curren
 + Request Create Sofort payment (application/json)
 
     + Parameters
-        + accountId: `1234567891` (string, required) - Your unique account identifer.
+        + accountId: `1234567891` (string, required) - This is your unique account identifier.
 
     + Attributes (Payment Request Base)
     
-        + paymentType: `SOFORT` (enum[string], required) - Type of payment
+        + paymentType: `SOFORT` (enum[string], required) - This is the type of payment.
             + Members
                 + `SOFORT`
                 + `IDEAL`
@@ -540,7 +540,7 @@ Your account is setup to allow payments for a specific payment method and curren
     + Attributes
     
         + Include Payment Response Base
-        + paymentType: `SOFORT` (string) - Type of payment
+        + paymentType: `SOFORT` (string) - This is the type of payment.
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
@@ -553,11 +553,11 @@ Your account is setup to allow payments for a specific payment method and curren
 + Request Create Giropay payment (application/json)
 
     + Parameters
-        + accountId: `1234567891` (string, required) - Your unique account identifer.
+        + accountId: `1234567891` (string, required) - This is your unique account identifier.
 
     + Attributes
     
-        + paymentType: `GIROPAY` (enum[string], required) - Type of payment
+        + paymentType: `GIROPAY` (enum[string], required) - This is the type of payment.
             + Members
                 + `GIROPAY`
                 + `SOFORT`
@@ -572,7 +572,7 @@ Your account is setup to allow payments for a specific payment method and curren
 
     + Attributes
     
-        + paymentType: `GIROPAY` (string) - Type of payment
+        + paymentType: `GIROPAY` (string) - This is the type of payment.
         + Include Payment Response Base
         + links (array) - This is an array of related links. 
             + (object)
@@ -585,14 +585,14 @@ Your account is setup to allow payments for a specific payment method and curren
         
 ## Lookup Payment by paymentId [GET /accounts/{accountId}/payments/{paymentId}]
 
-Returns an individual payments detail.
+Returns an individual payment detail.
 
 + Request (application/json)
 
 + Response 200 (application/json)
 
     + Attributes
-        + paymentType: `SOFORT` (string) - Type of payment    
+        + paymentType: `SOFORT` (string) - This is the type of payment.
         + Include Payment Response Base
         + links (array) - This is an array of related links. 
             + (object)
@@ -602,7 +602,7 @@ Returns an individual payments detail.
 
 ## Lookup Payment by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 
-Returns a collection of payment details, as merchantRefNum could be used for multiple requests when dupCheck
+Returns a collection of payment details, as *merchantRefNum* could be used for multiple requests when *dupCheck*
 is disabled.
 
 + Request (application/json)
@@ -611,7 +611,7 @@ is disabled.
 
     + Attributes
         + payments (array)
-            + paymentType: `GIROPAY` (string) - Type of payment
+            + paymentType: `GIROPAY` (string) - This is the type of payment.
             + (Payment Response Base)
         + links (array) - This is an array of related links. 
             + (object)
@@ -626,15 +626,15 @@ is disabled.
 
 ## Create Refund [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 
-You can issue a refund request against an already completed payment.  It is possible to issue either a full or a 
-partial refunds or series of refunds against the intial payment, however ther combined refund amount cannot
+You can issue a refund request against a payment that is already completed.  It is possible to issue either a full or a 
+partial refund or series of refunds against the intial payment. However, their combined refund amount cannot
 exceed the original charge amount.
 
 + Request (application/json)
 
     + Parameters
-        + accountId: `1234567891` (string, required) - Your unique account identifer.
-        + paymentId: `1111111` (string, required) - The unique identifier for the payment.
+        + accountId: `1234567891` (string, required) - This is your unique account identifier.
+        + paymentId: `1111111` (string, required) - This is the unique identifier for the payment.
 
     + Attributes
         + Include Refund Request
@@ -666,7 +666,7 @@ Returns an individual refund detail.
 
 ## Lookup Refund by merchantRefNum [GET /accounts/{accountID}/refunds/?merchantRefNum={merchantRefNum}]
 
-Returns a collection of refund details, as merchantRefNum could be used for multiple requests when dupCheck 
+Returns a collection of refund details, as *merchantRefNum* could be used for multiple requests when *dupCheck* 
 is disabled.
 
 + Request (application/json)
@@ -685,8 +685,8 @@ is disabled.
 # Data Structures
 
 ## Payment Request Base
-+ merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set dupCheck to false
-+ dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request. Default is true.
++ merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
++ dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
 + amount: `100` (number, required) - This is the amount of the request, in minor units.
 + currencyCode: `EUR` (string, required) - This is the currency of the payment.
 + descriptor: `Test description` (string, required) - This is the merchant descriptor that will be displayed on the customer's statement.
@@ -703,7 +703,7 @@ is disabled.
 + Include Billing Address
 + Include Return Links
 + descriptor: `test descriptor` (string) - This is the merchant descriptor that will be displayed on the customer's card statement.
-+ liveMode: `false` (string)
++ liveMode: `false` (string) - This indicates whether this is a Live or Test transaction.
 + txnTime: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 + status: `INITIATED` (string) - This is the status of the transaction request.
 + Include Payon Gateway Response
@@ -727,7 +727,7 @@ is disabled.
         + ip: `127.0.0.1` (string)
 
 ## Billing Address
-+ billingAddress (object, optional) = The billing address of the customer
++ billingAddress (object, optional) = This is the billing address of the customer.
 
     + Properties
         + street1: `Street line 1` (string)
@@ -738,21 +738,21 @@ is disabled.
         + zip: `T3H3L3` (string)
 
 ## Refund Request
-+ merchantRefNum: `xyz` (string, required) - The merchant reference number.
-+ dupCheck: `false` (boolean, optional) - The duplication check flag.
-+ paymentType: `IDEAL` (string, required) - Specifies the payment type of the transaction.
++ merchantRefNum: `xyz` (string, required) - This is the merchant reference number.
++ dupCheck: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
++ paymentType: `IDEAL` (string, required) - This specifies the payment type of the transaction.
 + currencyCode: `EUR` (string, required) - This is the currency of the payment.
 + amount: `100` (number, required) - This is the amount in minor units.
 
 ## Refund Response
-+ id: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - The refund id.  *\*\*Assigned by Paysafe* 
-+ liveMode: `true` (boolean) - Indicate whether this is a live or test transaction
-+ merchantRefNum: `xyz` (string) - Your unique idenitfier for this request
-+ amount: `400` (number) - The amount of the refund in minor units.  (ie: $50.00 USD => 5000, 50 YEN -> 50)
++ id: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the refund id.  *\*\*Assigned by Paysafe* 
++ liveMode: `true` (boolean) - This indicates whether this is a Live or Test transaction.
++ merchantRefNum: `xyz` (string) - This is your unique idenitfier for this request.
++ amount: `400` (number) - This is the amount of the refund in minor units (e.g., $50.00 USD => 5000, 50 YEN -> 50).
 + currencyCode: `EUR` (string) - This is the currency of the payment.
 + paymentType: `IDEAL` (string)
-+ txnTime: `2016-02-24T08:39:39Z` (string) - The datetime of the transaction in UTC. *\*\*Assigned by Paysafe*
-+ status: `COMPLETED` (string) - The current state of the transaction. *\*\*Assigned by Paysafe*
++ txnTime: `2016-02-24T08:39:39Z` (string) - This is the datetime of the transaction in UTC. *\*\*Assigned by Paysafe*
++ status: `COMPLETED` (string) - This is the current state of the transaction. *\*\*Assigned by Paysafe*
 + Include Payon Gateway Response
 + links (array) - This is an array of links related to the resource. 
 
@@ -772,5 +772,5 @@ is disabled.
 + returnLinks (array) - This is an array of return links.
 
     + (object)
-        + rel: `default` (enum, required) - The final transaction status that determines where to return the customer to. (Currently only 'default' is supported)
+        + rel: `default` (enum, required) - The final transaction status that determines where to return the customer to. (Currently only 'default' is supported.)
         + href: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the customer to.
