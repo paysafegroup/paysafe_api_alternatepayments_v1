@@ -12,7 +12,7 @@ Request and response payloads are formatted as JSON.
 
 |MajorVersion   |Patch Date            |Details|
 |---            |---                   |---|
-|v1             |2016-06-24            |<ul><li>Initial release with support for iDEAL, SOFORT</li></ul>|
+|v1             |2016-08-01            |<ul><li>Initial release with support for iDEAL, SOFORT</li></ul>|
 
 # Technical Introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API. 
@@ -105,7 +105,7 @@ For example, if a request to look up payments identifies that there are 134 paym
 
 Sample Response with List Data
 
-```apib
+```
 {
     "payments": [{
         "id": "044e3915-b612-40c7-b652-283bb288521f",
@@ -176,7 +176,7 @@ then add the **'expand=events'** parameter to your request and you will see the 
 
 *Result without resource expansion*
 
-```apib
+```
 GET /alternatepayments/admin/v1/accounts/987001112
 {
     "id": "987001112", 
@@ -200,7 +200,7 @@ GET /alternatepayments/admin/v1/accounts/987001112
 
 *Result with events expanded*
 
-```apib
+```
 GET /alternatepayments/admin/v1/accounts/987001112?expand=events
 {
     "id": "987001112", 
@@ -292,7 +292,7 @@ To ease integration and support for developers
 integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.  
 
 The error structure contains a code as well as a human readable message. 
-Additionally, the application error code will be returned in the header as *x-application-status-code* 
+Additionally, the application error code will be returned in the header as *x-application-error-code* 
 so it can be easily used by an application without parsing the body.
 <br/>
 
@@ -307,39 +307,36 @@ so it can be easily used by an application without parsing the body.
 |error.links        |Array of link       |*if applicable* Links to the error documentation.|
 |id                 |String              |*if applicable* This is the is the unique identifier for the related resource.|
 |merchantRefNum     |String              |*if applicable* This is the identifier provided by the merchant for a transaction.|
+|riskReasonCode     |String              |*if applicable* This is the associated risk reason.|
 |links              |Array of link       |*if applicable* The link to the related resource.|
 
 
 **Error message example with details**
 
-```apib
+```
 Status-Code: 402
-x-application-status-code: 3009
+x-application-error-code: 3009
  
 {
     "error": {
         "code": "3009",
         "message": "Your request has been declined by the issuing bank.",
-        "links": [{
-            "rel": "errorinfo",
-            "href": "http://54.186.215.106/en/documentation/card-payments-api/error-3009"
-        }]
     },
     "id": "3a406cc6-f9f5-47dd-a2e0-41ffbbf0de3e",
     "merchantRefNum": "abc123",
     "riskReasonCode": 1005,
     "links": [{
         "rel": "self",
-        "href": "https://api.qa.netbanx.com/cardpayments/v1/accounts/1000057082/auths/3a406cc6-f9f5-47dd-a2e0-41ffbbf0de3e"
+        "href": "https://api.paysafe.com/cardpayments/v1/accounts/1000057082/auths/3a406cc6-f9f5-47dd-a2e0-41ffbbf0de3e"
     }]
 }
 ```
  
 **Error message example with field errors**
 
-```apib
+```
 Status-Code: 400
-x-application-status-code: 5068
+x-application-error-code: 5068
 
 {
     "error": {
@@ -454,13 +451,14 @@ The following payment methods are supported:
 |---         |---                                                                                                  |---                 |---|
 |iDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Yes| 
 |SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Yes|
-|Giropay     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|none                |Yes|
+|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<table><tr><td>giropay.customerBic</td><td>The BIC for the customers bank</td></tr></table>|Yes|
 
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
 > these should be passed as a nested object in the root of your payment request.  
 > <br/>
 > For example, an iDeal payment requires the following attributes are included in your request:
+>
 >
 ```
 {
@@ -472,6 +470,8 @@ The following payment methods are supported:
     ... other payment attributes here ...
 |
 ```
+
+Each payment type and currency is associated with its own distinct account.  Please contact Paysafe Merchant Support to enable additional payment types and or currencies.
 
 ## Create Payment [POST /accounts/{accountId}/payments]
 
