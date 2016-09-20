@@ -452,7 +452,8 @@ The following payment methods are supported:
 |---         |---                                                                                                  |---                 |---|
 |iDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Yes| 
 |SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Yes|
-|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<table><tr><td>giropay.customerBic</td><td>The BIC for the customers bank</td></tr></table>|Yes|
+|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<table><tr><td>giropay.customerBic</td><td>The BIC for the customers bank</td></tr></table>|No|
+|BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)|<table><tr><td>boku.customerCountry</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>The customers mobile phone number</td></tr></table>|Yes|
 
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
