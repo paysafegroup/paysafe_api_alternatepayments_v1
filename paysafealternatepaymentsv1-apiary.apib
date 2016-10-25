@@ -772,11 +772,11 @@ is disabled.
 
 ## Return Links
 + returnLinks (array) - This is an array of return links.
-
+e
     + (object)
         + rel: `default` (enum[string], required) - The final transaction status that determines where to return the customer to. ('default' is mandatory)
             + Members
-                + `default`
+                + `default` - The default return url, will be used if specific status return url is not defined.
                 + `on_pending`
                 + `on_completed`
                 + `on_declined`
