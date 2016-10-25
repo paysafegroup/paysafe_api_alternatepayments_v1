@@ -13,7 +13,7 @@ Request and response payloads are formatted as JSON.
 |MajorVersion   |Patch Date            |Details|
 |---            |---                   |---|
 |v1             |2016-08-01            |<ul><li>Initial release with support for iDEAL, SOFORT</li></ul>|
-|               |2016-10-01            |<ul><li>Added support for Boku</li></ul>|
+|v1             |2016-11-15            |<ul><li>Added support for Boku, Giropay</li></ul>|
 
 # Technical Introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API. 
@@ -774,5 +774,12 @@ is disabled.
 + returnLinks (array) - This is an array of return links.
 
     + (object)
-        + rel: `default` (enum, required) - The final transaction status that determines where to return the customer to. (Currently only 'default' is supported.)
+        + rel: `default` (enum[string], required) - The final transaction status that determines where to return the customer to. ('default' is mandatory)
+            + Members
+                + `default`
+                + `on_pending`
+                + `on_completed`
+                + `on_declined`
+                + `on_cancelled`
+                + `on_error`
         + href: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the customer to.
