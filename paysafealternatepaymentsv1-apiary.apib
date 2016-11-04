@@ -13,6 +13,7 @@ Request and response payloads are formatted as JSON.
 |MajorVersion   |Patch Date            |Details|
 |---            |---                   |---|
 |v1             |2016-08-01            |<ul><li>Initial release with support for iDEAL, SOFORT</li></ul>|
+|v1             |2016-11-15            |<ul><li>Added support for Boku, Giropay</li></ul>|
 
 # Technical Introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API. 
@@ -452,6 +453,8 @@ The following payment methods are supported:
 |iDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Yes| 
 |SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Yes|
 |GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<table><tr><td>giropay.customerBic</td><td>The BIC for the customers bank</td></tr></table>|No|
+|BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)|<table><tr><td>boku.customerCountry</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>The customers mobile phone number</td></tr></table>|Yes|
+|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<table><tr><td>giropay.customerBic</td><td>The BIC for the customers bank</td></tr></table>|No|
 
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
@@ -772,5 +775,12 @@ is disabled.
 + returnLinks (array) - This is an array of return links.
 
     + (object)
-        + rel: `default` (enum, required) - The final transaction status that determines where to return the customer to. (Currently only 'default' is supported.)
+        + rel: `default` (enum[string], required) - The final transaction status that determines where to return the customer to. ('default' is mandatory)
+            + Members
+                + `default` - The default return url, will be used if specific status return url is not defined.
+                + `on_pending`
+                + `on_completed`
+                + `on_declined`
+                + `on_cancelled`
+                + `on_error`
         + href: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the customer to.
