@@ -311,25 +311,24 @@ so it can be easily used by an application without parsing the body.
 |riskReasonCode     |String              |*if applicable* This is the associated risk reason.|
 |links              |Array of link       |*if applicable* The link to the related resource.|
 
-
 **Error message example with details**
 
 ```
 Status-Code: 402
-x-application-error-code: 3009
- 
+
+x-application-status-code: ALTERNATIVE-PAYMENTS-GATEWAY-6 
+x-application-error-code: ALTERNATIVE-PAYMENTS-GATEWAY-6
+x-application-error-message: Bad Request
+x-application-error-details: Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]
+
 {
     "error": {
-        "code": "3009",
-        "message": "Your request has been declined by the issuing bank.",
-    },
-    "id": "3a406cc6-f9f5-47dd-a2e0-41ffbbf0de3e",
-    "merchantRefNum": "abc123",
-    "riskReasonCode": 1005,
-    "links": [{
-        "rel": "self",
-        "href": "https://api.paysafe.com/cardpayments/v1/accounts/1000057082/auths/3a406cc6-f9f5-47dd-a2e0-41ffbbf0de3e"
-    }]
+        "code": "5023",
+        "message": "Bad Request",
+        "details": {
+            "Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]"
+        }
+    }
 }
 ```
  
@@ -337,7 +336,11 @@ x-application-error-code: 3009
 
 ```
 Status-Code: 400
+
+x-application-status-code: 5068
 x-application-error-code: 5068
+x-application-error-message: Field Error(s)
+x-application-error-details: Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected.
 
 {
     "error": {
@@ -453,7 +456,7 @@ The following payment methods are supported:
 |iDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Yes| 
 |SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Yes|
 |GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<table><tr><td>giropay.customerBic</td><td>The BIC for the customers bank</td></tr></table>|No|
-|BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)|<table><tr><td>boku.customerCountry</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>The customers mobile phone number</td></tr></table>|Yes|
+|BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)|<table><tr><td>boku.customerCountry</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>The customers mobile phone number</td></tr></table>|No|
 
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
