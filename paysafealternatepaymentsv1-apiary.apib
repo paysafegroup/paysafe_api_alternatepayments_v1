@@ -488,6 +488,10 @@ Your account is set up to allow payments for a specific payment method and curre
 
 + Request Create iDeal payment (application/json)
 
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
     + Parameters
         + accountId: `1234567891` (string, required) - This is your unique account identifier.
 
@@ -504,10 +508,6 @@ Your account is set up to allow payments for a specific payment method and curre
                     + Properties
                         + bankName: `ING` (string, required)
                         + country: `NL` (string, required)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
             
 + Response 201 (application/json)
 
@@ -530,6 +530,10 @@ Your account is set up to allow payments for a specific payment method and curre
         
 + Request Create Sofort payment (application/json)
 
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
     + Parameters
         + accountId: `1234567891` (string, required) - This is your unique account identifier.
 
@@ -541,10 +545,6 @@ Your account is set up to allow payments for a specific payment method and curre
                 + `IDEAL`
                 + `GIROPAY`
 
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-            
 + Response 201 (application/json)
 
     + Attributes
@@ -562,6 +562,10 @@ Your account is set up to allow payments for a specific payment method and curre
 
 + Request Create Giropay payment (application/json)
 
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
     + Parameters
         + accountId: `1234567891` (string, required) - This is your unique account identifier.
 
@@ -574,9 +578,6 @@ Your account is set up to allow payments for a specific payment method and curre
                 + `IDEAL`
         + Include Payment Request Base
 
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 201 (application/json)
 
@@ -599,6 +600,10 @@ Returns an individual payment detail.
 
 + Request (application/json)
 
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
+
 + Response 200 (application/json)
 
     + Attributes
@@ -616,6 +621,10 @@ Returns a collection of payment details, as *merchantRefNum* could be used for m
 is disabled.
 
 + Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
 
 + Response 200 (application/json)
 
@@ -642,16 +651,17 @@ exceed the original charge amount.
 
 + Request (application/json)
 
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
     + Parameters
         + accountId: `1234567891` (string, required) - This is your unique account identifier.
         + paymentId: `1111111` (string, required) - This is the unique identifier for the payment.
 
     + Attributes
         + Include Refund Request
-        
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY        
+     
 
 + Response 201 (application/json)
 
@@ -663,6 +673,10 @@ exceed the original charge amount.
 Returns an individual refund detail.
 
 + Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
 
@@ -680,6 +694,10 @@ Returns a collection of refund details, as *merchantRefNum* could be used for mu
 is disabled.
 
 + Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
 
