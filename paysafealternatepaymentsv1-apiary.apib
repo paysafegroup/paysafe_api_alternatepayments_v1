@@ -13,7 +13,7 @@ Request and response payloads are formatted as JSON.
 |MajorVersion   |Patch Date            |Details|
 |---            |---                   |---|
 |v1             |2016-08-01            |<ul><li>Initial release with support for iDEAL, SOFORT</li></ul>|
-|v1             |2016-11-15            |<ul><li>Added support for Boku, Giropay</li></ul>|
+|v1             |2016-12-15            |<ul><li>Added support for Boku, Giropay</li></ul>|
 
 # Technical Introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API. 
@@ -451,12 +451,12 @@ You can submit a payment request using local payment methods that your customers
 
 The following payment methods are supported:
 
-|Payment Type|Brand Logo                                                                                           |Additional Payment Specific Attributes |Refunds Supported?|
+|Payment Type|Brand Logo                                                                                           |Additional Payment Specific Attributes<BR>(M - Mandatory, O - Optional)|Refunds Supported?|
 |---         |---                                                                                                  |---                 |---|
-|iDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<table><tr><td>ideal.bankName</td><td>The bank name</td></tr><tr><td>ideal.accountCountry</td><td>The country of the bank account</td></tr></table>|Yes| 
-|SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |none                |Yes|
-|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<table><tr><td>giropay.customerBic</td><td>The BIC for the customers bank</td></tr></table>|No|
-|BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)|<table><tr><td>boku.customerCountry</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>The customers mobile phone number</td></tr></table>|No|
+|iDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<hr><table><tr><td>ideal.sepa.bankName</td><td>M</td><td>The bank name</td></tr><tr><td>ideal.sepa.country</td><td>M</td><td>The country of the bank account</td></tr><tr><td>ideal.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>ideal.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>ideal.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|Yes| 
+|SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |<hr><table><tr><td>sofort.sepa.bankName</td><td>O</td><td>The bank name</td></tr><tr><td>sofort.sepa.country</td><td>O</td><td>The country of the bank account</td></tr><tr><td>sofort.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>sofort.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>sofort.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|Yes|
+|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<hr><table><tr><td>giropay.sepa.bankName</td><td>O</td><td>The bank name</td></tr><tr><td>giropay.sepa.country</td><td>O</td><td>The country of the bank account</td></tr><tr><td>giropay.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>giropay.sepa.bic</td><td>M</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>giropay.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|No|
+|BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)|<hr><table><tr><td>boku.customerCountry</td><td>M</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>O</td><td>The customers mobile phone number</td></tr></table>|No|
 
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
@@ -469,8 +469,10 @@ The following payment methods are supported:
 {
     "paymentType": "IDEAL",
     "ideal": {
-       "bankName": "XYZ Commerce",
-       "accountCountry": "DK"
+       "sepa": {
+           "bankName": "XYZ Commerce",
+           "country": "DK"
+       }
     }
     ... other payment attributes here ...
 |
@@ -498,8 +500,10 @@ Your account is set up to allow payments for a specific payment method and curre
                 + `GIROPAY`
         + ideal (object) - Parameters required for an iDEAL payment request.
             + Properties
-                + bankName: `ING` (string, required)
-                + accountCountry: `NL` (string, required)
+                + sepa (object)
+                    + Properties
+                        + bankName: `ING` (string, required)
+                        + country: `NL` (string, required)
 
     + Headers
     
@@ -511,9 +515,10 @@ Your account is set up to allow payments for a specific payment method and curre
     
         + paymentType: `IDEAL` (string) - This is the type of payment.
         + ideal (object) - Parameters required for an iDEAL payment request.
-            + Properties
-                + bankName: `ING` (string)
-                + accountCountry: `NL` (string)   
+            + sepa (object)
+                + Properties
+                    + bankName: `ING` (string, required)
+                    + country: `NL` (string, required)  
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
