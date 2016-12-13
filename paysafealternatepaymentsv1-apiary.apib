@@ -507,7 +507,18 @@ Your account is set up to allow payments for a specific payment method and curre
             + Properties
                 + sepa (object)
                     + Properties
-                        + bankName: `ING` (string, required)
+                        + bankName: `ING` (enum[string], required)
+                            + Members
+                                + `ABN_AMRO`
+                                + `Rabobank`
+                                + `BUNQ`
+                                + `ING`
+                                + `Triodos Bank`
+                                + `ASN Bank`
+                                + `SNS Bank`
+                                + `RegioBank`
+                                + `Van Lanschot Bankiers`
+                                + `Knab`
                         + country: `NL` (string, required)
             
 + Response 201 (application/json)
