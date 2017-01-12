@@ -10,10 +10,16 @@ Request and response payloads are formatted as JSON.
 
 # Release Notes
 
-|MajorVersion   |Patch Date            |Details|
-|---            |---                   |---|
-|v1             |2016-08-01            |<ul><li>Initial release with support for iDEAL, SOFORT</li></ul>|
-|v1             |2016-12-15            |<ul><li>Added support for Boku, Giropay</li></ul>|
+|API Version    |Release      |Patch Date            |Details|
+|---            |---          |---                   |---|
+|v1             |1.2          |2017-03-01            |- Added support for authorization, settlement|
+|               |             |                      |- Support returns on settlement|
+|               |             |                      |- Ability to refund a settlement|
+|               |             |                      |- Added Payolution|
+|v1             |1.1          |2016-12-15            |- Added support for Boku, Giropay|
+|v1             |1.0          |2016-08-01            |- Initial release with support for iDeal, Sofort|
+
+
 
 # Technical Introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API. 
@@ -445,8 +451,18 @@ are provided to navigate through the set of resources in the collection.
 ```
 
 
-
 # Payments [/payments]
+
+Payments represent a transaction authorization.  When requesting a payment you can either request that the payment 
+includes settlement (authWithSettle = true) or that settlement will be manually issued later (authWithSettle = false).
+The ability to have delayed settlement will depend on the payment option you are attempting.  
+Some options may support only one or the other, and some may support both (for example Paypal).
+
+Each payment type and currency is associated with its own distinct account.  Please contact Paysafe Merchant Support to enable additional payment types and or currencies.
+
+## Create a payment [POST /accounts/{accountId}/payments]
+
+Your account is set up to allow payments for a specific payment method and currency. 
 
 You can submit a payment request using local payment methods that your customers are familiar with.
 
@@ -458,7 +474,7 @@ The following payment methods are supported:
 |SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |<hr><table><tr><td>sofort.sepa.bankName</td><td>O</td><td>The bank name</td></tr><tr><td>sofort.sepa.country</td><td>O</td><td>The country of the bank account</td></tr><tr><td>sofort.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>sofort.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>sofort.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|Yes|
 |GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<hr><table><tr><td>giropay.sepa.bankName</td><td>O</td><td>The bank name</td></tr><tr><td>giropay.sepa.country</td><td>O</td><td>The country of the bank account</td></tr><tr><td>giropay.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>giropay.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>giropay.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|No|
 |BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)|<hr><table><tr><td>boku.customerCountry</td><td>M</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>O</td><td>The customers mobile phone number</td></tr></table>|No|
-
+|PAYOLUTION  |ICON|OPTS|Y|
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
 > these should be passed as a nested object in the root of your payment request.  
@@ -479,11 +495,6 @@ The following payment methods are supported:
 |
 ```
 
-Each payment type and currency is associated with its own distinct account.  Please contact Paysafe Merchant Support to enable additional payment types and or currencies.
-
-## Create Payment [POST /accounts/{accountId}/payments]
-
-Your account is set up to allow payments for a specific payment method and currency. 
 
 > Please contact Paysafe Merchant Support to enable additional options for your account.
 
@@ -595,7 +606,20 @@ Your account is set up to allow payments for a specific payment method and curre
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
 
         
-## Lookup Payment by paymentId [GET /accounts/{accountId}/payments/{paymentId}]
+## Create a payment - authorization only [POST /accounts/{accountId}/payments]        
+
+You can create a payment authorization that requires manual settlement.  This process is also known as capture of funds for a payment.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
+
++ Response 200 (application/json)
+
+        
+## Lookup payment by id [GET /accounts/{accountId}/payments/{paymentId}]
 
 Returns an individual payment detail.
 
@@ -616,7 +640,7 @@ Returns an individual payment detail.
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
 
 
-## Lookup Payment by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
+## List payments by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 
 Returns a collection of payment details, as *merchantRefNum* could be used for multiple requests when *dupCheck*
 is disabled.
@@ -641,10 +665,7 @@ is disabled.
                 + rel: `next`
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/?merchantRefNum=merchantRef_2014_03_10_01&limit=10&offset=10&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z`
 
-
-# Refunds [/refunds]
-
-## Create Refund [POST /accounts/{accountId}/payments/{paymentId}/refunds]
+## Refund a payment [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 
 You can issue a refund request against a payment that is already completed.  It is possible to issue either a full or a 
 partial refund or series of refunds against the intial payment. However, their combined refund amount cannot
@@ -667,6 +688,132 @@ exceed the original charge amount.
 + Response 201 (application/json)
 
     + Attributes (Refund Response)
+
+## List returns [GET /accounts/{accountId}/payment/{paymentId}/returns]
+
+Retrieve a list of any returns associated to this payment.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
+
+# Settlements [/settlements]
+
+## Create a settlement [POST /accounts/{accountId}/payments/{paymentId}/settlements]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
+## Lookup a settlement by id [GET /accounts/{accountId}/settlements/{settlementId}]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
+
+## List settlements by merchantRefNum [GET /accounts/{accountId}/settlements/?merchantRefNum={merchantRefNum}]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
+## Refund a settlement [POST /accounts/{accountId}/settlements/{settlementId}/refunds]
+
+You can issue a refund request against a payment that is already completed.  It is possible to issue either a full or a 
+partial refund or series of refunds against the intial payment. However, their combined refund amount cannot
+exceed the original charge amount.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Parameters
+        + accountId: `1234567891` (string, required) - This is your unique account identifier.
+        + paymentId: `1111111` (string, required) - This is the unique identifier for the payment.
+
+    + Attributes
+        + Include Refund Request
+     
+
++ Response 201 (application/json)
+
+    + Attributes (Refund Response)
+
+
+
+# Returns [/returns]
+
+Returns transaction will be automatically created if we receive a no credit notification from the service provider. 
+Currently only Sofort can trigger creation of a return.
+
+
+## Lookup a return [GET /accounts/{accountId}/returns/{returnId}]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
+
+# Return Reversals [/returnreversals]
+
+Return reversal transactions will be automatically created if we receive a late credit notification after already issuing a return.
+Currently only Sofort can trigger creation of a return reversal.
+
+## List return reversals [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+                                                
+
+## Lookup Return Reversal [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
+# Refunds [/refunds]
+
+
 
 
 ## Lookup Refund by id [GET /accounts/{accountID}/refunds/{id}]
