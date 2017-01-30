@@ -129,13 +129,13 @@ Sample Response with List Data
         },
         "ideal": {
             "bankName": "ING",
-            "accountCountry": "NL"
+            "country": "NL"
+            "descriptor": "test descriptor",
         },
         "returnLinks": [{
             "rel": "default",
             "href": "http://yoursite.com/"
         }],
-        "descriptor": "test descriptor",
         "liveMode": true,
         "txnTime": "2016-05-05T20:34:06Z",
         "status": "INITIATED",
@@ -407,10 +407,12 @@ These errors are specific to the Alternate Payments API.
 |---           |---                           |---                                     |---|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-1  |Transaction cancelled at the gateway    |The transaction was cancelled at the gateway.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-4  |Transaction declined by the gateway     |The transaction declined by the gateway. |
-|402           |ALTERNATE-PAYMENTS-GATEWAY-5  |Cannot refund an incomplete transaction |The transaction cannot be refunded as the payment status is not finalized.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-5  |Incomplete transaction                  |The requested operation can only be executed on a completed transaction.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-6  |Over refund                             |The total refund amount cannot exceed the original payment amount.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-7  |Payment expired                         |The payment has expired.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-8  |Over settlement                         |The total settlement amount cannot exceed the authorized (payment) amount.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-9  |Risk gateway error                      |A risk issue was reported by the gateway.|
+|502           |ALTERNATE-PAYMENTS-GATEWAY-10 |Payment type temporarily unavailable    |The gateway is temporarily unavailable due to system maintenance activities.|
 
 
 ## HATEOAS
@@ -453,12 +455,13 @@ are provided to navigate through the set of resources in the collection.
 
 # Payments [/payments]
 
-Payments represent a transaction authorization.  When requesting a payment you can either request that the payment 
-includes settlement (authWithSettle = true) or that settlement will be manually issued later (authWithSettle = false).
+Payments represent a payment authorization.  When requesting a payment you can choose to have the request 
+automatically include settlement (authWithSettle = true) or that settlement will be manually requested later (authWithSettle = false).
 The ability to have delayed settlement will depend on the payment option you are attempting.  
-Some options may support only one or the other, and some may support both (for example Paypal).
+Some payment types may support only one or the other, and some may support both (for example Paypal). 
 
-Each payment type and currency is associated with its own distinct account.  Please contact Paysafe Merchant Support to enable additional payment types and or currencies.
+> Note that each payment type and currency is associated with its own distinct account.  
+> Please contact Paysafe Merchant Support to enable additional payment types and or currencies.
 
 ## Create a payment [POST /accounts/{accountId}/payments]
 
@@ -473,8 +476,8 @@ The following payment methods are supported:
 |iDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<hr><table><tr><td>ideal.sepa.bankName</td><td>M</td><td>The bank name</td></tr><tr><td>ideal.sepa.country</td><td>M</td><td>The country of the bank account</td></tr><tr><td>ideal.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>ideal.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>ideal.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|Yes| 
 |SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |<hr><table><tr><td>sofort.sepa.bankName</td><td>O</td><td>The bank name</td></tr><tr><td>sofort.sepa.country</td><td>O</td><td>The country of the bank account</td></tr><tr><td>sofort.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>sofort.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>sofort.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|Yes|
 |GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<hr><table><tr><td>giropay.sepa.bankName</td><td>O</td><td>The bank name</td></tr><tr><td>giropay.sepa.country</td><td>O</td><td>The country of the bank account</td></tr><tr><td>giropay.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>giropay.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>giropay.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|No|
-|BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)|<hr><table><tr><td>boku.customerCountry</td><td>M</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>O</td><td>The customers mobile phone number</td></tr></table>|No|
-|PAYOLUTION  |ICON|OPTS|Y|
+|BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)   |<hr><table><tr><td>boku.customerCountry</td><td>M</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>O</td><td>The customers mobile phone number</td></tr></table>|No|
+|PAYOLUTION  |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/payolution.png)||Yes|
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
 > these should be passed as a nested object in the root of your payment request.  
