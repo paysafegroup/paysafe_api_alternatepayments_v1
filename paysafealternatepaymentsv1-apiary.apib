@@ -609,9 +609,18 @@ The following payment methods are supported:
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
 
         
-## Create a payment - authorization only [POST /accounts/{accountId}/payments]        
+## Create a payment authorization [POST /accounts/{accountId}/payments]
 
-You can create a payment authorization that requires manual settlement.  This process is also known as capture of funds for a payment.
++ Request Create a Payolution payment authorization (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
+
++ Response 200 (application/json)
+
+
+## Void a payment authorization [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
 
 + Request (application/json)
 
@@ -707,6 +716,12 @@ Retrieve a list of any returns associated to this payment.
 
 
 # Settlements [/settlements]
+
+A settlement is the process of capturing funds from a previous authorizaiton request.  If your requested manual settlement
+on your payment request, then you need to settle funds for the payment.
+
+> NOTE: If you are capturing payment settlements manually, then you need to ensure that you complete this process before the
+> payment authorization period ends.
 
 ## Create a settlement [POST /accounts/{accountId}/payments/{paymentId}/settlements]
 
