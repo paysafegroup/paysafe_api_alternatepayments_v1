@@ -225,7 +225,7 @@ GET /alternatepayments/admin/v1/accounts/987001112?expand=events
            "type": "ap_auths_completed"
     }, {
            "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
-           "type": "ap_auths_declined"
+           "type": "ap_auths_failed"
     }, {
            "id": "6ddbc05a-ff40-4dc1-b2d3-f20091234567",
            "type": "ap_refunds_complete"
@@ -501,6 +501,22 @@ The following payment methods are supported:
 
 > Please contact Paysafe Merchant Support to enable additional options for your account.
 
+
++ Parameters
+    + accountId: `1234567891` (string, required) - This is your unique account identifier.
+
++ Attributes (Payment Request Base)
+
+    + paymentType: `IDEAL` (enum)
+        + Members
+            + `IDEAL`
+            + `SOFORT`
+            + `GIROPAY`
+            + `BOKU`
+    + Include ideal
+    + Include sofort
+
+
 + Request Create iDeal payment (application/json)
 
     + Headers
@@ -512,28 +528,21 @@ The following payment methods are supported:
 
     + Attributes (Payment Request Base)
     
-        + paymentType: `IDEAL` (enum[string], required) - This is the type of payment.
+        + paymentType: `IDEAL` (enum)
             + Members
                 + `IDEAL`
                 + `SOFORT`
                 + `GIROPAY`
-        + ideal (object) - Parameters required for an iDEAL payment request.
-            + Properties
-                + sepa (object)
-                    + Properties
-                        + bankName: `ING` (string, required)
-                        + country: `NL` (string, required)
+                + `BOKU`
+        + Include ideal
+
             
 + Response 201 (application/json)
 
     + Attributes (Payment Response Base)
     
         + paymentType: `IDEAL` (string) - This is the type of payment.
-        + ideal (object) - Parameters required for an iDEAL payment request.
-            + sepa (object)
-                + Properties
-                    + bankName: `ING` (string, required)
-                    + country: `NL` (string, required)  
+        + Include ideal
         + links (array) - This is an array of related links. 
             + (object)
                 + rel: `self`
@@ -609,7 +618,6 @@ The following payment methods are supported:
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc`
 
         
-## Create a payment authorization [POST /accounts/{accountId}/payments]
 
 + Request Create a Payolution payment authorization (application/json)
 
@@ -879,99 +887,144 @@ is disabled.
 # Data Structures
 
 ## Payment Request Base
-+ merchantRefNum: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
-+ dupCheck: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
-+ amount: `100` (number, required) - This is the amount of the request, in minor units.
-+ currencyCode: `EUR` (string, required) - This is the currency of the payment.
-+ descriptor: `Test description` (string, required) - This is the merchant descriptor that will be displayed on the customer's statement.
+
++ `merchantRefNum`: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
++ `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
 + Include Profile Request
-+ Include Billing Address
-+ Include Return Links
++ Include billingDetails
++ Include returnLinks
 
 ## Payment Response Base
-+ id: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
-+ merchantRefNum: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ amount: `100` (number) - This is the amount of the request, in minor units.
-+ currencyCode: `EUR` (string) - This is the currency of the payment.
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
++ `merchantRefNum`: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
++ `amount`: `100` (number) - This is the amount of the request, in minor units.
++ `currencyCode`: `EUR` (string) - This is the currency of the payment.
 + Include Profile Response
-+ Include Billing Address
-+ Include Return Links
-+ descriptor: `test descriptor` (string) - This is the merchant descriptor that will be displayed on the customer's card statement.
-+ liveMode: `false` (string) - This indicates whether this is a Live or Test transaction.
-+ txnTime: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
-+ status: `INITIATED` (string) - This is the status of the transaction request.
++ Include billingDetails
++ Include returnLinks
++ `liveMode`: `false` (string) - This indicates whether this is a Live or Test transaction.
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
++ `status`: `INITIATED` (string) - This is the status of the transaction request.
 + Include Payon Gateway Response
 
 ## Profile Request 
-+ profile (object, optional) - These are some details about the customer.
 
-    + Properties
-        + firstName: `Stan` (string, required)
-        + lastName: `Smith` (string, required)
-        + email: `stan.smith@fox.com` (string, required)
-        + ip: `127.0.0.1` (string, optional)
++ `profile` (object, optional) - These are some details about the customer.
+    + `firstName`: `Stan` (string, required)
+    + `lastName`: `Smith` (string, required)
+    + `email`: `stan.smith@fox.com` (string, required)
+    + `ip`: `127.0.0.1` (string, optional)
 
 ## Profile Response 
-+ profile (object, optional) - These are some details about the customer.
 
-    + Properties
-        + firstName: `Stan` (string)
-        + lastName: `Smith` (string)
-        + email: `stan.smith@fox.com` (string)
-        + ip: `127.0.0.1` (string)
++ `profile` (object, optional) - These are some details about the customer.
+    + `firstName`: `Stan` (string)
+    + `lastName`: `Smith` (string)
+    + `email`: `stan.smith@fox.com` (string)
+    + `ip`: `127.0.0.1` (string)
 
-## Billing Address
-+ billingAddress (object, optional) = This is the billing address of the customer.
+## `billingDetails`
 
-    + Properties
-        + street1: `Street line 1` (string)
-        + street2: `Street line 2` (string)
-        + city: `Calgary` (string)
-        + state: `AB` (string)
-        + country: `CA` (string)
-        + zip: `T3H3L3` (string)
++ `billingDetails` (object, optional) = This is the billing address of the customer.
+    + `street1`: `Street line 1` (string)
+    + `street2`: `Street line 2` (string)
+    + `city`: `Calgary` (string)
+    + `state`: `AB` (string)
+    + `country`: `CA` (string)
+    + `zip`: `T3H3L3` (string)
 
 ## Refund Request
-+ merchantRefNum: `xyz` (string, required) - This is the merchant reference number.
-+ dupCheck: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
-+ paymentType: `IDEAL` (string, required) - This specifies the payment type of the transaction.
-+ currencyCode: `EUR` (string, required) - This is the currency of the payment.
-+ amount: `100` (number, required) - This is the amount in minor units.
+
++ `merchantRefNum`: `xyz` (string, required) - This is the merchant reference number.
++ `dupCheck`: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
++ `paymentType`: `IDEAL` (string, required) - This specifies the payment type of the transaction.
++ `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
++ `amount`: `100` (number, required) - This is the amount in minor units.
 
 ## Refund Response
-+ id: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the refund id.  *\*\*Assigned by Paysafe* 
-+ liveMode: `true` (boolean) - This indicates whether this is a Live or Test transaction.
-+ merchantRefNum: `xyz` (string) - This is your unique idenitfier for this request.
-+ amount: `400` (number) - This is the amount of the refund in minor units (e.g., $50.00 USD => 5000, 50 YEN -> 50).
-+ currencyCode: `EUR` (string) - This is the currency of the payment.
-+ paymentType: `IDEAL` (string)
-+ txnTime: `2016-02-24T08:39:39Z` (string) - This is the datetime of the transaction in UTC. *\*\*Assigned by Paysafe*
-+ status: `COMPLETED` (string) - This is the current state of the transaction. *\*\*Assigned by Paysafe*
-+ Include Payon Gateway Response
-+ links (array) - This is an array of links related to the resource. 
 
++ `id`: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the refund id.  *\*\*Assigned by Paysafe* 
++ `liveMode`: `true` (boolean) - This indicates whether this is a Live or Test transaction.
++ `merchantRefNum`: `xyz` (string) - This is your unique idenitfier for this request.
++ `amount`: `400` (number) - This is the amount of the refund in minor units (e.g., $50.00 USD => 5000, 50 YEN -> 50).
++ `currencyCode`: `EUR` (string) - This is the currency of the payment.
++ `paymentType`: `IDEAL` (string)
++ `txnTime`: `2016-02-24T08:39:39Z` (string) - This is the datetime of the transaction in UTC. *\*\*Assigned by Paysafe*
++ `status`: `COMPLETED` (string) - This is the current state of the transaction. *\*\*Assigned by Paysafe*
++ Include Payon Gateway Response
++ `links` (array) - This is an array of links related to the resource. 
     + ([object])
-        + rel: `self`
-        + href: `https://api.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
+        + `rel`: `self`
+        + `href`: `https://api.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
 
 ## Payon Gateway Response
-+ gatewayResponse (object)
 
-    + Properties
-        + code: `000.100.110` (string)
-        + description: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
-        + paymentType: `RF` (string)
++ `gatewayResponse` (object)
+    + `code`: `000.100.110` (string)
+    + `description`: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
+    + `paymentType`: `RF` (string)
 
-## Return Links
-+ returnLinks (array) - This is an array of return links.
+## `returnLinks`
 
++ `returnLinks` (array) - This is an array of return links.
     + (object)
-        + rel: `default` (enum[string], required) - The final transaction status that determines where to return the customer to. ('default' is mandatory)
+        + `rel`: `default` (enum, required) - The final transaction status that determines where to return the customer to. ('default' is mandatory)
             + Members
                 + `default` - The default return url, will be used if specific status return url is not defined.
                 + `on_pending`
                 + `on_completed`
-                + `on_declined`
+                + `on_failed`
                 + `on_cancelled`
                 + `on_error`
-        + href: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the customer to.
+        + `href`: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the customer to.
+
+## `paymentType`(enum)
+
+    + Members
+        + `GIROPAY`
+        + `SOFORT`
+        + `IDEAL`
+
+## `sepa` 
+
++ `country`: `NL` (string)
++ `bic`: `BARCGB22XXX` (string)
++ `iban`: `AZ21NABZ00000000137010001944` (string)
++ `accountHolderName`: `Max Mustermann` (string)
+
+## `payolutionPaymentInformation` 
+
++ `paymentReference`: `YTTR-WMQX-KLGW` (string)
++ `iban`: `AT611904300234573201456` (string)
++ `bic`: `BFRILI22XXX` (string)
++ `bankName`: `Musterbank` (string)
++ `accountHolderName`: `Test Merchant` (string)
+
+## `payolutionAnalysis`
+
++ `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
++ `value`: `TOP` (string)
+
+## `payolution`
+
++ `payolution` (object) - Parameters required for a Payolution payment request.
+    + `customerID`: `maxx_muster1980` (string)
+    + `sepa` (sepa)
+    + `paymentInformation` (payolutionPaymentInformation)
+    + `analysis` (array[payolutionAnalysis])
+
+## `sofort`
+
++ `sofort` (object) - Parameters required for a SOFORT payment request.
+    + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
+
+## `ideal`
+
++ `ideal` (object) - Additional attributes that can be passed that when making a IDEAL payment request.
+    + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the customers statement.
+    + `sepa` (object)
+        + `bankName`: `ING` (string, required)
+        + `country`: `NL` (string, required)
