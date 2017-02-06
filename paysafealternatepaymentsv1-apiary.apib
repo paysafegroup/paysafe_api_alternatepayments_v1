@@ -455,29 +455,23 @@ are provided to navigate through the set of resources in the collection.
 
 # Payments [/payments]
 
-Payments represent a payment authorization.  When requesting a payment you can choose to have the request 
-automatically include settlement (authWithSettle = true) or that settlement will be manually requested later (authWithSettle = false).
-The ability to have delayed settlement will depend on the payment option you are attempting.  
-Some payment types may support only one or the other, and some may support both (for example Paypal). 
+The payment resource represents a payment authorization.  When requesting a payment, you can choose to have the request 
+include automatic settlement (authWithSettle = true), alternatively, you can choose delayed settlement (authWithSettle = false). 
+A Payment and Settlement work in conjunction and a completed transaction will always have both resources created.  For cases
+when authWithSettle is true, then the corresponding settlement resource will have the same resource identifier because it was
+created from the same request.
+
+The ability to have delayed settlement will depend on the payment option you are attempting.  Some payment types may only support 
+one or the other, and some may support both (for example Paypal). 
 
 > Note that each payment type and currency is associated with its own distinct account.  
 > Please contact Paysafe Merchant Support to enable additional payment types and or currencies.
 
 ## Create a payment [POST /accounts/{accountId}/payments]
 
-Your account is set up to allow payments for a specific payment method and currency. 
+Your account is set up to allow payments for a specific payment method and currency. Please contact Paysafe Merchant Support to enable additional options for your account.
 
 You can submit a payment request using local payment methods that your customers are familiar with.
-
-The following payment methods are supported:
-
-|Payment Type|Brand Logo                                                                                           |Additional Payment Specific Attributes<BR>(M - Mandatory, O - Optional)|Refunds Supported?|
-|---         |---                                                                                                  |---                 |---|
-|iDEAL       |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)  |<hr><table><tr><td>ideal.sepa.bankName</td><td>M</td><td>The bank name</td></tr><tr><td>ideal.sepa.country</td><td>M</td><td>The country of the bank account</td></tr><tr><td>ideal.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>ideal.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>ideal.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|Yes| 
-|SOFORT      |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png) |<hr><table><tr><td>sofort.sepa.bankName</td><td>O</td><td>The bank name</td></tr><tr><td>sofort.sepa.country</td><td>O</td><td>The country of the bank account</td></tr><tr><td>sofort.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>sofort.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>sofort.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|Yes|
-|GIROPAY     |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)|<hr><table><tr><td>giropay.sepa.bankName</td><td>O</td><td>The bank name</td></tr><tr><td>giropay.sepa.country</td><td>O</td><td>The country of the bank account</td></tr><tr><td>giropay.sepa.iban</td><td>O</td><td>The International Bank Account Number (IBAN) of the account</td></tr><tr><td>giropay.sepa.bic</td><td>O</td><td>The Bank Identifier Code (BIC) of the account</td></tr><tr><td>giropay.sepa.accountHolderName</td><td>O</td><td>The account holders name</td></tr></table>|No|
-|BOKU        |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)   |<hr><table><tr><td>boku.customerCountry</td><td>M</td><td>The country of registration for the customers mobile phone</td></tr><tr><td>boku.customerMobilePhone</td><td>O</td><td>The customers mobile phone number</td></tr></table>|No|
-|PAYOLUTION  |![](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/payolution.png)||Yes|
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
 > these should be passed as a nested object in the root of your payment request.  
@@ -498,9 +492,41 @@ The following payment methods are supported:
 |
 ```
 
+The following payment type specific attributes are supported:
 
-> Please contact Paysafe Merchant Support to enable additional options for your account.
+![iDeal](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)
+<code>
+ideal.descriptor - Descriptor to display on customers statement<br/>
+ideal.sepa.bankName -<b><i>Required</b></i> The customers bank<br/>
+ideal.sepa.country - <b><i>Required</b></i> country<br/>
+ideal.sepa.iban - The International Bank Account Number (IBAN) of the account<br/>
+ideal.sepa.bic - The Bank Identifier Code (BIC) of the account<br/>
+ideal.sepa.accountHolderName - The account holders name<br/>
+</code>
 
+![Sofort](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png)
+<code>
+sofort.descriptor - Descriptor to display on customers statement<br/>
+sofort.sepa.bankName -<b><i>Required</b></i> The customers bank<br/>
+sofort.sepa.country - <b><i>Required</b></i> country<br/>
+sofort.sepa.iban - The International Bank Account Number (IBAN) of the account<br/>
+sofort.sepa.bic - The Bank Identifier Code (BIC) of the account<br/>
+sofort.sepa.accountHolderName - The account holders name<br/>
+</code>
+
+![Giropay](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png) 
+<code>
+giropay.sepa.iban - The International Bank Account Number (IBAN) of the account<br/>
+giropay.sepa.bic - The Bank Identifier Code (BIC) of the account<br/>
+giropay.sepa.accountHolderName - The account holders name</br>
+</code>
+
+![Boku](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)
+<code>
+boku.descriptor - Descriptor to display on customers statement<br/>
+boku.customerCountry -<b><i>Required</b></i> The country of registration for the customers mobile phone<br/>
+boku.customerMobilePhone - <b><i>Required</b></i> The customers mobile phone number<br/>
+</code>
 
 + Parameters
     + accountId: `1234567891` (string, required) - This is your unique account identifier.
@@ -1023,7 +1049,7 @@ is disabled.
 
 ## `ideal`
 
-+ `ideal` (object) - Additional attributes that can be passed that when making a IDEAL payment request.
++ `ideal` (object) - OPTIONAL attributes that can be passed that when making a IDEAL payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the customers statement.
     + `sepa` (object)
         + `bankName`: `ING` (string, required)
