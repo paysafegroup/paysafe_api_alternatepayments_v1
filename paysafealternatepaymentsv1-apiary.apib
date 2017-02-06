@@ -656,6 +656,9 @@ boku.customerMobilePhone - <b><i>Required</b></i> The customers mobile phone num
 
 ## Void a payment authorization [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
 
+An payment void allows you to void (reverse) all or part of an existing authorization, provided no settlements 
+(either full or partial) have been processed against that payment.
+
 + Request (application/json)
 
     + Headers
@@ -714,8 +717,8 @@ is disabled.
 ## Refund a payment [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 
 You can issue a refund request against a payment that is already completed.  It is possible to issue either a full or a 
-partial refund or series of refunds against the intial payment. However, their combined refund amount cannot
-exceed the original charge amount.
+partial refund (or series of refunds) against the intial payment, however the combined refund amount cannot
+exceed the original settlement amount.
 
 + Request (application/json)
 
@@ -734,7 +737,7 @@ exceed the original charge amount.
 + Response 201 (application/json)
 
     + Attributes (Refund Response)
-
+    
 ## List returns [GET /accounts/{accountId}/payment/{paymentId}/returns]
 
 Retrieve a list of any returns associated to this payment.
@@ -751,8 +754,10 @@ Retrieve a list of any returns associated to this payment.
 
 # Settlements [/settlements]
 
-A settlement is the process of capturing funds from a previous authorization request.  If you specified delayed (manual) settlement
-on your payment request, then you need to manually POST the settlement against the payment.
+A settlement allows you to settle an amount that was previously authorized for a customer.  It is the process 
+of capturing funds from a previous authorization request.  If you specified delayed (manual) settlement
+on your payment request, then you must manually POST the settlement against the payment.  You can settle all or 
+part of an existing payment authorization.
 
 ## Create a settlement [POST /accounts/{accountId}/payments/{paymentId}/settlements]
 
@@ -791,8 +796,8 @@ on your payment request, then you need to manually POST the settlement against t
 ## Refund a settlement [POST /accounts/{accountId}/settlements/{settlementId}/refunds]
 
 You can issue a refund request against a completed settlement.  It is possible to issue either a full or a 
-partial refund or series of refunds against the intial settlement. However, their combined refund amount cannot
-exceed the original charge amount.
+partial refund (or series of refunds against the intial settlement), hoowever the combined refund amount cannot
+exceed the original settlement amount.
 
 > NOTE: You can also issue a refund against the payment.  Choose the right method depending upon your integration needs.
 
@@ -863,8 +868,8 @@ Currently only Sofort supports return reversal.
 
 # Refunds [/refunds]
 
-
-
+A Refund allows you to refund back to a customer an amount that has previously been settled. You can create a refund 
+against an existing payment OR settlement.
 
 ## Lookup Refund by id [GET /accounts/{accountID}/refunds/{id}]
 
