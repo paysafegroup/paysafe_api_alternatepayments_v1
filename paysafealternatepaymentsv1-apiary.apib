@@ -751,11 +751,8 @@ Retrieve a list of any returns associated to this payment.
 
 # Settlements [/settlements]
 
-A settlement is the process of capturing funds from a previous authorizaiton request.  If your requested manual settlement
-on your payment request, then you need to settle funds for the payment.
-
-> NOTE: If you are capturing payment settlements manually, then you need to ensure that you complete this process before the
-> payment authorization period ends.
+A settlement is the process of capturing funds from a previous authorization request.  If you specified delayed (manual) settlement
+on your payment request, then you need to manually POST the settlement against the payment.
 
 ## Create a settlement [POST /accounts/{accountId}/payments/{paymentId}/settlements]
 
@@ -793,9 +790,11 @@ on your payment request, then you need to settle funds for the payment.
 
 ## Refund a settlement [POST /accounts/{accountId}/settlements/{settlementId}/refunds]
 
-You can issue a refund request against a payment that is already completed.  It is possible to issue either a full or a 
-partial refund or series of refunds against the intial payment. However, their combined refund amount cannot
+You can issue a refund request against a completed settlement.  It is possible to issue either a full or a 
+partial refund or series of refunds against the intial settlement. However, their combined refund amount cannot
 exceed the original charge amount.
+
+> NOTE: You can also issue a refund against the payment.  Choose the right method depending upon your integration needs.
 
 + Request (application/json)
 
@@ -819,9 +818,8 @@ exceed the original charge amount.
 
 # Returns [/returns]
 
-Returns transaction will be automatically created if we receive a no credit notification from the service provider. 
-Currently only Sofort can trigger creation of a return.
-
+Returns transactions will be created by Paysafe if we receive a no credit notification from the service provider.  As a merchant you can
+not create a return.  Currently only Sofort supports return.
 
 ## Lookup a return [GET /accounts/{accountId}/returns/{returnId}]
 
@@ -837,8 +835,8 @@ Currently only Sofort can trigger creation of a return.
 
 # Return Reversals [/returnreversals]
 
-Return reversal transactions will be automatically created if we receive a late credit notification after already issuing a return.
-Currently only Sofort can trigger creation of a return reversal.
+Return reversal transactions will be automatically created by Paysafe if we receive a late credit notification after already issuing a return.
+Currently only Sofort supports return reversal.
 
 ## List return reversals [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
 
