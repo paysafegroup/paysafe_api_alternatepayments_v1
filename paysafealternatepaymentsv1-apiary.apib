@@ -493,8 +493,8 @@ You can submit a payment request using local payment methods that your customers
 >    "paymentType": "IDEAL",
 >    "ideal": {
 >       "sepa": {
->           "bankName": "XYZ Commerce",
->           "country": "DK"
+>           "bankName": "ing",
+>           "country": "NL"
 >       }
 >    }
 >    ... other payment attributes here ...
@@ -506,7 +506,7 @@ You can submit a payment request using local payment methods that your customers
 ![iDeal](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)
 <code>
 <b>ideal.descriptor</b> - Descriptor to display on customers statement <i>(max 16 alphanumeric)</i><br/>
-<b>ideal.sepa.bankName</b> - <i>Required</i> The customers bank. <i>Options (abn\_amro, rabobank, bunq, inq, triodos, asn\_bank, sns\bank, regiobank, van_lanshot, knab)</i><br/>
+<b>ideal.sepa.bankName</b> - <i>Required</i> The customers bank. <i>Options (abn\_amro, rabobank, bunq, ing, triodos, asn\_bank, sns\bank, regiobank, van_lanshot, knab)</i><br/>
 <b>ideal.sepa.country</b> - <i>Required</i> The customers bank country<br/>
 <b>ideal.sepa.iban</b> - The International Bank Account Number (IBAN) of the account<br/>
 <b>ideal.sepa.bic</b> - The Bank Identifier Code (BIC) of the account<br/>
@@ -632,7 +632,7 @@ You can submit a payment request using local payment methods that your customers
               "paymentType": "IDEAL",
               "ideal": {
                 "sepa": {
-                  "bankName": "ING",
+                  "bankName": "ing",
                   "country": "NL"
                 }
               },
