@@ -461,6 +461,161 @@ are provided to navigate through the set of resources in the collection.
 
 ```
 
+# Complex JSON Objects
+
+<a name="billingDetails"></a>
+## billingDetails
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|street1                 |string<br/>`length<=50`  |This is the first line of the street address in the billing address.|
+|street2                 |string<br/>`length<=50`  |This is the second line of the street address in the billing address, if required (e.g., apartment number).|
+|city                    |string<br/>`length<=40`  |This is the city in the billing address.|
+|state                   |string<br/>`length<=40`  |See Province Codes or State Codes for Canada or the United States.|
+|country                 |string<br/>`length=2`    |See Country Codes.|
+|zip                     |string<br/>`length<=10`  |This is the postal/zip code in the billing address.|
+
+```
+{
+    "billingDetails": {
+        "street1": "100QueenStreetWest",
+        "city": "Toronto",
+        "state": "ON",
+        "country": "CA",
+        "zip": "M5H2N2"
+    }
+}
+```
+
+<a name="boku"></a>
+## boku
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+
+<a name="giropay"></a>
+## giropay
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
+
+<a name="ideal"></a>
+## ideal
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
+
+<a name="payment"></a>
+## payment
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|merchantRefNum          |string                 |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
+|dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent settlement to capture funds<br/><b>true</b> - the request is settled (default)<br/>If the merchant wants to find out whether an authorization has been settled, they should check the availableToSettle element.<br/>If the amount is 0, the authorization has been fully settled.|
+|amount                  |number                 |<i>required</i> This is the amount of the request, in minor units.|
+|currencyCode            |string                 |This is the currency of the payment.|
+
+
+```apib
+{
+  "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
+  "dupCheck": true,
+  "amount": 100,
+  "currencyCode": "EUR",
+  "profile": {
+    "firstName": "Stan",
+    "lastName": "Smith",
+    "email": "stan.smith@fox.com",
+    "ip": "127.0.0.1"
+  },
+  "billingAddress": {
+    "street1": "Street line 1",
+    "street2": "Street line 2",
+    "city": "Calgary",
+    "state": "AB",
+    "country": "CA",
+    "zip": "T3H3L3"
+  },
+  "returnLinks": [
+    {
+      "rel": "default",
+      "href": "https://mysite.com/return"
+    }
+  ],
+  "paymentType": "IDEAL",
+  "ideal": {
+    "descriptor": "sampledesc",
+    "sepa": {
+      "bankName": "ing",
+      "country": "NL"
+    }
+  }
+}
+```
+
+<a name="profile"></a>
+## profile
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|firstName               |string<br/>`length<=80`  |This is the customer’s first name.|
+|lastName                |string<br/>`length<=80`  |This is the customer's last name.|
+|email                   |string<br/>`length<=255` |This is the customer's email address.|
+|ip                      |string<br/>`length<=50`  |The IP address the customers device.|
+
+
+<a name="refund"></a>
+## refund
+
+|Element                 |Type                         |Description |
+|---                     |---                          |--- |
+|id                      |string<br/>`length<=36`      |This is the ID returned in the response. This ID can be used for future associated requests.|
+|merchantRefNum          |string<br/>`length<=255`     |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
+|amount                  |number<br/>`max=99999999999` |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139|
+|dupCheck                |boolean                      |This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.<br/>Note: This value defaults to <i>true</i>.|
+
+<a name="return"></a>
+## return
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+
+<a name="returnLink"></a>
+## returnLink
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|rel                     |string<br/>`length=X`  | |
+|href                    |string<br/>`length=X`  | |
+
+<a name="settlement"></a>
+## settlement
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+
+<a name="sepa"></a>
+## sepa
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|accountHolderName       |string<br/>`length<=50`  |This is the name of the customer or company.|
+|iban                    |string<br/>`length=1-34` |This is the International Bank Account Number for the customer's bank account.|
+
+<a name="sofort"></a>
+## sofort
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
+
+
 
 # Payments [/payments]
 
@@ -475,6 +630,11 @@ one or the other, and some may support both (for example Paypal).
 
 > Note that each payment type and currency is associated with its own distinct account.  
 > Please contact Paysafe Merchant Support to enable additional payment types and or currencies.
+
++ Model (application/json)
+
+        Include billingDetails
+        
 
 ## Create Payment [POST /accounts/{accountId}/payments]
 
@@ -503,7 +663,7 @@ You can submit a payment request using local payment methods that your customers
 
 <u>Payment Specific Attributes</U>
 
-![iDeal](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)
+![iDeal](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png) See: [sepa](#sepa)
 <code>
 <b>ideal.descriptor</b> - Descriptor to display on customers statement <i>(max 16 alphanumeric)</i><br/>
 <b>ideal.sepa.bankName</b> - <i>Required</i> The customers bank. <i>Options (abn\_amro, rabobank, bunq, ing, triodos, asn\_bank, sns\bank, regiobank, van_lanshot, knab)</i><br/>
@@ -537,6 +697,7 @@ You can submit a payment request using local payment methods that your customers
 <b>boku.customerCountry</b> - <i>Required</i> The country of registration for the customers mobile phone<br/>
 <b>boku.customerMobilePhone</b> - <i>Required</i> The customers mobile phone number<br/>
 </code>
+
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1146,6 +1307,14 @@ is disabled.
 
 + `merchantRefNum`: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
 + `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
++ `settleWithAuth`: `true` (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
+
+    false - the request is not automatically settled, you have to post a subsequent settlement to capture funds
+    true - the request is settled (default)
+
+    If the merchant wants to find out whether an authorization has been settled, they should check the availableToSettle element. 
+    If the amount is 0, the authorization has been fully settled.
+
 + `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 + `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
 + Include Profile Request
@@ -1156,6 +1325,7 @@ is disabled.
 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 + `merchantRefNum`: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
++ `settleWithAuth`: `true` (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
 + `amount`: `100` (number) - This is the amount of the request, in minor units.
 + `currencyCode`: `EUR` (string) - This is the currency of the payment.
 + Include Profile Response
@@ -1164,7 +1334,13 @@ is disabled.
 + `liveMode`: `false` (string) - This indicates whether this is a Live or Test transaction.
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 + `status`: `INITIATED` (string) - This is the status of the transaction request.
-
++ `statusReason`: `USER_CANCELLED` (enum)
+    + Members
+        + `USER_CANCELLED`
+        + `MERCHANT_CANCELLED`
+        + `AUTH_VOIDED`
+        + `AUTH_EXPIRED`        
+        
 ## Profile Request 
 
 + `profile` (object, optional) - These are some details about the customer.
