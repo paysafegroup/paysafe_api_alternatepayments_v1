@@ -561,7 +561,6 @@ You can submit a payment request using local payment methods that your customers
               "dupCheck": true,
               "amount": 100,
               "currencyCode": "EUR",
-              "descriptor": "Test description",
               "profile": {
                 "firstName": "Stan",
                 "lastName": "Smith",
@@ -584,8 +583,9 @@ You can submit a payment request using local payment methods that your customers
               ],
               "paymentType": "IDEAL",
               "ideal": {
+                "descriptor": "sampledesc",
                 "sepa": {
-                  "bankName": "ING",
+                  "bankName": "ing",
                   "country": "NL"
                 }
               }
@@ -620,7 +620,6 @@ You can submit a payment request using local payment methods that your customers
                   "href": "https://mysite.com/return"
                 }
               ],
-              "descriptor": "test descriptor",
               "liveMode": "false",
               "txnTime": "2015-12-11T16:33:49Z",
               "status": "INITIATED",
@@ -631,6 +630,7 @@ You can submit a payment request using local payment methods that your customers
               },
               "paymentType": "IDEAL",
               "ideal": {
+                "descriptor": "sampledesc",
                 "sepa": {
                   "bankName": "ing",
                   "country": "NL"
@@ -812,6 +812,44 @@ Retrieve a list of any returns associated to this payment.
 
 
 + Response 201 (application/json)
+
+    + Body
+    
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "returns": [
+                    {
+                        "id": "455dc29c-26f3-43fb-b086-9b76672b17c2",
+                        "merchantRefNum": "1487029009",
+                        "amount": 400,
+                        "currencyCode": "EUR",
+                        "paymentType": "SOFORT",
+                        "txnTime": "2017-02-13T23:38:29Z",
+                        "liveMode": true,
+                        "status": "COMPLETED",
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/returns/455dc29c-26f3-43fb-b086-9b76672b17c2"
+                            }
+                        ]
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/payments/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
+                    },
+                    {
+                        "rel": "payments",
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/payments/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
+                    }
+                ]
+            }    
 
 
 # Settlements [/settlements]
