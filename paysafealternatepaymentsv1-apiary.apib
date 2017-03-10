@@ -12,10 +12,9 @@ Request and response payloads are formatted as JSON.
 
 |API Version    |Release      |Patch Date            |Details|
 |---            |---          |---                   |---|
-|v1             |1.2          |2017-03-01            |- Added support for authorization, settlement|
+|v1             |1.2          |2017-03-08            |- Added support for delayed settlement|
 |               |             |                      |- Support returns on settlement|
 |               |             |                      |- Ability to refund a settlement|
-|               |             |                      |- Added Payolution|
 |v1             |1.1          |2016-12-15            |- Added support for Boku, Giropay|
 |v1             |1.0          |2016-08-01            |- Initial release with support for iDeal, Sofort|
 
@@ -479,6 +478,7 @@ are provided to navigate through the set of resources in the collection.
 {
     "billingDetails": {
         "street1": "100QueenStreetWest",
+        "street2": "Building 2",
         "city": "Toronto",
         "state": "ON",
         "country": "CA",
@@ -496,6 +496,15 @@ are provided to navigate through the set of resources in the collection.
 |customerCountry         |string                 |The country of registration for the customers mobile phone.|
 |customerMobilePhone     |string                 |The customers mobile phone number.|
 
+```
+{
+    "boku": {
+        "descriptor": "custom descriptor",
+        "customerCountry": "GB",
+        "customerMobilePhone": "44292102029"
+    }
+}
+```
 
 <a name="giropay"></a>
 ## giropay
@@ -505,6 +514,16 @@ are provided to navigate through the set of resources in the collection.
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
 
+```
+{
+    "giropay": {
+        "descriptor": "custom descriptor",
+        "sepa": {
+        }
+    }
+}
+```
+
 <a name="ideal"></a>
 ## ideal
 
@@ -513,6 +532,15 @@ are provided to navigate through the set of resources in the collection.
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
 
+```
+{
+    "ideal": {
+        "descriptor": "custom descriptor",
+        "sepa": {
+        }
+    }
+}
+```
 <a name="payment"></a>
 ## payment
 
@@ -611,6 +639,15 @@ are provided to navigate through the set of resources in the collection.
 |accountHolderName       |string<br/>`length<=50`  |This is the name of the customer or company.|
 |iban                    |string<br/>`length=1-34` |This is the International Bank Account Number for the customer's bank account.|
 
+```
+{
+    "sepa": {
+        "accountHolderName": "John Doe",
+        "iban": "DE89370400440532013000"
+    }
+}
+```
+
 <a name="sofort"></a>
 ## sofort
 
@@ -619,7 +656,15 @@ are provided to navigate through the set of resources in the collection.
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
 
-
+```
+{
+    "sofort": {
+        "descriptor": "custom descriptor",
+        "sepa": {
+        }
+    }
+}
+```
 
 # Payments [/payments]
 
