@@ -646,6 +646,8 @@ Payment objects are used to define additional values that can be supplied with y
 <a name="boku"></a>
 ## boku
 
+![Boku](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)
+
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=20` |Descriptor to display on customers statement.|
@@ -665,10 +667,15 @@ Payment objects are used to define additional values that can be supplied with y
 <a name="giropay"></a>
 ## giropay
 
+![Giropay](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png) 
+
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|descriptor              |string<br/>`length=27` |<i>Required</i>This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
+|sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
+|sepa.bic<               |string                 |The Bank Identifier Code (BIC) of the account.|
+|sepa.accountHolderName  |string                 |The account holders name.|
 
 ```
 {
@@ -681,18 +688,27 @@ Payment objects are used to define additional values that can be supplied with y
 ```
 
 <a name="ideal"></a>
-## ideal
+## ideal 
+
+![iDeal](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
+|sepa                    |[sepa](#sepa)          |The customers SEPA bank account details (if applicable). |
+|sepa.bankName           |enum                   |<i>Required</i> The customers bank. <br/><b>Options: <ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
+|sepa.country            |enum                   |<i>Required</i> The customers bank country.|
+|sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
+|sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
+|sepa.accountHolderName  |string                 |The account holders name.|
 
 ```
 {
     "ideal": {
         "descriptor": "custom descriptor",
         "sepa": {
+            "bankname": "abn_amro",
+            "country": "NL"
         }
     }
 }
@@ -700,6 +716,8 @@ Payment objects are used to define additional values that can be supplied with y
 
 <a name="sofort"></a>
 ## sofort
+
+![Sofort](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png)
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
@@ -762,40 +780,11 @@ You can submit a payment request using local payment methods that your customers
 
 <u>Payment Specific Attributes</U>
 
-![iDeal](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png) See: [sepa](#sepa)
-<code>
-<b>ideal.descriptor</b> - Descriptor to display on customers statement <i>(max 16 alphanumeric)</i><br/>
-<b>ideal.sepa.bankName</b> - <i>Required</i> The customers bank. <i>Options (abn\_amro, rabobank, bunq, ing, triodos, asn\_bank, sns\bank, regiobank, van_lanshot, knab)</i><br/>
-<b>ideal.sepa.country</b> - <i>Required</i> The customers bank country<br/>
-<b>ideal.sepa.iban</b> - The International Bank Account Number (IBAN) of the account<br/>
-<b>ideal.sepa.bic</b> - The Bank Identifier Code (BIC) of the account<br/>
-<b>ideal.sepa.accountHolderName</b> - The account holders name<br/>
-</code>
+See [Payment Objects](#paymentObjects) for details around specific values for your payment type or select payment type below.
 
-![Sofort](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png)
-<code>
-<b>sofort.descriptor</b> - Descriptor to display on customers statement<br/>
-<b>sofort.sepa.bankName</b> - The customers bank<br/>
-<b>sofort.sepa.country</b> - The customers bank country<br/>
-<b>sofort.sepa.iban</b> - The International Bank Account Number (IBAN) of the account<br/>
-<b>sofort.sepa.bic</b> - The Bank Identifier Code (BIC) of the account<br/>
-<b>sofort.sepa.accountHolderName</b> - The account holders name<br/>
-</code>
-
-![Giropay](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png) 
-<code>
-<b>giropay.descriptor</b> - <i>Required (max 27 alphanumeric)</i><br/>
-<b>giropay.sepa.iban</b> - The International Bank Account Number (IBAN) of the account<br/>
-<b>giropay.sepa.bic</b> - The Bank Identifier Code (BIC) of the account<br/>
-<b>giropay.sepa.accountHolderName</b> - The account holders name</br>
-</code>
-
-![Boku](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)
-<code>
-<b>boku.descriptor</b> - <i>Required (max 20 char)</i> Descriptor to display on customers statement<br/>
-<b>boku.customerCountry</b> - <i>Required</i> The country of registration for the customers mobile phone<br/>
-<b>boku.customerMobilePhone</b> - <i>Required</i> The customers mobile phone number<br/>
-</code>
+| | | | |
+|---|---|---|---|
+|[![iDeal](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)](#boku)|
 
 
 + Parameters
