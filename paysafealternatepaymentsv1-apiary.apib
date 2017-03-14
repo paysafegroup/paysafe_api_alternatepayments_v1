@@ -460,6 +460,9 @@ are provided to navigate through the set of resources in the collection.
 
 ```
 
+# Resource Hierarchy and State Transition
+
+
 # Common Objects
 
 <a name="billingDetails"></a>
@@ -497,30 +500,37 @@ are provided to navigate through the set of resources in the collection.
 |year                    |string<br/>`length=2`  |2 digit day, DD|
 
 
+```
+{
+    "day": "01",
+    "month": "12",
+    "year": "2000"
+}
+```
+
 <a name="payment"></a>
 ## payment
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|id                      |string                 ||
+|id                      |string                 |Unique system generated identifier for this payment.|
 |merchantRefNum          |string                 |<i>required</i> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent settlement to capture funds<br/><b>true</b> - the request is settled (default)<br/>If the merchant wants to find out whether an authorization has been settled, they should check the availableToSettle element.<br/>If the amount is 0, the authorization has been fully settled.|
 |amount                  |number                 |<i>required</i> This is the amount of the request, in minor units.|
 |currencyCode            |string                 |This is the currency of the payment.|
-|availableToSettle       |number                 ||
-|profile                 |[profile](#profile)    ||
-|billingDetails          |[billingDetails](#billingDetails) ||
-|shippingDetails         |[shippingDetails](#shippingDetails) ||
-|descriptor              |string                 ||
-|txnTime                 |datetime               ||
-|error                   |[error](#error)        ||
-|status                  |enum                   ||
-|statusReason            |enum                   |<ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul>|
-|gatewayResponse         |gatewayResponse        ||
-|[Payment Object](#paymentObjects)| ||
+|availableToSettle       |number                 |This is the amount of of the Authorization remaining to settle, in minor units.|
+|billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
+|shippingDetails         |[object](#shippingDetails) |These are the shi8pping details for the payment.|
+|txnTime                 |datetime               |This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`|
+|error                   |[object](#error)       |The associated error details for this payment (if applicable).|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li>|
+|statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.|
+|paymentType             |enum                   |Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li></ul>|
+|[Payment Object](#paymentObjects)|object        |Optional payment object depending upon the paymentType.|
 
-```apib
+```
 {
   "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
   "dupCheck": true,
@@ -566,13 +576,31 @@ are provided to navigate through the set of resources in the collection.
 |firstName               |string<br/>`length<=80`  |<i>required</i>This is the customer’s first name.|
 |lastName                |string<br/>`length<=80`  |<i>required</i>This is the customer's last name.|
 |email                   |string<br/>`length<=255` |<i>required</i>This is the customer's email address.|
-|dateOfBirth             |[date](#date)            |   ||
+|dateOfBirth             |[object](#date)          |   ||
 |gender                  |enum                     |<ul><li>M - Male</li><li>F - Female</li><li>O - Other</li><li>N - Not Specificd</li></ul>|
-|phone                   |                         ||
-|cellphone               |                         ||
+|phone                   |string                   ||
+|cellphone               |string                   ||
 |ip                      |string<br/>`length<=50`  |The IP address the customers device.|
 |locale                  |enum                     ||
 
+```
+{
+    "title": "",
+    "firstName": "",
+    "lastName": "",
+    "email": "",
+    "dateOfBirth": {
+        "day": "",
+        "month": "",
+        "year": ""
+    },
+    "gender": "",
+    "phone": "",
+    "cellphone": "",
+    "ip": "",
+    "locale": ""
+}
+```
 
 <a name="refund"></a>
 ## refund
@@ -584,11 +612,37 @@ are provided to navigate through the set of resources in the collection.
 |amount                  |number<br/>`max=99999999999` |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139|
 |dupCheck                |boolean                      |This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.<br/>Note: This value defaults to <i>true</i>.|
 
+```
+{
+    "id": "",
+    "merchantReFNum": "",
+    "amount": "",
+    "dupCheck": ""
+}
+```
+
 <a name="return"></a>
 ## return
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
+|id                      |string                 ||
+|amount                  |number                 ||
+|currencyCode            |enum<br/>`length=3`    ||
+|paymentType             |enum                   ||
+|txnTime                 |datetime               ||
+|status                  |                       ||
+
+```
+{
+    "id": "",
+    "amount": "",
+    "currencyCode": "",
+    "paymentType": "",
+    "tnxTime": "",
+    "status": ""
+}
+```
 
 <a name="returnLink"></a>
 ## returnLink
@@ -598,11 +652,47 @@ are provided to navigate through the set of resources in the collection.
 |rel                     |string<br/>`length=X`  | |
 |href                    |string<br/>`length=X`  | |
 
+```
+{
+    "rel": "",
+    "href": ""
+}
+```
+
 <a name="settlement"></a>
 ## settlement
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
+|id                      |string                 ||
+|merchantRefNum          |string                 |<i>required</i> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
+|dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|amount                  |number                 |<i>required</i> This is the amount of the request, in minor units.|
+|currencyCode            |string                 |This is the currency of the payment.|
+|availableToRefund       |number                 |This is the amount of this settlement that is available to refund, in minor units.|
+|txnTime                 |datetime               |This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`|
+|error                   |[object](#error)       |The associated error details for this payment (if applicable).|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.|
+|paymentType             |enum                   |Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li></ul>|
+|[Payment Object](#paymentObjects)|object        |Optional payment object depending upon the paymentType.|
+
+
+```
+{
+    "id": "",
+    "merchantRefNum": "",
+    "dupCheck": "",
+    "amount": "",
+    "currencyCode": "",
+    "availableToRefund": "",
+    "txnTime": "",
+    "error": "",
+    "status": "",
+    "gatewayREsponse": "",
+    "paymentType": ""
+}
+```
 
 <a name="sepa"></a>
 ## sepa
@@ -636,6 +726,12 @@ are provided to navigate through the set of resources in the collection.
 |state                   |string                  ||
 |country                 |enum                    |<b><i>required</i></b>|
 |zip                     |string                  |<b><i>required</i></b>|
+
+```
+{
+
+}
+```
 
 
 <a name="paymentObjects"></a>
@@ -672,9 +768,9 @@ Payment objects are used to define additional values that can be supplied with y
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=27` |<i>Required</i>This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
+|sepa                    |[object](#sepa)        |The customsrs SEPA bank account details.|
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
-|sepa.bic<               |string                 |The Bank Identifier Code (BIC) of the account.|
+|sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
 |sepa.accountHolderName  |string                 |The account holders name.|
 
 ```
@@ -695,7 +791,7 @@ Payment objects are used to define additional values that can be supplied with y
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[sepa](#sepa)          |The customers SEPA bank account details (if applicable). |
+|sepa                    |[object](#sepa)        |The customers SEPA bank account details (if applicable). |
 |sepa.bankName           |enum                   |<i>Required</i> The customers bank. <br/><b>Options: <ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
 |sepa.country            |enum                   |<i>Required</i> The customers bank country.|
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
@@ -722,7 +818,7 @@ Payment objects are used to define additional values that can be supplied with y
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[sepa](#sepa)          |The customsrs SEPA bank account details.|
+|sepa                    |[object](#sepa)        |The customsrs SEPA bank account details.|
 
 ```
 {
@@ -1305,6 +1401,8 @@ Return reversal transactions will be automatically created by Paysafe if we rece
 
 ## List return reversals [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
 
+Returns a collection of return reversal details.
+
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + returnId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return identifier.
@@ -1320,6 +1418,8 @@ Return reversal transactions will be automatically created by Paysafe if we rece
                                                 
 
 ## Lookup Return Reversal [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
+
+Returns an individual return reversal detail.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1506,6 +1606,8 @@ is disabled.
 
 + `boku` (object) - OPTIONAL attributes that can be passed that when making a BOKU payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
+    + `customerCountry` : `US` (string, required) - the desc.
+    + `customerMobilePhone`: `17802323333` (string, required) - The customers mobile phone number.  Full number including international dialing code (country code).
 
 ## `bokuGatewayResponse`
 
