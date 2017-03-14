@@ -1186,58 +1186,6 @@ Retrieve a list of any settlements associated to this payment.
             
             
 
-## List returns [GET /accounts/{accountId}/payment/{paymentId}/returns]
-
-Retrieve a list of any returns associated to this payment.
-
-+ Request (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-
-+ Response 201 (application/json)
-
-    + Body
-    
-            {
-                "meta": {
-                    "numberOfRecords": 1,
-                    "limit": 10,
-                    "page": 1
-                },
-                "returns": [
-                    {
-                        "id": "455dc29c-26f3-43fb-b086-9b76672b17c2",
-                        "merchantRefNum": "1487029009",
-                        "amount": 400,
-                        "currencyCode": "EUR",
-                        "paymentType": "SOFORT",
-                        "txnTime": "2017-02-13T23:38:29Z",
-                        "liveMode": true,
-                        "status": "COMPLETED",
-                        "links": [
-                            {
-                                "rel": "self",
-                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/returns/455dc29c-26f3-43fb-b086-9b76672b17c2"
-                            }
-                        ]
-                    }
-                ],
-                "links": [
-                    {
-                        "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/payments/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
-                    },
-                    {
-                        "rel": "payments",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/payments/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
-                    }
-                ]
-            }    
-
-
 # Settlements [/settlements]
 
 A settlement allows you to settle an amount that was previously authorized for a customer.  It is the process 
@@ -1370,6 +1318,57 @@ exceed the original settlement amount.
 
     + Attributes (Refund Response)
 
+
+## List returns [GET /accounts/{accountId}/settlements/{settlementId}/returns]
+
+Retrieve a list of any returns associated to this settlement.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
+    + Body
+    
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "returns": [
+                    {
+                        "id": "455dc29c-26f3-43fb-b086-9b76672b17c2",
+                        "merchantRefNum": "1487029009",
+                        "amount": 400,
+                        "currencyCode": "EUR",
+                        "paymentType": "SOFORT",
+                        "txnTime": "2017-02-13T23:38:29Z",
+                        "liveMode": true,
+                        "status": "COMPLETED",
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/returns/455dc29c-26f3-43fb-b086-9b76672b17c2"
+                            }
+                        ]
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/payments/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
+                    },
+                    {
+                        "rel": "payments",
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/payments/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
+                    }
+                ]
+            }    
 
 
 # Returns [/returns]
