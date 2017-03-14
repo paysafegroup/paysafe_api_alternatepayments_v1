@@ -680,18 +680,25 @@ are provided to navigate through the set of resources in the collection.
 
 ```
 {
-    "id": "",
-    "merchantRefNum": "",
-    "dupCheck": "",
-    "amount": "",
-    "currencyCode": "",
-    "availableToRefund": "",
-    "txnTime": "",
-    "error": "",
-    "status": "",
-    "gatewayREsponse": "",
-    "paymentType": ""
+    "id": "30381792-1237-4868-8fd3-73196e94d009",
+    "merchantRefNum": "1489522059",
+    "dupCheck": true,
+    "amount": 100,
+    "currencyCode": "EUR",
+    "paymentType": "PAYOLUTION",
+    "liveMode": true,
+    "txnTime": "2017-03-14T20:07:39Z",
+    "availableToRefund": 100,
+    "status": "COMPLETED",
+    "gatewayResponse": {
+        "code": "0.0.0",
+        "description": "The request was processed successfuly.",
+        "id": "d3188d9c-f81a-4958-8505-03764bf577f2",
+        "processor": "PAYOLUTION",
+        "paymentType": "DB"
+    }
 }
+
 ```
 
 <a name="sepa"></a>
@@ -886,7 +893,8 @@ See [Payment Objects](#paymentObjects) for details around specific values for yo
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
 
-+ Attributes (Payment Request Base)
++ Attributes
+    + Include Payment Request Base
     + Include paymentType            
     + Include ideal
     + Include sofort
@@ -1215,9 +1223,20 @@ part of an existing payment authorization.
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
+        
+    + Attributes
+        + Include Settlement Request
+       
 
 + Response 201 (application/json)
+
+    + Attributes
+        + Include Refund Request
+        + links (array) - This is an array of related links. 
+            + (object)
+                + rel: `self`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1001386530/settlements/30381792-1237-4868-8fd3-73196e94d009`
+
 
 ## Lookup a settlement by id [GET /accounts/{accountId}/settlements/{settlementId}]
 
@@ -1234,24 +1253,12 @@ part of an existing payment authorization.
 
 + Response 201 (application/json)
 
-    + Body
-
-            {
-                "id": "670c8464-f7bf-45da-ba53-972abf7701e4",
-                "merchantRefNum": "1486757872",
-                "amount": 400,
-                "currencyCode": "EUR",
-                "paymentType": "SOFORT",
-                "liveMode": true,
-                "txnTime": "2017-02-10T20:17:51Z",
-                "status": "COMPLETED",
-                "links": [
-                    {
-                        "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/settlements/670c8464-f7bf-45da-ba53-972abf7701e4"
-                    }
-                ]
-            }    
+    + Attributes
+        + Include Refund Request
+        + links (array) - This is an array of related links. 
+            + (object)
+                + rel: `self`
+                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1001386530/settlements/30381792-1237-4868-8fd3-73196e94d009`
 
 
 ## List settlements by merchantRefNum [GET /accounts/{accountId}/settlements/?merchantRefNum={merchantRefNum}]
@@ -1578,6 +1585,24 @@ is disabled.
     + ([object])
         + `rel`: `self`
         + `href`: `https://api.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
+
+## Settlement Request
+
++ `merchantRefNum`: `1489522059` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
++ `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
+
+## Settlement Response
+
++ `id`: `30381792-1237-4868-8fd3-73196e94d009` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
++ `merchantRefNum`: `1489522059` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
++ `amount`: `100` (number) - This is the amount of the request, in minor units.
++ `currencyCode`: `EUR` (string) - This is the currency of the payment.
++ `liveMode`: `false` (string) - This indicates whether this is a Live or Test transaction.
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
++ `status`: `COMPLETED` (string) - This is the status of the setllement request.
 
 ## `returnLinks`
 
