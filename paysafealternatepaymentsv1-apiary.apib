@@ -302,127 +302,6 @@ HTTP response codes are used to indicate the status of a request.
 |502 EXTERNAL SERVER ERROR|We received an invalid response from the upstream gateway in attempting to fulfill the request.|
 
 
-## Errors
-
-To ease integration and support for developers 
-integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.  
-
-The error structure contains a code as well as a human readable message. 
-Additionally, the application error code will be returned in the header as *x-application-error-code* 
-so it can be easily used by an application without parsing the body.
-<br/>
-
-**Error Attributes**
-
-|Element            |Type                |Description|
-|---                |---                 |---|
-|error.code         |String              |This is the error code.|
-|error.message      |String              |This is a description of the error.|
-|error.details      |Array of String     |*if applicable* This is a collection of detailed descriptions.|
-|error.fieldErrors  |Array of fieldError |*if applicable* This is a list of fields that have problems.|
-|error.links        |Array of link       |*if applicable* Links to the error documentation.|
-|id                 |String              |*if applicable* This is the is the unique identifier for the related resource.|
-|merchantRefNum     |String              |*if applicable* This is the identifier provided by the merchant for a transaction.|
-|riskReasonCode     |String              |*if applicable* This is the associated risk reason.|
-|links              |Array of link       |*if applicable* The link to the related resource.|
-
-**Error message example with details**
-
-```
-Status-Code: 402
-
-x-application-status-code: ALTERNATIVE-PAYMENTS-GATEWAY-6 
-x-application-error-code: ALTERNATIVE-PAYMENTS-GATEWAY-6
-x-application-error-message: Bad Request
-x-application-error-details: Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]
-
-{
-    "error": {
-        "code": "5023",
-        "message": "Bad Request",
-        "details": {
-            "Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]"
-        }
-    }
-}
-```
- 
-**Error message example with field errors**
-
-```
-Status-Code: 400
-
-x-application-status-code: 5068
-x-application-error-code: 5068
-x-application-error-message: Field Error(s)
-x-application-error-details: Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected.
-
-{
-    "error": {
-        "code": 5068,
-        "message": "Field Error(s)",
-        "details": [
-            "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
-        ],        
-        "fieldErrors": [{
-            "field": "recipientEmail",
-            "error": "john@hi@you.c.c.c.c is not a valid e-mail address."
-        }, {
-            "field": "transaction.amount",
-            "error": "A transaction amount is required."
-        }, {
-            "field": "transaction.currency",
-            "error": "Currency with value [USD] exceeds the maximum size of [3]."
-        }]
-    }
-}
-```
-
-
-These are the error codes common to all subsystems
-
-|HTTP Status   |Error Code     |Message                                 |Details|
-|---           |---            |---                                     |---|
-|400           |5001           |Invalid currency                        |The submitted currency code is invalid or your account does not support this currency.|
-|              |5005           |Unsupported operation                   |You submitted an an invalid or unsupported operation type with your request.|
-|              |5010           |Invalid country                         |The submitted country code is invalid.|
-|              |5016           |Account not found                       |The account you provided cannot be found.|
-|              |5017           |Account disabled                        |The account you provided is disabled.|
-|              |5023           |Bad request                             |The request is not parseable.|
-|              |5042           |Invalid merchant reference              |This error usually indicates that a transaction was attempted with the merchant reference field missing. This value is mandatory and must be included with your request.|
-|              |5068           |Field error(s)                          |Either you submitted a request that is missing a mandatory  field or the value of a field does not match the format expected.|
-|              |5082           |Mode not permitted                      |The request was sent in a mode that is not permitted. For example, a Live refund request was made on a Test authorization request.|
-|              |5283           |Duplicate merchant reference            |The provided reference has already been used for another request.|
-|401           |5275           |Authentication credentials expired      |The authentication credentials provided with the request have expired.|
-|              |5276           |Authentication credentials disabled     |The authentication credentials provided with the request provided have been disabled.|
-|              |5277           |Authentication credentials locked       |The authentication credentials provided with the request have been locked due to multiple authentication failures.|
-|              |5278           |Cannot authenticate                     |The authentication credentials provided with the request were not accepted for an unknown reason.| 
-|              |5279           |Authentication credentials are invalid  |The authentication credentials are invalid.|
-|              |5280           |Authentication credentials not provided |The required authentication credentials were not provided.|
-|403           |5270           |Unauthorized access                     |The credentials provided with the request do not have permission to access the requested data.|
-|404           |5269           |Entity not found                        |The ID\(s\) specified in the URL do not correspond to the values in the system.|
-|              |5273           |URI not found                           |Your client reached our application but we were unable to service your request due to an invalid URL.|
-|405           |5281           |Method not supported                    |The request uses an action (e.g., GET, POST, or PUT) that is not supported by the resource.|
-|406           |5271           |Unsupported 'Accept' header             |You requested a response in the 'Accept' header that is in an unsupported format.|
-|415           |5272           |Unsupported 'Content-Type'              |The 'Content-Type' you specified in request header was submitted in an unsupported format.|
-|429           |1200           |API call rate exceeded                  |The API call has been denied as it has exceeded the permissible call rate limit.|
-|500           |1000           |Internal error                          |An internal error occurred.|
-|502           |1001           |External gateway error                  |An external error occurred.|
-
-These errors are specific to the Alternate Payments API.
-
-|HTTP Status   |Error Code                    |Message                                 |Details|                                 
-|---           |---                           |---                                     |---|
-|402           |ALTERNATE-PAYMENTS-GATEWAY-1  |Transaction cancelled at the gateway    |The transaction was cancelled at the gateway.|
-|402           |ALTERNATE-PAYMENTS-GATEWAY-4  |Transaction declined by the gateway     |The transaction declined by the gateway. |
-|402           |ALTERNATE-PAYMENTS-GATEWAY-5  |Incomplete transaction                  |The requested operation can only be executed on a completed transaction.|
-|402           |ALTERNATE-PAYMENTS-GATEWAY-6  |Over refund                             |The total refund amount cannot exceed the original payment amount.|
-|402           |ALTERNATE-PAYMENTS-GATEWAY-7  |Payment expired                         |The payment has expired.|
-|402           |ALTERNATE-PAYMENTS-GATEWAY-8  |Over settlement                         |The total settlement amount cannot exceed the authorized (payment) amount.|
-|402           |ALTERNATE-PAYMENTS-GATEWAY-9  |Risk gateway error                      |A risk issue was reported by the gateway.|
-|502           |ALTERNATE-PAYMENTS-GATEWAY-10 |Payment type temporarily unavailable    |The gateway is temporarily unavailable due to system maintenance activities.|
-
-
 ## HATEOAS
 
 The Alternate Payments API uses a RESTful endpoint structure and relies on HTTP verbs (GET, PUT, POST, DELETE)
@@ -507,6 +386,49 @@ are provided to navigate through the set of resources in the collection.
     "year": "2000"
 }
 ```
+
+<a name="error"></a>
+## error
+
+|Element            |Type                           |Description|
+|---                |---                            |---|
+|error.code         |string                         |<i>Required</i> This is the error code.|
+|error.message      |string                         |<i>Required</i> This is a description of the error.|
+|error.details      |array of string                |This is a collection of detailed descriptions.|
+|error.fieldErrors  |array of [object](#fieldError) |This is a list of fields that have problems.|
+|error.links        |array of [object](#link)       |Links to the error documentation.|
+|id                 |string                         |This is the is the unique identifier for the related resource.|
+|merchantRefNum     |string                         |This is the identifier provided by the merchant for a transaction.|
+|riskReasonCode     |string                         |This is the associated risk reason.|
+|links              |array of [object](#link)       |The link to the related resource.|
+
+```
+{
+    "error": {
+        "code": 5068,
+        "message": "Field Error(s)",
+        "details": [
+            "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
+        ],        
+        "fieldErrors": [{
+            "field": "recipientEmail",
+            "error": "john@hi@you.c.c.c.c is not a valid e-mail address."
+        }, {
+            "field": "transaction.amount",
+            "error": "A transaction amount is required."
+        }, {
+            "field": "transaction.currency",
+            "error": "Currency with value [USD] exceeds the maximum size of [3]."
+        }]
+    }
+}
+```
+
+<a name="fieldError"></a>
+## fieldError
+
+<a name="link"></a>
+## link
 
 <a name="payment"></a>
 ## payment
@@ -836,6 +758,117 @@ Payment objects are used to define additional values that can be supplied with y
     }
 }
 ```
+
+
+# Error Summary
+
+To ease integration and support for developers 
+integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.  
+
+> See [error Object](#error)
+
+The error structure contains a code as well as a human readable message. 
+Additionally, the application error code will be returned in the header as *x-application-error-code* 
+so it can be easily used by an application without parsing the body.
+<br/>
+
+**Error message example with details**
+
+```
+Status-Code: 402
+
+x-application-status-code: ALTERNATIVE-PAYMENTS-GATEWAY-6 
+x-application-error-code: ALTERNATIVE-PAYMENTS-GATEWAY-6
+x-application-error-message: Bad Request
+x-application-error-details: Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]
+
+{
+    "error": {
+        "code": "5023",
+        "message": "Bad Request",
+        "details": {
+            "Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]"
+        }
+    }
+}
+```
+ 
+**Error message example with field errors**
+
+```
+Status-Code: 400
+
+x-application-status-code: 5068
+x-application-error-code: 5068
+x-application-error-message: Field Error(s)
+x-application-error-details: Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected.
+
+{
+    "error": {
+        "code": 5068,
+        "message": "Field Error(s)",
+        "details": [
+            "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
+        ],        
+        "fieldErrors": [{
+            "field": "recipientEmail",
+            "error": "john@hi@you.c.c.c.c is not a valid e-mail address."
+        }, {
+            "field": "transaction.amount",
+            "error": "A transaction amount is required."
+        }, {
+            "field": "transaction.currency",
+            "error": "Currency with value [USD] exceeds the maximum size of [3]."
+        }]
+    }
+}
+```
+
+
+These are the error codes common to all subsystems
+
+|HTTP Status   |Error Code     |Message                                 |Details|
+|---           |---            |---                                     |---|
+|400           |5001           |Invalid currency                        |The submitted currency code is invalid or your account does not support this currency.|
+|              |5005           |Unsupported operation                   |You submitted an an invalid or unsupported operation type with your request.|
+|              |5010           |Invalid country                         |The submitted country code is invalid.|
+|              |5016           |Account not found                       |The account you provided cannot be found.|
+|              |5017           |Account disabled                        |The account you provided is disabled.|
+|              |5023           |Bad request                             |The request is not parseable.|
+|              |5042           |Invalid merchant reference              |This error usually indicates that a transaction was attempted with the merchant reference field missing. This value is mandatory and must be included with your request.|
+|              |5068           |Field error(s)                          |Either you submitted a request that is missing a mandatory  field or the value of a field does not match the format expected.|
+|              |5082           |Mode not permitted                      |The request was sent in a mode that is not permitted. For example, a Live refund request was made on a Test authorization request.|
+|              |5283           |Duplicate merchant reference            |The provided reference has already been used for another request.|
+|401           |5275           |Authentication credentials expired      |The authentication credentials provided with the request have expired.|
+|              |5276           |Authentication credentials disabled     |The authentication credentials provided with the request provided have been disabled.|
+|              |5277           |Authentication credentials locked       |The authentication credentials provided with the request have been locked due to multiple authentication failures.|
+|              |5278           |Cannot authenticate                     |The authentication credentials provided with the request were not accepted for an unknown reason.| 
+|              |5279           |Authentication credentials are invalid  |The authentication credentials are invalid.|
+|              |5280           |Authentication credentials not provided |The required authentication credentials were not provided.|
+|403           |5270           |Unauthorized access                     |The credentials provided with the request do not have permission to access the requested data.|
+|404           |5269           |Entity not found                        |The ID\(s\) specified in the URL do not correspond to the values in the system.|
+|              |5273           |URI not found                           |Your client reached our application but we were unable to service your request due to an invalid URL.|
+|405           |5281           |Method not supported                    |The request uses an action (e.g., GET, POST, or PUT) that is not supported by the resource.|
+|406           |5271           |Unsupported 'Accept' header             |You requested a response in the 'Accept' header that is in an unsupported format.|
+|415           |5272           |Unsupported 'Content-Type'              |The 'Content-Type' you specified in request header was submitted in an unsupported format.|
+|429           |1200           |API call rate exceeded                  |The API call has been denied as it has exceeded the permissible call rate limit.|
+|500           |1000           |Internal error                          |An internal error occurred.|
+|502           |1001           |External gateway error                  |An external error occurred.|
+
+These errors are specific to the Alternate Payments API.
+
+|HTTP Status   |Error Code                    |Message                                 |Details|                                 
+|---           |---                           |---                                     |---|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-1  |Transaction cancelled at the gateway    |The transaction was cancelled at the gateway.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-4  |Transaction declined by the gateway     |The transaction declined by the gateway. |
+|402           |ALTERNATE-PAYMENTS-GATEWAY-5  |Incomplete transaction                  |The requested operation can only be executed on a completed transaction.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-6  |Over refund                             |The total refund amount cannot exceed the original payment amount.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-7  |Payment expired                         |The payment has expired.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-8  |Over settlement                         |The total settlement amount cannot exceed the authorized (payment) amount.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-9  |Risk gateway error                      |A risk issue was reported by the gateway.|
+|502           |ALTERNATE-PAYMENTS-GATEWAY-10 |Payment type temporarily unavailable    |The gateway is temporarily unavailable due to system maintenance activities.|
+
+
 
 # Payments [/payments]
 
