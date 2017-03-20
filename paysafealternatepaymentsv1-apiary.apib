@@ -167,89 +167,6 @@ Sample Response with List Data
 }
 ```
 
-## Resource Expansion
-
-Resource expansion can be compared to eager loading in the database realm. It offers a way to load a specific resource as well as other resources related to it. You are encouraged to use resource expansion when you know you are going to need the extra information. This will reduce the number of API calls as well as the amount of traffic to and from your server. You should avoid resource expansion when you want to reduce the amount of information returned or if you are unsure if you will need the additional resource object.
-<br/><br/>
-By adding an **expand** query parameter to the query you are effectively telling the server to include the details for the reference object in-line.  Any time you encounter an object that contains an "_expandable" section, you will know that the resources
-identified are expandable. Passing that resource name as part of your **expand** parameter list will automatically include the associated resource details in your response.
-<br/><br/>
-
-For resources that have multiple expandable children, you can specify which resources to expand in a comma-separated list. <br />
-For example, <strong>?expand=resource1,resource2</strong>
-
-> Resource Expansion is available only when a single resource is involved. When you look up resources that could return collections of 
-> results, the **_expandable** option will not be present. (I.e., if you query for a specific subscription, then **_expandable** will be available 
-> for related resources such as the customer profile and associated plan for the subscription).  When a collection of related resources 
-> relates to the particular resource you are looking at, a HATEOAS link will be provided instead. A good example of this would be a
-> plan and its related subscriptions.  
-
-<br/>
-Below is a sample account lookup. By default the events resource is not expanded and instead includes a 
-reference link that would provide the relevant details. If you would rather have the full account object returned, 
-then add the **'expand=events'** parameter to your request and you will see the second events returned in-line.
-<br/>
-
-*Result without resource expansion*
-
-```
-GET /alternatepayments/admin/v1/accounts/987001112
-{
-    "id": "987001112", 
-    "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
-    "processorCode": "PAYON",
-    "paymentType": "IDEAL",
-    "currencyCode": "EUR",
-    "status": "ENABLED",
-    "creationTime": "2016-04-05T15:17:57Z",
-    "lastModificationTime": "2016-04-06T15:24:17Z",
-    "allowTestTransaction": false,
-    "_expandable": {
-        "events": "https://api.paysafe.com/alternatepayments/admin/v1/accounts/987001112/events"
-    },        
-    "links": [{
-       "rel": "self",
-       "href": "https://api.paysafe.com/alternatepayments/admin/v1/accounts/987001112"
-    }]
-}
-```
-
-*Result with events expanded*
-
-```
-GET /alternatepayments/admin/v1/accounts/987001112?expand=events
-{
-    "id": "987001112", 
-    "processorId": "b76786b1-4dfa-4b56-b707-976e47075a61",
-    "processorCode": "PAYON",
-    "paymentType": "IDEAL",
-    "currencyCode": "EUR",
-    "status": "ENABLED",
-    "creationTime": "2016-04-05T15:17:57Z",
-    "lastModificationTime": "2016-04-06T15:24:17Z",
-    "allowTestTransaction": false,
-    "events": [{
-           "id": "deadbeef-aec8-41a5-94d7-446bc3999426",
-           "type": "ap_auths_completed"
-    }, {
-           "id": "6ddbc05a-ff40-4dc1-b2d3-f200934dfdde",
-           "type": "ap_auths_failed"
-    }, {
-           "id": "6ddbc05a-ff40-4dc1-b2d3-f20091234567",
-           "type": "ap_refunds_complete"
-    }, {
-           "id": "12345eef-aec8-41a5-94d7-446bc3999426",
-           "type": "ap_refunds_complete"
-    }],
-    "_expandable": {
-        "events": "https://api.paysafe.com/alternatepayments/admin/v1/accounts/987001112/events"
-    },        
-    "links": [{
-       "rel": "self",
-       "href": "https://api.paysafe.com/alternatepayments/admin/v1/accounts/987001112?expand=events"
-    }]
-}
-```
 
 ## Global Invalid Characters
 
@@ -341,6 +258,20 @@ are provided to navigate through the set of resources in the collection.
 
 # Resource Hierarchy and State Transition
 
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/ap_resource_hierarchy.png)
+
+Some resources in the system can transition through various statuses depending on the current state of the resource.  The below diagrams show the
+valid statuses for these complex resources and how they are linked.
+
+*Payments*
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_state_transition_diagram.png)
+
+*Settlements*
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/settlement_state_transition_diagram.png)
+
+*Refunds*
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/settlement_state_transition_diagram.png)
+
 
 # Common Objects
 
@@ -353,7 +284,7 @@ are provided to navigate through the set of resources in the collection.
 |street2                 |string<br/>`length<=50`  |This is the second line of the street address in the billing address, if required (e.g., apartment number).|
 |city                    |string<br/>`length<=40`  |This is the city in the billing address.|
 |state                   |string<br/>`length<=40`  |See Province Codes or State Codes for Canada or the United States.|
-|country                 |string<br/>`length=2`    |<b><i>Required</i></b> See Country Codes.|
+|country                 |string<br/>`length=2`    |<i>required</i> See Country Codes.|
 |zip                     |string<br/>`length<=10`  |This is the postal/zip code in the billing address.|
 
 ```
@@ -392,8 +323,8 @@ are provided to navigate through the set of resources in the collection.
 
 |Element            |Type                           |Description|
 |---                |---                            |---|
-|error.code         |string                         |<i>Required</i> This is the error code.|
-|error.message      |string                         |<i>Required</i> This is a description of the error.|
+|error.code         |string                         |<i>required</i> This is the error code.|
+|error.message      |string                         |<i>required</i> This is a description of the error.|
 |error.details      |array of string                |This is a collection of detailed descriptions.|
 |error.fieldErrors  |array of [object](#fieldError) |This is a list of fields that have problems.|
 |error.links        |array of [object](#link)       |Links to the error documentation.|
@@ -589,7 +520,7 @@ are provided to navigate through the set of resources in the collection.
 |id                      |string                 ||
 |merchantRefNum          |string                 |<i>required</i> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
-|amount                  |number                 |<i>required</i> This is the amount of the request, in minor units.|
+|amount                  |number                 |<i>stat</i> This is the amount of the request, in minor units.|
 |currencyCode            |string                 |This is the currency of the payment.|
 |availableToRefund       |number                 |This is the amount of this settlement that is available to refund, in minor units.|
 |txnTime                 |datetime               |This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`|
@@ -647,14 +578,14 @@ are provided to navigate through the set of resources in the collection.
 |---                     |---                     |--- |
 |carrier                 |enum                    ||
 |shipMethod              |enum                    ||
-|recipientName           |string<br/>`length=255` |<b><i>required</i></b>|
+|recipientName           |string<br/>`length=255` |<i>required</i>|
 |company                 |                        ||
-|street                  |string<br/>`length<=50` |<b><i>required</i></b>|
+|street                  |string<br/>`length<=50` |<i>required</i>|
 |street2                 |string<br/>`length<=50` ||
-|city                    |string<br/>`length<=40` |<b><i>required</i></b>|
+|city                    |string<br/>`length<=40` |<i>required</i>|
 |state                   |string                  ||
-|country                 |enum                    |<b><i>required</i></b>|
-|zip                     |string                  |<b><i>required</i></b>|
+|country                 |enum                    |<i>required</i>|
+|zip                     |string                  |<i>required</i>|
 
 ```
 {
@@ -671,7 +602,9 @@ Payment objects are used to define additional values that can be supplied with y
 <a name="boku"></a>
 ## boku
 
-![Boku](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/boku.png)
+![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)
+
+
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
@@ -692,11 +625,11 @@ Payment objects are used to define additional values that can be supplied with y
 <a name="giropay"></a>
 ## giropay
 
-![Giropay](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/giropay.png) 
+![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png) 
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=27` |<i>Required</i>This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|descriptor              |string<br/>`length=27` |<i>required</i> This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customsrs SEPA bank account details.|
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
@@ -715,14 +648,14 @@ Payment objects are used to define additional values that can be supplied with y
 <a name="ideal"></a>
 ## ideal 
 
-![iDeal](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/ideal.png)
+![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customers SEPA bank account details (if applicable). |
-|sepa.bankName           |enum                   |<i>Required</i> The customers bank. <br/><b>Options: <ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
-|sepa.country            |enum                   |<i>Required</i> The customers bank country.|
+|sepa.bankName           |enum                   |<i>required</i> The customers bank. <br/><b>Options: <ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
+|sepa.country            |enum                   |<i>required</i> The customers bank country.|
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
 |sepa.accountHolderName  |string                 |The account holders name.|
@@ -742,7 +675,7 @@ Payment objects are used to define additional values that can be supplied with y
 <a name="sofort"></a>
 ## sofort
 
-![Sofort](https://github.com/paysafegroup/neteller_rest_api_v1/raw/master/images/payment_icons/sofort.png)
+![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/sofort.png)
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
