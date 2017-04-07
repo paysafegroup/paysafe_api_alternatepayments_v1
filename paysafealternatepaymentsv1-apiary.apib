@@ -273,6 +273,23 @@ valid statuses for these complex resources and how they are linked.
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/settlement_state_transition_diagram.png)
 
 
+# Notifications
+
+You can configure custom notification events for your account(s) from the merchant backoffice.  Notification events could include webhooks, email and/or SMS.  The availibity of notification types will vary 
+depending upon your account type and setup.
+<br/>
+
+The most common notification used as part of your alternate payments integration comes in the form of a webhook.  A webhook allows you to define an HTTP callback that will be POST to when 
+an event occurs that you would like to be notified of.  This would typically include status changes to a payment request.   As many alternate payment flows involve redirecting your customer 
+to a 3rd party site, you have no guarantee they will be properly returned to your site once payment is completed.   For these situations you should make use of webhook notifications.   
+
+Notifications are configured by logging into the merchant backoffice and navigating to the <i>Settings --> Notifications</i> section.  
+<br/>
+> NOTE: Access to this function is dependant upon your user account privileges.  If you are unable to access this function please contact your merchant account support represenative for assistance.
+
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/webhooks_sample.png)
+
+
 # Common Objects
 
 <a name="billingDetails"></a>
@@ -284,7 +301,7 @@ valid statuses for these complex resources and how they are linked.
 |street2                 |string<br/>`length<=50`  |This is the second line of the street address in the billing address, if required (e.g., apartment number).|
 |city                    |string<br/>`length<=40`  |This is the city in the billing address.|
 |state                   |string<br/>`length<=40`  |See Province Codes or State Codes for Canada or the United States.|
-|country                 |string<br/>`length=2`    |<i>required</i> See Country Codes.|
+|country                 |string<br/>`length=2`    |<i>required</i> The ISO 3166-1 Alpha 2-code for the customers billing address. (e.g. Germany = DE, JP=Japan. CA=Canada)|
 |zip                     |string<br/>`length<=10`  |This is the postal/zip code in the billing address.|
 
 ```
@@ -559,15 +576,20 @@ valid statuses for these complex resources and how they are linked.
 
 |Element                 |Type                     |Description |
 |---                     |---                      |--- |
+|bankName                |string                   |The name of the bank.|
+|country                 |string<br/>`length=2`    |The ISO 3166-1 Alpha 2-code for the customers country of residence (e.g. Germany = DE, JP=Japan. CA=Canada)|
 |accountHolderName       |string<br/>`length<=50`  |This is the name of the customer or company.|
+|bic                     |string<br/>`length=8-11` |This is the Bank Identifier Code for the customer's bank account.|
 |iban                    |string<br/>`length=1-34` |This is the International Bank Account Number for the customer's bank account.|
 
 ```
 {
     "sepa": {
+        "bankName": "ING",
+        "country": "NL",
         "accountHolderName": "John Doe",
-        "iban": "DE89370400440532013000"
-    }
+        "bic": "ABNANL2APIP",
+        "iban": "DE89370400440532013000"        
 }
 ```
 
@@ -584,7 +606,7 @@ valid statuses for these complex resources and how they are linked.
 |street2                 |string<br/>`length<=50` ||
 |city                    |string<br/>`length<=40` |<i>required</i>|
 |state                   |string                  ||
-|country                 |enum                    |<i>required</i>|
+|country                 |enum                    |<i>required</i>The ISO 3166-1 Alpha 2-code for the customers shipping address (e.g. Germany = DE, JP=Japan. CA=Canada)|
 |zip                     |string                  |<i>required</i>|
 
 ```
@@ -609,7 +631,7 @@ Payment objects are used to define additional values that can be supplied with y
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=20` |Descriptor to display on customers statement.|
-|customerCountry         |string                 |The country of registration for the customers mobile phone.|
+|customerCountry         |string                 |The ISO 3166-1 Alpha 2-code for the country of registration for the customers mobile phone. (e.g. Germany = DE, JP=Japan. CA=Canada)|
 |customerMobilePhone     |string                 |The customers mobile phone number.|
 
 ```
@@ -631,15 +653,18 @@ Payment objects are used to define additional values that can be supplied with y
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=27` |<i>required</i> This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customsrs SEPA bank account details.|
-|sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
-|sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
 |sepa.accountHolderName  |string                 |The account holders name.|
+|sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
+|sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
 
 ```
 {
     "giropay": {
         "descriptor": "custom descriptor",
         "sepa": {
+            "accountHolderName": "John Doe",
+            "bic": "ABNANL2APIP"
+            "iban": "DE89370400440532013000"                
         }
     }
 }
@@ -655,7 +680,7 @@ Payment objects are used to define additional values that can be supplied with y
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customers SEPA bank account details (if applicable). |
 |sepa.bankName           |enum                   |<i>required</i> The customers bank. <br/><b>Options: <ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
-|sepa.country            |enum                   |<i>required</i> The customers bank country.|
+|sepa.country            |enum                   |<i>required</i> The ISO 3166-1 Alpha 2-code for the customers bank. (e.g. Germany = DE, JP=Japan. CA=Canada)
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
 |sepa.accountHolderName  |string                 |The account holders name.|
@@ -1600,7 +1625,7 @@ is disabled.
 
 + `boku` (object) - OPTIONAL attributes that can be passed that when making a BOKU payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
-    + `customerCountry` : `US` (string, required) - the desc.
+    + `customerCountry` : `US` (string, required) - The ISO 3166-1 Alpha 2-code for the customers mobile country of registration.(e.g. Germany = DE, JP=Japan. CA=Canada)
     + `customerMobilePhone`: `17802323333` (string, required) - The customers mobile phone number.  Full number including international dialing code (country code).
 
 ## `bokuGatewayResponse`
@@ -1626,7 +1651,7 @@ is disabled.
     
 ## `sepa` 
 
-+ `country`: `NL` (string)
++ `country`: `NL` (string) - The ISO 3166-1 Alpha 2-code for the customers bank (e.g. Germany = DE, JP=Japan. CA=Canada)
 + `bic`: `BARCGB22XXX` (string)
 + `iban`: `AZ21NABZ00000000137010001944` (string)
 + `accountHolderName`: `Max Mustermann` (string)
