@@ -285,7 +285,7 @@ to a 3rd party site, you have no guarantee they will be properly returned to you
 
 Notifications are configured by logging into the merchant backoffice and navigating to the <i>Settings --> Notifications</i> section.  
 <br/>
-> NOTE: Access to this function is dependant upon your user account privileges.  If you are unable to access this function please contact your merchant account support represenative for assistance.
+> NOTE: Access to this function is dependant upon your user account privileges.  If you are unable to access this function please contact your merchant account support representative for assistance.
 
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/webhooks_sample.png)
 
@@ -480,15 +480,28 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |id                      |string<br/>`length<=36`      |This is the ID returned in the response. This ID can be used for future associated requests.|
 |merchantRefNum          |string<br/>`length<=255`     |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
 |amount                  |number<br/>`max=99999999999` |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139|
-|dupCheck                |boolean                      |This validates that this request is not a duplicate. A request is considered a duplicate if the merchantRefNum has already been used in a previous request within the past 90 days.<br/>Note: This value defaults to <i>true</i>.|
-
+|currencyCode            |                             ||
+|paymentType             |                             ||
+|txnTime                 |                             ||
+|status                  |                             ||
+|gatewayReponse          |                             ||
 ```
 {
-    "id": "",
-    "merchantReFNum": "",
-    "amount": "",
-    "dupCheck": ""
-}
+  "id": "6565bce8-9ae2-4359-bc7c-48c2e560810b",
+  "liveMode": true,
+  "merchantRefNum": "xyz",
+  "amount": 400,
+  "currencyCode": "EUR",
+  "paymentType": "IDEAL",
+  "txnTime": "2016-02-24T08:39:39Z",
+  "status": "COMPLETED",
+  "gatewayResponse": {
+    "code": "000.100.110",
+    "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
+    "id": "9bcaa7f0dba44c64981881401794abby",
+    "processor": "PAYON",
+    "paymentType": "RF"
+  }
 ```
 
 <a name="return"></a>
