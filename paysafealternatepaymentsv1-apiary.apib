@@ -290,6 +290,29 @@ Notifications are configured by logging into the merchant backoffice and navigat
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/webhooks_sample.png)
 
 
+|Event|Description|
+|---|---|
+|AP\_PAYMENT\_PROCESSING|The alternate payment authorization was requested but is still to be accessed by the downstream PSP.|
+|AP\_PAYMENT\_COMPLETED|The alternate payment authorization was successful.|
+|AP\_PAYMENT\_FAILED|The alternate payment authorization was declined or rejected.|
+|AP\_PAYMENT\_CANCELLED|The alternate payment authorization was cancelled.  This is usually the result of a voidauth in a delayed settlement transaction.|
+|AP\_PAYMENT\_ERRORED|The alternate payment authorization has failed due to an error.|
+|AP\_PAYMENT\_EXPIRED|The alternate payment authorization has expired.|
+|AP\_REFUND\_COMPLETED|The alternate payment refund was successful.|
+|AP\_REFUND\_FAILED|The alternate payment refund was declined or rejected.|
+|AP\_REFUND\_CANCELLED|The alternate payment refund was cancelled.|
+|AP\_REFUND\_ERRORED|The alternate payment refund has failed due to an error.|
+|AP\_RETURN\_COMPLETED|The downstream PSP has notified of a credit loss.|
+|AP\_RETURN\_REVERSAL\_COMPLETED|The downstream PSP has notified of a late credit and is reversing a previous credit loss.notice.|
+|AP\_SETTLEMENT\_PENDING|The settlement is pending batch processing.|
+|AP\_SETTLEMENT\_PROCESSING|The settlement request was received and is progress.|
+|AP\_SETTLEMENT\_COMPLETED|The settlement was successfully processed.|
+|AP\_SETTLEMENT\_FAILED|The settlement was declined or rejected.|
+|AP\_SETTLEMENT\_CANCELLED|The settlement was cancelled.|
+|AP\_SETTLEMENT\_ERRORED|The settlement has failed due to an error.|
+
+
+
 # Common Objects
 
 <a name="billingDetails"></a>
@@ -375,8 +398,32 @@ Notifications are configured by logging into the merchant backoffice and navigat
 <a name="fieldError"></a>
 ## fieldError
 
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|field                   |string                 |Identifies the JSON request field.|
+|error                   |                       |The problem associated with field.|
+
+```
+{
+    "field": "transaction.accountProfile.email",
+    "error": "Required field"
+}
+```
+
 <a name="link"></a>
 ## link
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|rel                     |string                 |This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call.- self will get details of the current call|
+|href                    |                       |This is the URL to which to send the link. If this is an HTTPS address, please ensure that your certificate is valid – otherwise, the link will cause the browser to display a certificate warning.|
+
+```
+{
+    "rel": "self",
+     "url": "https://domain.com"
+}
+```
 
 <a name="payment"></a>
 ## payment
@@ -532,15 +579,9 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|rel                     |string<br/>`length=X`  | |
-|href                    |string<br/>`length=X`  | |
+|rel                     |string<br/>`length=X`  |<b>default</b> - The default return url, will be used if specific status return url is not defined.<br/>on\_pending<br/>on\_completed<br/>on\_failed<br/>on\_cancelled<br/>on\_error|
+|href                    |string<br/>`length=X`  |The TLS secured endpoint to return the customer to.|
 
-```
-{
-    "rel": "",
-    "href": ""
-}
-```
 
 <a name="settlement"></a>
 ## settlement
