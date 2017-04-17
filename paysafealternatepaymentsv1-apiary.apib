@@ -363,15 +363,15 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element            |Type                           |Description|
 |---                |---                            |---|
-|error.code         |string                         |<i>required</i> This is the error code.|
-|error.message      |string                         |<i>required</i> This is a description of the error.|
-|error.details      |array of string                |This is a collection of detailed descriptions.|
-|error.fieldErrors  |array of [object](#fieldError) |This is a list of fields that have problems.|
-|error.links        |array of [object](#link)       |Links to the error documentation.|
-|id                 |string                         |This is the is the unique identifier for the related resource.|
-|merchantRefNum     |string                         |This is the identifier provided by the merchant for a transaction.|
-|riskReasonCode     |string                         |This is the associated risk reason.|
-|links              |array of [object](#link)       |The link to the related resource.|
+|error.code         |string                         |This is the error code.<br/><i>read only</i>|
+|error.message      |string                         |This is a description of the error.<br/><i>read only</i>|
+|error.details      |array of string                |This is a collection of detailed descriptions.<br/><i>read only</i>|
+|error.fieldErrors  |array of [object](#fieldError) |This is a list of fields that have problems.<br/><i>read only</i>|
+|error.links        |array of [object](#link)       |Links to the error documentation.<br/><i>read only</i>|
+|id                 |string                         |This is the is the unique identifier for the related resource.<br/><i>read only</i>|
+|merchantRefNum     |string                         |This is the identifier provided by the merchant for a transaction.<br/><i>read only</i>|
+|riskReasonCode     |string                         |This is the associated risk reason.<br/><i>read only</i>|
+|links              |array of [object](#link)       |The link to the related resource.<br/><i>read only</i>|
 
 ```
 {
@@ -400,8 +400,8 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|field                   |string                 |Identifies the JSON request field.|
-|error                   |                       |The problem associated with field.|
+|field                   |string                 |Identifies the JSON request field.<br/><i>read only</i>|
+|error                   |                       |The problem associated with field.<br/><i>read only</i>|
 
 ```
 {
@@ -415,8 +415,8 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|rel                     |string                 |This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call.- self will get details of the current call|
-|href                    |                       |This is the URL to which to send the link. If this is an HTTPS address, please ensure that your certificate is valid – otherwise, the link will cause the browser to display a certificate warning.|
+|rel                     |string                 |This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call.- self will get details of the current call<br/><i>read only</i>|
+|href                    |                       |This is the URL to which to send the link. If this is an HTTPS address, please ensure that your certificate is valid – otherwise, the link will cause the browser to display a certificate warning.<br/><i>read only</i>|
 
 ```
 {
@@ -430,22 +430,23 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|id                      |string                 |Unique system generated identifier for this payment.|
+|id                      |string                 |Unique system generated identifier for this payment.<br/><i>read only</i> |
 |merchantRefNum          |string                 |<i>required</i> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent settlement to capture funds<br/><b>true</b> - the request is settled (default)<br/>If the merchant wants to find out whether an authorization has been settled, they should check the availableToSettle element.<br/>If the amount is 0, the authorization has been fully settled.|
-|amount                  |number                 |<i>required</i> This is the amount of the request, in minor units.|
-|currencyCode            |string                 |This is the currency of the payment.|
-|availableToSettle       |number                 |This is the amount of of the Authorization remaining to settle, in minor units.|
+|amount                  |number                 |<i>required</i> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
+|currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
+|availableToSettle       |number                 |This is the amount of of the Authorization remaining to settle, in minor units.<br/><i>read only</i>|
+|availableToRefund       |number                 |This is the amount of the authorization remaining to refund in minor units.  It is visible only if no refunds are done on any of the corresponding settlements for this payment.<br/><i>read only</i>|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |shippingDetails         |[object](#shippingDetails) |These are the shi8pping details for the payment.|
-|txnTime                 |datetime               |This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`|
-|error                   |[object](#error)       |The associated error details for this payment (if applicable).|
-|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li>|
-|statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul>|
-|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.|
-|paymentType             |enum                   |Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li></ul>|
-|[Payment Object](#paymentObjects)|object        |Optional payment object depending upon the paymentType.|
+|txnTime                 |datetime               |ISO 8601 format (UTC) This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`<br/><i>read only</i>|
+|error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
+|statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>read only</i>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>read only</i>|
+|paymentType             |enum                   |<i>required</i> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li></ul>|
+|[Payment Object](#paymentObjects)|object        |<i>optional</i> Payment object with additional attributes for the requested paymentType.|
 
 ```
 {
@@ -493,12 +494,12 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |firstName               |string<br/>`length<=80`  |<i>required</i>This is the customer’s first name.|
 |lastName                |string<br/>`length<=80`  |<i>required</i>This is the customer's last name.|
 |email                   |string<br/>`length<=255` |<i>required</i>This is the customer's email address.|
-|dateOfBirth             |[object](#date)          |   ||
-|gender                  |enum                     |<ul><li>M - Male</li><li>F - Female</li><li>O - Other</li><li>N - Not Specificd</li></ul>|
-|phone                   |string                   ||
-|cellphone               |string                   ||
+|dateOfBirth             |[object](#date)          |The date of birth of the customer associated to this profile.|
+|gender                  |enum                     |Options:<ul><li>M - Male</li><li>F - Female</li><li>O - Other</li><li>N - Not Specificd</li></ul>|
+|phone                   |string                   |The customers primary phone.|
+|cellphone               |string                   |The customers cell phone.|
 |ip                      |string<br/>`length<=50`  |The IP address the customers device.|
-|locale                  |enum                     ||
+|locale                  |enum                     |The ISO language code representing preferred language for this profile.|
 
 ```
 {
@@ -524,14 +525,16 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                         |Description |
 |---                     |---                          |--- |
-|id                      |string<br/>`length<=36`      |This is the ID returned in the response. This ID can be used for future associated requests.|
+|id                      |string<br/>`length<=36`      |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>read only</i>|
 |merchantRefNum          |string<br/>`length<=255`     |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
 |amount                  |number<br/>`max=99999999999` |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139|
-|currencyCode            |                             ||
-|paymentType             |                             ||
-|txnTime                 |                             ||
-|status                  |                             ||
-|gatewayReponse          |                             ||
+|currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
+|paymentType             |enum                         |Payment type of the original payment.|
+|txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`<br/><i>read only</i>|
+|error                   |[object](#error)             |The associated error details for this refund (if applicable).<br/><i>read only</i>|
+|status                  |enum                         |Options:<br/><ul><li>RECEIVED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
+|gatewayResponse         |[object](#gatewayResponse)   |Details from the raw response returned by the gateway.<br/><i>read only</i>|
+
 ```
 {
   "id": "6565bce8-9ae2-4359-bc7c-48c2e560810b",
@@ -554,14 +557,14 @@ Notifications are configured by logging into the merchant backoffice and navigat
 <a name="return"></a>
 ## return
 
-|Element                 |Type                   |Description |
-|---                     |---                    |--- |
-|id                      |string                 ||
-|amount                  |number                 ||
-|currencyCode            |enum<br/>`length=3`    ||
-|paymentType             |enum                   ||
-|txnTime                 |datetime               ||
-|status                  |                       ||
+|Element                 |Type                         |Description |
+|---                     |---                          |--- |
+|id                      |string                       |<br/><i>read only</i>|
+|amount                  |number<br/>`max=99999999999` |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139|
+|currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
+|paymentType             |enum                         |Payment type of the original payment.|
+|txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`<br/><i>read only</i>|
+|status                  |enum                         |Options:<br/><ul><li>COMPLETED</li></ul><br/><i>read only</i>|
 
 ```
 {
@@ -588,18 +591,19 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|id                      |string                 ||
+|id                      |string                 |<br/><i>read only</i>|
 |merchantRefNum          |string                 |<i>required</i> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |amount                  |number                 |<i>stat</i> This is the amount of the request, in minor units.|
 |currencyCode            |string                 |This is the currency of the payment.|
-|availableToRefund       |number                 |This is the amount of this settlement that is available to refund, in minor units.|
-|txnTime                 |datetime               |This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`|
-|error                   |[object](#error)       |The associated error details for this payment (if applicable).|
-|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li>|
-|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.|
-|paymentType             |enum                   |Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li></ul><br/><i>read only</i>|
 |[Payment Object](#paymentObjects)|object        |Optional payment object depending upon the paymentType.|
+|txnTime                 |datetime               |This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`<br/><i>read only</i>|
+|availableToRefund       |number                 |This is the amount of this settlement that is available to refund, in minor units.<br/><i>read only</i>|
+|error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>read only</i>|
+
 
 
 ```
@@ -669,6 +673,26 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
+
+<a name="voidauth"></a>
+## voidauth
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|id                      |string                 |Unique system generated identifier for this payment.<br/><i>read only</i> |
+|merchantRefNum          |string                 |<i>required</i> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
+|dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|amount                  |number                 |<i>required</i> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
+|currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
+|paymentType             |enum                   |<i>required</i> Identifies the type of payment. <br/>Options:<br/><ul><li>PAYOLUTION</li></ul>|
+|txnTime                 |datetime               |ISO 8601 format (UTC) This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`<br/><i>read only</i>|
+|error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>COMPLETED</li><li>FAILED</li><li>ERROR</li><br/><i>read only</i>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>read only</i>|
+
+
+```
+```
 
 <a name="paymentObjects"></a>
 # Payment Objects
