@@ -12,6 +12,7 @@ Request and response payloads are formatted as JSON.
 
 |API Version    |Release      |Patch Date            |Details|
 |---            |---          |---                   |---|
+|               |             |                      |- Add support for NO to Boku.|
 |v1             |1.2          |2017-03-08            |- Added support for delayed settlement|
 |               |             |                      |- Support returns on settlement|
 |               |             |                      |- Ability to refund a settlement|
@@ -31,8 +32,7 @@ credentials.
 
 The following endpoints form the basis of a resource URI:
 
-    Test endpoint - https://api.test.paysafe.com/alternatepayments/v1/
-
+    Test endpoint - https://api.test.paysafe.com/alternatepayments/v1/<br/>
     Production endpoint - https://api.paysafe.com/alternatepayments/v1/
 
 Because the Test environment is completely isolated, any changes you perform on your Test accounts configuration
@@ -925,7 +925,7 @@ one or the other, and some may support both (for example Paypal).
         Include billingDetails
         
 
-## Create Payment [POST /accounts/{accountId}/payments]
+## Create a payment authorization [POST /accounts/{accountId}/payments]
 
 Your account is set up to allow payments for a specific payment method and currency. Please contact Paysafe Merchant Support to enable additional options for your account.
 
@@ -1072,23 +1072,6 @@ See [Payment Objects](#paymentObjects) for details around specific values for yo
 
 
 
-## Void a payment authorization [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
-
-An payment void allows you to void (reverse) all or part of an existing authorization, provided no settlements 
-(either full or partial) have been processed against that payment.
-
-+ Parameters
-    + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + paymentId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique payment identifier.
-            
-+ Request (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
-
-+ Response 200 (application/json)
-
         
 ## Lookup payment by id [GET /accounts/{accountId}/payments/{paymentId}]
 
@@ -1172,6 +1155,41 @@ exceed the original settlement amount.
      + Include Refund Response
 
 
+## Update a payment authorization [PATCH /accounts/{accountId}/payment/{paymentId}]
+
+Update an Authorization to modify the amount (re authorization).  This can be used to release a hold on previously authorized funds or to increase
+the amount of the authorization.
+
++ Parameters
+    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
++ Response 201 (application/json)
+
+## List voidauths [GET /accounts/{accountId}/payment/{paymentId}/voidauths]
+
+Retrieve a list of any authorization reversals associated to this payment.
+
++ Parameters
+    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
+
 ## List settlements [GET /accounts/{accountId}/payment/{paymentId}/settlements]
 
 Retrieve a list of any settlements associated to this payment.
@@ -1225,13 +1243,35 @@ Retrieve a list of any settlements associated to this payment.
             }
             
             
+# Authorization Reversals [/voidauths]
+
+The voidauth resource is used to represent an authorization reversal.
+
+## Void a payment authorization [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
+
+Reverse (cancel) an existing authorization, provided no settlements 
+(either full or partial) have been processed against that payment.
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + paymentId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique payment identifier.
+            
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
+
++ Response 200 (application/json)
+
+
 
 # Settlements [/settlements]
 
-A settlement allows you to settle an amount that was previously authorized for a customer.  It is the process 
-of capturing funds from a previous authorization request.  If you specified delayed (manual) settlement
-on your payment request, then you must manually POST the settlement against the payment.  You can settle all or 
-part of an existing payment authorization.
+If you specified delayed (manual) settlement on your payment request, then you must manually POST the settlement against 
+the payment authorization.  You can settle all or part of an existing payment authorization.
+
+Settlement is the process of capturing funds from a previous authorization request to your merchant account.  
 
 ## Create a settlement [POST /accounts/{accountId}/payments/{paymentId}/settlements]
 
