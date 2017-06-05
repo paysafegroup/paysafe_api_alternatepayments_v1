@@ -10,14 +10,16 @@ Request and response payloads are formatted as JSON.
 
 # Release Notes
 
-|API Version    |Release      |Patch Date            |Details|
-|---            |---          |---                   |---|
-|               |             |                      |- Add support for NO to Boku.|
-|v1             |1.2          |2017-03-08            |- Added support for delayed settlement|
-|               |             |                      |- Support returns on settlement|
-|               |             |                      |- Ability to refund a settlement|
-|v1             |1.1          |2016-12-15            |- Added support for Boku, Giropay|
-|v1             |1.0          |2016-08-01            |- Initial release with support for iDeal, Sofort|
+|API Version    |Release Date          |Details|
+|---            |---                   |---|
+|v1             |2017-05-06            |- Replaced error 5283 with 5031.|
+|               |                      |- Added authorization reversal.|
+|               |                      |- Add support for NO to Boku.|
+|v1             |2017-03-08            |- Added support for delayed settlement|
+|               |                      |- Support returns on settlement|
+|               |                      |- Ability to refund a settlement|
+|v1             |2016-12-15            |- Added support for Boku, Giropay|
+|v1             |2016-08-01            |- Initial release with support for iDeal, Sofort|
 
 
 
@@ -871,10 +873,10 @@ These are the error codes common to all subsystems
 |              |5016           |Account not found                       |The account you provided cannot be found.|
 |              |5017           |Account disabled                        |The account you provided is disabled.|
 |              |5023           |Bad request                             |The request is not parseable.|
+|              |5031           |Duplicate merchant reference            |The provided reference has already been used for another request.|
 |              |5042           |Invalid merchant reference              |This error usually indicates that a transaction was attempted with the merchant reference field missing. This value is mandatory and must be included with your request.|
 |              |5068           |Field error(s)                          |Either you submitted a request that is missing a mandatory  field or the value of a field does not match the format expected.|
 |              |5082           |Mode not permitted                      |The request was sent in a mode that is not permitted. For example, a Live refund request was made on a Test authorization request.|
-|              |5283           |Duplicate merchant reference            |The provided reference has already been used for another request.|
 |401           |5275           |Authentication credentials expired      |The authentication credentials provided with the request have expired.|
 |              |5276           |Authentication credentials disabled     |The authentication credentials provided with the request provided have been disabled.|
 |              |5277           |Authentication credentials locked       |The authentication credentials provided with the request have been locked due to multiple authentication failures.|
