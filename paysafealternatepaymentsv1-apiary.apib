@@ -43,7 +43,8 @@ Because the Test environment is completely isolated, any changes you perform on 
 
 ## Versioning
 
-The API version will influence the request/response object structure as well as the functionality that is available through the API. A new version of the API will  be introduced only if we roll out a backwards-incompatible change that may impact your existing integrations.  As your API version can be maintained through the merchant portal, you can manage when to upgrade to the latest version, helping ensure your integration is not disrupted as new functionality becomes available.
+The API version will influence the request/response object structure as well as the functionality that is available through the API. A new version of the API will  be introduced only if we roll out a backwards-incompatible change
+that may impact your existing integrations.  
 
 ### Major Version
 
@@ -777,6 +778,20 @@ Payment objects are used to define additional values that can be supplied with y
 }
 ```
 
+<a name="payolution"></a>
+## payolution 
+
+![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+
+```
+{
+}
+```
+
 <a name="sofort"></a>
 ## sofort
 
@@ -959,6 +974,7 @@ See [Payment Objects](#paymentObjects) for details around specific values for yo
 | | | | |
 |---|---|---|---|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/sofort.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
+|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#ideal)||||
 
 
 + Parameters
