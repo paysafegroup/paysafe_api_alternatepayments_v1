@@ -230,7 +230,8 @@ to determine what action you are attempting to perform on a specific resource.
 
 Each API call response includes an array of HATEOAS (Hypermedia as the Engine of Application State) links. 
 These links can be used to integrate subsequent flows and typically they will provide you information as to
-what you can do next.
+what you can do next.  Additionally these links might be used to link to other resources related to the
+current response object.
 
 By using these links, you no longer need to hardcode your integration to call specific endpoint URLs to utilize
 our API, but rather can use the returned URL for the specific purpose as defined by the 'rel' definition.
@@ -243,21 +244,23 @@ our API, but rather can use the returned URL for the specific purpose as defined
 |href     |URL of the related HATEOAS link you can use for subsequent calls.|
 
 
-Below are sample HATEOAS links from an API response that returns a collection of payments. Links
+Below are sample HATEOAS links from an API response that returns a collection of payments associated to a specific merchant reference. Links
 are provided to navigate through the set of resources in the collection.
 ```
+GET https://api.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=10
+ 
+...result set
+ 
 "links": [{
     "rel": "self",
-    "href": "https://api.paysafe.com/alternatepayments/v1/payments/234243242?limit=10&offset=10"
+    "href": "https://api.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=10"
 },  {
     "rel": "prev",
-    "href": "https://api.paysafe.com/alternatepayments/v1/payments/234243242?limit=10&offset=0"
-
+    "href": "https://api.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=0"
 }, {
     "rel": "next",
-    "href": "https://api.paysafe.com/alternatepayments/v1/payments/234243242?limit=10&offset=20"
+    "href": "https://api.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=20"
 }]
-
 ```
 
 # Resource Hierarchy and State Transition
