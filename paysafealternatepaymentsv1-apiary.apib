@@ -216,6 +216,7 @@ HTTP response codes are used to indicate the status of a request.
 |402 PAYMENT REQUIRED|The parameters were valid but the request failed.|
 |404 NOT FOUND|The requested resource does not exist.|
 |405 METHOD NOT ALLOWED|The client tried to POST or PUT to a resource that would not accept it.|
+|409 CONFLICT|The request could not be completed due to a conflict with the current state of the target resource. This code is used in situations where the user might be able to resolve the conflict and resubmit the request.|
 |415 UNSUPPORTED MEDIA TYPE|The request is in a format not supported by the requested resource for the requested method.|
 |429 TOO MANY REQUESTS|The application is sending too many simultaneous requests.|
 |500 INTERNAL SERVER ERROR|An error occurred with an internal server.|
@@ -888,7 +889,6 @@ These are the error codes common to all subsystems
 |              |5016           |Account not found                       |The account you provided cannot be found.|
 |              |5017           |Account disabled                        |The account you provided is disabled.|
 |              |5023           |Bad request                             |The request is not parseable.|
-|              |5031           |Duplicate merchant reference            |The provided reference has already been used for another request.|
 |              |5042           |Invalid merchant reference              |This error usually indicates that a transaction was attempted with the merchant reference field missing. This value is mandatory and must be included with your request.|
 |              |5068           |Field error(s)                          |Either you submitted a request that is missing a mandatory  field or the value of a field does not match the format expected.|
 |              |5082           |Mode not permitted                      |The request was sent in a mode that is not permitted. For example, a Live refund request was made on a Test authorization request.|
@@ -903,6 +903,7 @@ These are the error codes common to all subsystems
 |              |5273           |URI not found                           |Your client reached our application but we were unable to service your request due to an invalid URL.|
 |405           |5281           |Method not supported                    |The request uses an action (e.g., GET, POST, or PUT) that is not supported by the resource.|
 |406           |5271           |Unsupported 'Accept' header             |You requested a response in the 'Accept' header that is in an unsupported format.|
+|409           |5031           |Duplicate merchant reference            |The provided reference has already been used for another request.|
 |415           |5272           |Unsupported 'Content-Type'              |The 'Content-Type' you specified in request header was submitted in an unsupported format.|
 |429           |1200           |API call rate exceeded                  |The API call has been denied as it has exceeded the permissible call rate limit.|
 |500           |1000           |Internal error                          |An internal error occurred.|
