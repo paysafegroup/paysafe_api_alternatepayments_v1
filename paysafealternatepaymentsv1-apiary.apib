@@ -13,7 +13,7 @@ Request and response payloads are formatted as JSON.
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
 |v1             |2017-05-06            |- Replaced error 5283 with 5031.|
-|               |                      |- Added authorization reversal.|
+|               |                      |- Added void authorization.|
 |               |                      |- Add support for NO to Boku.|
 |v1             |2017-03-08            |- Added support for delayed settlement|
 |               |                      |- Support returns on settlement|
@@ -1194,7 +1194,7 @@ the amount of the authorization.
 
 + Response 201 (application/json)
 
-## List voidauths [GET /accounts/{accountId}/payment/{paymentId}/voidauths]
+## List void authorizations [GET /accounts/{accountId}/payment/{paymentId}/voidauths]
 
 Retrieve a list of any authorization reversals associated to this payment.
 
@@ -1265,7 +1265,7 @@ Retrieve a list of any settlements associated to this payment.
             }
             
             
-# Authorization Reversals [/voidauths]
+# Void Authorizations [/voidauths]
 
 The voidauth resource is used to represent an authorization reversal.
 
@@ -1283,9 +1283,49 @@ Reverse (cancel) an existing authorization, provided no settlements
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
+            
+    + Body
+
+            {
+              "merchantRefNum":"merchant ABC-123-voidauths"
+            }    
 
 + Response 200 (application/json)
 
+    
+    + Body
+    
+            {
+              "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
+              "merchantRefNum":"merchant ABC-123-voidauths",
+              "amount":898,
+              "currencyType" : "CAD"
+              "txnTime":"2014-03-14T15:12:18Z",
+              "status":"COMPLETED",
+              "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/99000/voidauths/d1fb46ee-2736-4ef5-a724-f263ace75373"
+                    }
+                ]              
+            }    
+
+## Lookup void authorization [GET /accounts/{accountId}/payment/{paymentId}/voidauths/{voidauthId}]
+
+Returns an individual void authorization.
+
++ Parameters
+    + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
+    + voidauthId (string, required, `1486757865`) - This is your unique voidauth identifier.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 200 (application/json)
 
 
 # Settlements [/settlements]
@@ -1616,7 +1656,7 @@ is disabled.
 <h1>Legal and Community</h1>
 <ul class="footer-menu">
 <li><a href="https://www.paysafe.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
-<li><a href="en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
+<li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
 <li><a href="http://www.paysafe.com/regulatory-disclosure/" target="_blank">Regulatory Disclosures</a></li>
 <li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
 <li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
