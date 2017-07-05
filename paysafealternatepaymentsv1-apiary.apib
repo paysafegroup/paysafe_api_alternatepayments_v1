@@ -452,7 +452,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>read only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>read only</i>|
-|paymentType             |enum                   |<i>required</i> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |<i>required</i> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li><li>PAYOLUTION</li></ul>|
 |[Payment Object](#paymentObjects)|object        |<i>optional</i> Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -787,12 +787,83 @@ Payment objects are used to define additional values that can be supplied with y
 
 ![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)
 
-|Element                 |Type                   |Description |
-|---                     |---                    |--- |
-|descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|Element                        |Type                   |Description |
+|---                            |---                    |--- |
+|productType                    |enum                   |<ul><li>INVOICE</li></ul>|
+|transactionType                |enum                   |<ul><li>B2C</li></ul>|
+|descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|customerId                     |string                 |The customer ID at the merchant in case of monthly invoice|
+|referenceId                    |string                 |<i>required</i> If the productType is INSTALLMENTS. This should be the id of the previously submitted verification (that also shows the payment plans)|
+|planDuration                   |string                 |<i>required</i> If the productType is INSTALLMENTS. This should be the duration in months of the selected plan by the customer.|
+|company                        |object                 |<i>required if transactionType is B2B</i>|
+|company.name                   |string                 |<i>required</i>|
+|company.uid                    |string                 |<i>required</i>VAT or other identification number|
+|company.tradeRegistryNumber                     |                       ||
+|company.type                                    |                       ||
+|company.companyOwner                            |                       ||
+|company.companyOwner.firstName                  |                       ||
+|company.companyOwner.lastName                   |                       ||
+|company.companyOwner.dateOfBirth                |object                 ||
+|sepa                                            |object                 |<i>required if currency is EUR</i>|
+|paymentDetails                                  |string                 |Contains installments with amount and due date plus some additional parameters like interest, etc. <i>read only</i>|
+|paymentInformation                              |string                 |<i>read only</i>|
+|paymentInformation.paymentReference             |string                 |The string to use as a reason for the payment|
+|paymentInformation.iban                         |string                 |The iban to send the payment to|
+|paymentInformation.bic                          |string                 |The bic of the bank to send the payment to|
+|paymentInformation.accountHolderName            |string                 |Beneficiary|
+|analysis                                        |object|                ||
 
 ```
 {
+    "payolution": {
+        "productType": "INSTALLMENTS",
+        "transactionType": "B2B",
+        "descriptor": "Order with ID 4ab2",
+        "customerID": "maxx_muster1980",
+        "referenceId": "034044a5-ff05-421d-a29f-0668cc074ebe",
+        "planDuration": 3,
+        "sepa": {   
+            "country": "NL",
+            "bic": "BARCGB22XXX",
+            "iban": "AZ21NABZ00000000137010001944",
+            "accountHolderName": "Max Mustermann"
+        },
+        "paymentInformation": {
+            "paymentReference": "YTTR-WMQX-KLGW",
+            "iban": "AT611904300234573201456",
+            "bic": "BFRILI22XXX",
+            "bankName": "Musterbank",
+            "accountHolderName": "Test Merchant"
+        }
+    },
+    "company": {
+        "name": "MyCompany",
+        "uid": "345098304958",
+        "tradeRegistryNumber": "HRB3454",
+        "companytype": "SOLE",
+        "companyOwner": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "dateOfBirth": {
+                "day": 5,
+                "month": 11,
+                "year": 1970
+            }
+        }
+    },
+    "analysis": [{
+        "key": "PAYOLUTION_CUSTOMER_GROUP",
+        "value": "TOP"
+    }, {
+        "key": "PAYOLUTION_MODULE_NAME",
+        "value": "PaymentModuleName"
+    }, {
+        "key": "PAYOLUTION_INVOICE_ID",
+        "value": "23498739478"
+    }, {
+        "key": "PAYOLUTION_ORDER_ID",
+        "value": "23498739478"
+    }]
 }
 ```
 
@@ -978,7 +1049,7 @@ See [Payment Objects](#paymentObjects) for details around specific values for yo
 | | | | |
 |---|---|---|---|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/sofort.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#ideal)||||
+|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)||||
 
 
 + Parameters
