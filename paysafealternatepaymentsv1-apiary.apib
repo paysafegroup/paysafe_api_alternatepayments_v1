@@ -736,7 +736,7 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=27` |<i>required</i> This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|descriptor              |string<br/>`length=16` |<i>required</i> This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customsrs SEPA bank account details.|
 |sepa.accountHolderName  |string                 |The account holders name.|
 |sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
@@ -874,7 +874,7 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|descriptor              |string<br/>`length=43`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customsrs SEPA bank account details.|
 
 ```
