@@ -763,7 +763,7 @@ Payment objects are used to define additional values that can be supplied with y
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |The customer'minors SEPA bank account details (if applicable). |
+|sepa                    |[object](#sepa)        |The customer's SEPA bank account details (if applicable). |
 |sepa.bankName           |enum                   |<i>required</i> The customers bank. <br/><b>Options: <ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
 |sepa.country            |enum                   |<i>required</i> The ISO 3166-1 Alpha 2-code for the customers bank. (e.g. Germany = DE, JP=Japan. CA=Canada)
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
