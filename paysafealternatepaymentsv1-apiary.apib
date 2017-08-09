@@ -12,6 +12,7 @@ Request and response payloads are formatted as JSON.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2017-08-09            |- Added /monitor endpoint.|
 |v1             |2017-05-06            |- Replaced error 5283 with 5031.|
 |               |                      |- Added void authorization.|
 |               |                      |- Add support for NO to Boku.|
@@ -996,7 +997,17 @@ These errors are specific to the Alternate Payments API.
 |402           |ALTERNATE-PAYMENTS-GATEWAY-9  |Risk gateway error                      |A risk issue was reported by the gateway.|
 |502           |ALTERNATE-PAYMENTS-GATEWAY-10 |Payment type temporarily unavailable    |The gateway is temporarily unavailable due to system maintenance activities.|
 
+# Verify That the Service Is Accessible [GET /monitor]
 
+This call returns a status of READY if the API is available.
+
++ Response 200 (application/json)
+
+  + Body
+    
+            {
+                "status" : "READY"
+            }
 
 # Payments [/payments]
 
