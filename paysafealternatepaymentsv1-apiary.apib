@@ -721,13 +721,11 @@ Payment objects are used to define additional values that can be supplied with y
 |customerMobilePhone     |string                 |The customers mobile phone number.|
 
 ```
-{
     "boku": {
         "descriptor": "custom descriptor",
         "customerCountry": "GB",
         "customerMobilePhone": "44292102029"
     }
-}
 ```
 
 <a name="giropay"></a>
@@ -744,7 +742,6 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
 
 ```
-{
     "giropay": {
         "descriptor": "custom descriptor",
         "sepa": {
@@ -753,7 +750,6 @@ Payment objects are used to define additional values that can be supplied with y
             "iban": "DE89370400440532013000"                
         }
     }
-}
 ```
 
 <a name="ideal"></a>
@@ -772,7 +768,6 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa.accountHolderName  |string                 |The account holders name.|
 
 ```
-{
     "ideal": {
         "descriptor": "custom descriptor",
         "sepa": {
@@ -780,7 +775,6 @@ Payment objects are used to define additional values that can be supplied with y
             "country": "NL"
         }
     }
-}
 ```
 
 <a name="payolution"></a>
@@ -879,13 +873,11 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa                    |[object](#sepa)        |The customers SEPA bank account details.|
 
 ```
-{
     "sofort": {
         "descriptor": "custom descriptor",
         "sepa": {
         }
     }
-}
 ```
 
 
