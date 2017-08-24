@@ -310,6 +310,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |AP\_REFUND\_FAILED|The alternate payment refund was declined or rejected.|
 |AP\_REFUND\_CANCELLED|The alternate payment refund was cancelled.|
 |AP\_REFUND\_ERRORED|The alternate payment refund has failed due to an error.|
+|AP\_REFUND\_EXPIRED|Refund request has expired. This will only occur if the refund was left in PENDING or PROCESSING state for extended period of time and never finished.|
 |AP\_RETURN\_COMPLETED|The downstream PSP has notified of a credit loss.|
 |AP\_RETURN\_REVERSAL\_COMPLETED|The downstream PSP has notified of a late credit and is reversing a previous credit loss.notice.|
 |AP\_SETTLEMENT\_PENDING|The settlement is pending batch processing.|
@@ -318,6 +319,10 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |AP\_SETTLEMENT\_FAILED|The settlement was declined or rejected.|
 |AP\_SETTLEMENT\_CANCELLED|The settlement was cancelled.|
 |AP\_SETTLEMENT\_ERRORED|The settlement has failed due to an error.|
+|AP\_SETTLEMENT\_EXPIRED|Settlement has expired. This typically will only occur on a settle with auth request and the auth was never completed (abandoned by user).|
+|AP\_VOIDAUTH\_COMPLETED|Voidauth was successfully processed.|
+|AP\_VOIDAUTH\_ERRORED|Voidauth was unsuccessful due to error.|
+|AP\_VOIDAUTH\_FAILED|Voidauth was declined.|
 
 
 
@@ -716,15 +721,17 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=20` |Descriptor to display on customers statement.|
-|customerCountry         |string                 |The ISO 3166-1 Alpha 2-code for the country of registration for the customers mobile phone. (e.g. Germany = DE, JP=Japan. CA=Canada)|
-|customerMobilePhone     |string                 |The customers mobile phone number.|
+|descriptor              |string<br/>`length=20` |<b>required</b> Descriptor to display on customers statement.|
+|consumerId              |string                 |<b>required</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
+|consumerCountry         |string                 |<b>required</b> The ISO 3166-1 Alpha 2-code for the country of registration for the customers mobile phone. (e.g. Germany = DE, JP=Japan. CA=Canada)|
+|consumerMobilePhone     |string                 |<b>required</b> The customers mobile phone number.|
 
 ```
     "boku": {
         "descriptor": "custom descriptor",
-        "customerCountry": "GB",
-        "customerMobilePhone": "44292102029"
+        "consumerId": "CUS_12345678",
+        "consumerCountry": "GB",
+        "consumerMobilePhone": "44292102029"
     }
 ```
 
@@ -1893,8 +1900,9 @@ is disabled.
 
 + `boku` (object) - OPTIONAL attributes that can be passed that when making a BOKU payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
-    + `customerCountry` : `US` (string, required) - The ISO 3166-1 Alpha 2-code for the customers mobile country of registration.(e.g. Germany = DE, JP=Japan. CA=Canada)
-    + `customerMobilePhone`: `17802323333` (string, required) - The customers mobile phone number.  Full number including international dialing code (country code).
+    + `conumerId`: `<b>required</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.`
+    + `consumerCountry` : `US` (string, required) - The ISO 3166-1 Alpha 2-code for the customers mobile country of registration.(e.g. Germany = DE, JP=Japan. CA=Canada)
+    + `consumerMobilePhone`: `17802323333` (string, required) - The customers mobile phone number.  Full number including international dialing code (country code).
 
 ## `bokuGatewayResponse`
 
