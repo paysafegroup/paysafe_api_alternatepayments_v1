@@ -459,7 +459,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>read only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>read only</i>|
-|paymentType             |enum                   |<b>required</b> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li><li>PAYOLUTION</li></ul>|
+|paymentType             |enum                   |<b>required</b> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -610,7 +610,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |amount                  |number                 |<i>stat</i> This is the amount of the request, in minor units.|
 |currencyCode            |string                 |This is the currency of the payment.|
-|paymentType             |enum                   |Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>IDEAL</li><li>GIROPAY</li><li>SOFORT</li></ul><br/><i>read only</i>|
+|paymentType             |enum                   |Payment type of the original payment.|
 |[Payment Object](#paymentObjects)|object        |Optional payment object depending upon the paymentType.|
 |txnTime                 |datetime               |This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`<br/><i>read only</i>|
 |availableToRefund       |number                 |This is the amount of this settlement that is available to refund, in minor units.<br/><i>read only</i>|
@@ -1973,7 +1973,11 @@ is disabled.
     + Members
         + `BOKU`
         + `GIROPAY`
-        + `IDEAL`        
+        + `IDEAL` 
+        + `NETELLER`
+        + `PAYSAFECARD`
+        + `PAYOLUTION`
+        + `SKRILL`
         + `SOFORT`
 
 ## `boku`
