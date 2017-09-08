@@ -696,9 +696,9 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |id                      |string                 |Unique system generated identifier for this payment.<br/><i>read only</i> |
 |merchantRefNum          |string                 |<b>required</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
-|amount                  |number                 |<b>required</b> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
+|amount                  |number                 |This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japanese yen, which has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
-|paymentType             |enum                   |<b>required</b> Identifies the type of payment. <br/>Options:<br/><ul><li>PAYOLUTION</li></ul>|
+|paymentType             |enum                   |This identifies the type of payment. If not included, it is inferred from the authorization that is being voided (reversed).<br/>Options:<br/><ul><li>PAYOLUTION</li></ul>|
 |txnTime                 |datetime               |ISO 8601 format (UTC) This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`<br/><i>read only</i>|
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>COMPLETED</li><li>FAILED</li><li>ERROR</li><br/><i>read only</i>|
@@ -1211,7 +1211,7 @@ See [Payment Objects](#paymentObjects) for details around specific values for yo
                 "email": "stan.smith@fox.com",
                 "ip": "127.0.0.1"
               },
-              "billingAddress": {
+              "billingDetails": {
                 "street1": "Street line 1",
                 "street2": "Street line 2",
                 "city": "Calgary",
@@ -1300,6 +1300,10 @@ is disabled.
 + Response 200 (application/json)
 
     + Attributes
+        + meta (object)
+            + numberOfRecords: `1` (number) - The total of number of records in the collection
+            + limit: `10` (number) - The number of records returned in each page
+            + page: `1` (number) - The current page number
         + payments (array)
             + paymentType: `GIROPAY` (string) - This is the type of payment.
             + (Payment Response Base)
@@ -1308,10 +1312,6 @@ is disabled.
             + (object)
                 + rel: `self`
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/?merchantRefNum=ABC123`
-            + (object)
-                + rel: `next`
-                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/?merchantRefNum=merchantRef_2014_03_10_01&limit=10&offset=10&startDate=2014-03-10T13:01:50Z&endDate=2014-03-20T13:06:50Z`
-
 
 ## Refund a payment [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 
@@ -1589,7 +1589,7 @@ Settlement is the process of capturing funds from a previous authorization reque
                 "links": [
                     {
                         "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4/settlements?limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/settlements?merchantRefNum=1486757872&limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
                     }
                 ]
             }
@@ -1664,11 +1664,11 @@ Retrieve a list of any returns associated to this settlement.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/payments/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
                     },
                     {
-                        "rel": "payments",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/payments/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
+                        "rel": "settlement",
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
                     }
                 ]
             }    
