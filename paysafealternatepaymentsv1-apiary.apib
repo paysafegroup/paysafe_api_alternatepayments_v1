@@ -6,8 +6,6 @@ HOST: https://api.paysafe.com/alternatepayments/v1/
 The Paysafe Alternate Payments API allows you to collect payments from your consumers using a
 variety of non-card regional payament methods with a single integration.
 
-Request and response payloads are formatted as JSON.
-
 # Release Notes
 
 |API Version    |Release Date          |Details|
@@ -149,7 +147,6 @@ Sample Response with List Data
             "rel": "default",
             "href": "http://yoursite.com/"
         }],
-        "liveMode": true,
         "txnTime": "2016-05-05T20:34:06Z",
         "status": "INITIATED",
         "gatewayResponse": {
@@ -342,6 +339,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |zip                     |string<br/>`length<=10`  |This is the postal/zip code in the billing address.|
 
 ```
+{
 "billingDetails": {
     "street1": "100QueenStreetWest",
     "street2": "Building 2",
@@ -349,6 +347,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "state": "ON",
     "country": "CA",
     "zip": "M5H2N2"
+}
 }
 ```
 
@@ -387,6 +386,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 ```
 
+{
 "error": {
     "code": 5068,
     "message": "Field Error(s)",
@@ -403,6 +403,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
         "field": "transaction.currency",
         "error": "Currency with value [USD] exceeds the maximum size of [3]."
     }]
+}
 }
 
 ```
@@ -551,7 +552,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
 ```
 {
   "id": "6565bce8-9ae2-4359-bc7c-48c2e560810b",
-  "liveMode": true,
   "merchantRefNum": "xyz",
   "amount": 400,
   "currencyCode": "EUR",
@@ -564,6 +564,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "id": "9bcaa7f0dba44c64981881401794abby",
     "processor": "PAYON",
     "paymentType": "RF"
+  }
   }
 ```
 
@@ -626,7 +627,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "amount": 100,
     "currencyCode": "EUR",
     "paymentType": "PAYOLUTION",
-    "liveMode": true,
     "txnTime": "2017-03-14T20:07:39Z",
     "availableToRefund": 100,
     "status": "COMPLETED",
@@ -653,12 +653,14 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |iban                    |string<br/>`length=1-34` |This is the International Bank Account Number for the customer's bank account.|
 
 ```
+{
 "sepa": {
     "bankName": "ING",
     "country": "NL",
     "accountHolderName": "John Doe",
     "bic": "ABNANL2APIP",
     "iban": "DE89370400440532013000"      
+}
 }
 ```
 
@@ -678,6 +680,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |zip                     |string                  |This is the recipient's post code.|
 
 ```
+{
 "shippingDetails":{
     "carrier":"UPS",
     "shipMethod":"N",
@@ -687,6 +690,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "state":"ON",
     "country":"CA",
     "zip":"M5H 2N2"
+}
 }
 ```
 
@@ -713,7 +717,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
   "id": "d1fb46ee-2736-4ef5-a724-f263ace75373",
   "merchantRefNum":"merchant ABC-123-voidauths",
   "amount":898,
-  "currencyType" : "CAD"
+  "currencyType" : "CAD",
   "txnTime":"2014-03-14T15:12:18Z",
   "status":"COMPLETED"
 }
@@ -739,11 +743,13 @@ Payment objects are used to define additional values that can be supplied with y
 |consumerMobilePhone     |string                 |<b>(required)</b> The customers mobile phone number.|
 
 ```
+{
 "boku": {
     "descriptor": "custom descriptor",
     "consumerId": "CUS_12345678",
     "consumerCountry": "GB",
     "consumerMobilePhone": "44292102029"
+}
 }
 ```
 
@@ -761,13 +767,15 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
 
 ```
+{
 "giropay": {
     "descriptor": "custom descriptor",
     "sepa": {
         "accountHolderName": "John Doe",
-        "bic": "ABNANL2APIP"
+        "bic": "ABNANL2APIP",
         "iban": "DE89370400440532013000"                
     }
+}
 }
 ```
 
@@ -787,12 +795,14 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa.accountHolderName  |string                 |The account holders name.|
 
 ```
+{
 "ideal": {
     "descriptor": "custom descriptor",
     "sepa": {
         "bankName": "abn_amro",
         "country": "NL"
     }
+}
 }
 ```
 
@@ -812,7 +822,7 @@ Payment objects are used to define additional values that can be supplied with y
 |detail1Text                    |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334.|
 
 ```
-
+{
 "neteller":{
     "netellerAccount":"neteller.account@example.org",
     "netellerSecureId":"123456",
@@ -821,6 +831,7 @@ Payment objects are used to define additional values that can be supplied with y
     "logoUrl":"http://www.paysafe.com/icon.jpg",    
     "detail1Description":"Details 1 description",
     "detail1Text":"Details 1 text"
+}
 }
 ```
 
@@ -831,22 +842,7 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|productType                    |enum                   |<ul><li>INVOICE</li></ul>|
-|transactionType                |enum                   |<ul><li>B2C</li></ul>|
 |descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|customerId                     |string                 |The customer ID at the merchant in case of monthly invoice|
-|referenceId                    |string                 |<b>required If the productType is INSTALLMENTS</b> This should be the id of the previously submitted verification (that also shows the payment plans)|
-|planDuration                   |string                 |<b>required If the productType is INSTALLMENTS</b> This should be the duration in months of the selected plan by the customer.|
-|company                        |object                 |<b>required if transactionType is B2B</b>|
-|company.name                   |string                 |<b>(required)</b>|
-|company.uid                    |string                 |<b>(required)</b>VAT or other identification number|
-|company.tradeRegistryNumber                     |                       ||
-|company.type                                    |                       ||
-|company.companyOwner                            |                       ||
-|company.companyOwner.firstName                  |                       ||
-|company.companyOwner.lastName                   |                       ||
-|company.companyOwner.dateOfBirth                |object                 ||
-|sepa                                            |object                 |<i>required if currency is EUR</i>|
 |paymentDetails                                  |string                 |Contains installments with amount and due date plus some additional parameters like interest, etc. <i>read only</i>|
 |paymentInformation                              |string                 |<i>read only</i>|
 |paymentInformation.paymentReference             |string                 |The string to use as a reason for the payment|
@@ -856,40 +852,15 @@ Payment objects are used to define additional values that can be supplied with y
 |analysis                                        |object|                ||
 
 ```
+{
 "payolution": {
-    "productType": "INSTALLMENTS",
-    "transactionType": "B2B",
     "descriptor": "Order with ID 4ab2",
-    "customerID": "maxx_muster1980",
-    "referenceId": "034044a5-ff05-421d-a29f-0668cc074ebe",
-    "planDuration": 3,
-    "sepa": {
-        "country": "NL",
-        "bic": "BARCGB22XXX",
-        "iban": "AZ21NABZ00000000137010001944",
-        "accountHolderName": "Max Mustermann"
-    },
     "paymentInformation": {
         "paymentReference": "YTTR-WMQX-KLGW",
         "iban": "AT611904300234573201456",
         "bic": "BFRILI22XXX",
         "bankName": "Musterbank",
         "accountHolderName": "Test Merchant"
-    },
-    "company": {
-        "name": "MyCompany",
-        "uid": "345098304958",
-        "tradeRegistryNumber": "HRB3454",
-        "companytype": "SOLE",
-        "companyOwner": {
-            "firstName": "John",
-            "lastName": "Doe",
-            "dateOfBirth": {
-                "day": 5,
-                "month": 11,
-                "year": 1970
-            }
-        }
     },
     "analysis": [{
         "key": "PAYOLUTION_CUSTOMER_GROUP",
@@ -905,8 +876,8 @@ Payment objects are used to define additional values that can be supplied with y
         "value": "23498739478"
     }]
 }
+}
 ```
-
 <a name="paysafecard"></a>
 ## paysafecard 
 
@@ -914,17 +885,19 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|customerId                     |string                 |The unique identifier of the customer at the merchant.|
+|consumerId                     |string                 |The unique identifier of the customer at the merchant.|
 |ageRestriction                 |number                 |Minimum age restriction for the transaction|
 |kycLevelestriction             |string                 |The KYC level that will be required for the transaction. Possible values are FULL/SIMPLE|
 |countryRestriction             |string<br>`length=2`   |2 letter code the country to which the transaction will be restricted to.|
 
 ```
+{
 "paysafecard": {
-    "customerId": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation",
+    "consumerId": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation",
     "minAgeRestriction": 18,
     "kycLevelRestriction": "SIMPLE",
     "countryRestriction": "DE"
+}
 }
 ```
 
@@ -943,6 +916,7 @@ Payment objects are used to define additional values that can be supplied with y
 |detail1Text             |string                 |The detail1_text is shown next to the detail1_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334.|
 
 ```
+{
 "skrill":{
     "payFromEmail": "johndoe@email.com",
     "recipientDescription":"logo_url_alt_text",
@@ -951,12 +925,13 @@ Payment objects are used to define additional values that can be supplied with y
     "detail1Description":"Details 1 description",
     "detail1Text":"Details 1 text"
 }
+}
 ```
 
 <a name="sofort"></a>
 ## sofort
 
-![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/klarna.png)
+![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
@@ -964,10 +939,12 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa                    |[object](#sepa)        |The customers SEPA bank account details.|
 
 ```
+{
 "sofort": {
     "descriptor": "custom descriptor",
     "sepa": {
     }
+}
 }
 ```
 
@@ -1079,6 +1056,10 @@ These errors are specific to the Alternate Payments API.
 |402           |ALTERNATE-PAYMENTS-GATEWAY-8  |Over settlement                         |The total settlement amount cannot exceed the authorized (payment) amount.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-9  |Risk gateway error                      |A risk issue was reported by the gateway.|
 |502           |ALTERNATE-PAYMENTS-GATEWAY-10 |Payment type temporarily unavailable    |The gateway is temporarily unavailable due to system maintenance activities.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-11 |Over voidauth                           |The void authorization cannot exceed the amount remaining to settle for the corresponding payment.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-12 |Payment already settled                 |The payment is already partially/fully settled.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-13 |Transaction not refundable yet          |The transaction is not refundable yet.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-14 |Partial settlements not possible        |Partial settlements are not possible with the selected payment method.|
 
 # Verify That the Service Is Accessible [GET /monitor]
 
@@ -1094,28 +1075,28 @@ This call returns a status of READY if the API is available.
 
 # Payments [/payments]
 
+You can submit a payment request using local payment methods that your customers are familiar with.
+
 The payment resource represents a payment authorization.  When requesting a payment, you can choose to have the request 
-include automatic settlement (authWithSettle = true), alternatively, you can choose delayed settlement (authWithSettle = false). 
+include automatic settlement (*authWithSettle* = *true*). Alternatively, you can choose delayed settlement (*authWithSettle* = *false*). 
 A Payment and Settlement work in conjunction and a completed transaction will always have both resources created.  For cases
-when authWithSettle is true, then the corresponding settlement resource will have the same resource identifier because it was
+when *authWithSettle* is *true*, the corresponding settlement resource will have the same resource identifier because it was
 created from the same request.
 
 The ability to have delayed settlement will depend on the payment option you are attempting.  Some payment types may only support 
-one or the other, and some may support both (for example Paypal). 
+one or the other, and some may support both. 
 
 > Note that each payment type and currency is associated with its own distinct account.  
 > Please contact Paysafe Merchant Support to enable additional payment types and or currencies.
 
-+ Model (application/json)
 
-        Include billingDetails
+See [Payment Objects](#paymentObjects) for payment method-specific details, or select payment type below.
+
+| | | | |
+|---|---|---|---|
+|[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
+|[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
         
-
-## Create a payment authorization [POST /accounts/{accountId}/payments]
-
-Your account is set up to allow payments for a specific payment method and currency. Please contact Paysafe Merchant Support to enable additional options for your account.
-
-You can submit a payment request using local payment methods that your customers are familiar with.
 
 > In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
 > these should be passed as a nested object in the root of your payment request.  
@@ -1136,133 +1117,34 @@ You can submit a payment request using local payment methods that your customers
 >|
 >```
 
-<u>Payment Specific Attributes</U>
+## Create a Payment [POST /accounts/{accountId}/payments]
 
-See [Payment Objects](#paymentObjects) for details around specific values for your payment type or select payment type below.
+This is how you submit a Payment request. 
 
-| | | | |
-|---|---|---|---|
-|[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
-|[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/klarna.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-
+**Note:** This example is for the iDEAL payment method.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
 
-+ Attributes
-    + Include Payment Request Base
-    + Include paymentType            
-    + Include ideal
-    + Include sofort
-    + Include giropay
-    + Include boku    
++ Request Payment (application/json)
 
-+ Request Create iDeal payment (application/json)
+    + Attributes
+        + Include Payment Request Base
+        + Include paymentType
+        + Include ideal
 
-    + Headers
++ Response 200 (application/json)
 
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+    + Attributes
+        + Include Payment Response Base
+        + Include idealGatewayResponse
+        + Include paymentType
+        + Include ideal
+        + Include Links Payment
 
-    + Body
+## Get Payment by ID [GET /accounts/{accountId}/payments/{paymentId}]
 
-            {
-              "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
-              "dupCheck": true,
-              "amount": 100,
-              "currencyCode": "EUR",
-              "profile": {
-                "firstName": "Stan",
-                "lastName": "Smith",
-                "email": "stan.smith@fox.com",
-                "ip": "127.0.0.1"
-              },
-              "billingDetails": {
-                "street1": "Street line 1",
-                "street2": "Street line 2",
-                "city": "Calgary",
-                "state": "AB",
-                "country": "CA",
-                "zip": "T3H3L3"
-              },
-              "returnLinks": [
-                {
-                  "rel": "default",
-                  "href": "https://mysite.com/return"
-                }
-              ],
-              "paymentType": "IDEAL",
-              "ideal": {
-                "descriptor": "sampledesc",
-                "sepa": {
-                  "bankName": "ing",
-                  "country": "NL"
-                }
-              }
-            }
-
-+ Response 201 (application/json)
-
-    + Body
-
-            {
-              "id": "25f6dadf-176a-415f-95c9-6ff39ff697ba",
-              "merchantRefNum": "b0ceaa3-42ad-442d-b85b-c3b70f24835d",
-              "amount": 100,
-              "currencyCode": "EUR",
-              "profile": {
-                "firstName": "Stan",
-                "lastName": "Smith",
-                "email": "stan.smith@fox.com",
-                "ip": "127.0.0.1"
-              },
-              "billingDetails": {
-                "street1": "Street line 1",
-                "street2": "Street line 2",
-                "city": "Calgary",
-                "state": "AB",
-                "country": "CA",
-                "zip": "T3H3L3"
-              },
-              "returnLinks": [
-                {
-                  "rel": "default",
-                  "href": "https://mysite.com/return"
-                }
-              ],
-              "liveMode": "false",
-              "txnTime": "2015-12-11T16:33:49Z",
-              "status": "INITIATED",
-              "gatewayResponse": {
-                "code": "000.100.110",
-                "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                "paymentType": "RF"
-              },
-              "paymentType": "IDEAL",
-              "ideal": {
-                "descriptor": "sampledesc",
-                "sepa": {
-                  "bankName": "ing",
-                  "country": "NL"
-                }
-              },
-              "links": [
-                {
-                  "rel": "self",
-                  "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21\""
-                },
-                {
-                  "rel": "redirect_payment",
-                  "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc"
-                }
-              ]
-            }
-
-
-
-        
-## Lookup payment by id [GET /accounts/{accountId}/payments/{paymentId}]
-
-Returns an individual payment detail.
+This is how you look up a Payment request using the ID returned in the response to the original request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1286,9 +1168,9 @@ Returns an individual payment detail.
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
 
 
-## List payments by merchantRefNum [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
+## Get Payments Using Merchant Reference Number [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 
-Returns a collection of payment details, as *merchantRefNum* could be used for multiple requests when *dupCheck*
+This is how you look up Payments using the merchant reference number used in the original request. This returns a collection of payment details, as *merchantRefNum* could be used for multiple requests when *dupCheck*
 is disabled.
 
 + Parameters
@@ -1317,34 +1199,9 @@ is disabled.
                 + rel: `self`
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/?merchantRefNum=ABC123`
 
-## Refund a payment [POST /accounts/{accountId}/payments/{paymentId}/refunds]
+## Update a Payment [PATCH /accounts/{accountId}/payment/{paymentId}]
 
-You can issue a refund request against a payment that is already completed.  It is possible to issue either a full or a 
-partial refund (or series of refunds) against the intial payment, however the combined refund amount cannot
-exceed the original settlement amount.
-
-+ Parameters
-    + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + paymentId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique payment identifier.
-
-+ Attributes
-    + Include Refund Request
-     
-+ Request (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-+ Response 201 (application/json)
-
-    + Attributes
-     + Include Refund Response
-
-
-## Update a payment authorization [PATCH /accounts/{accountId}/payment/{paymentId}]
-
-Update an Authorization to modify the amount (re authorization).  This can be used to release a hold on previously authorized funds or to increase
+This is how you update an Authorization to modify the amount (re authorization). This can be used to release a hold on previously authorized funds or to increase
 the amount of the authorization.
 
 + Parameters
@@ -1359,85 +1216,13 @@ the amount of the authorization.
 
 + Response 201 (application/json)
 
-## List void authorizations [GET /accounts/{accountId}/payment/{paymentId}/voidauths]
-
-Retrieve a list of any authorization reversals associated to this payment.
-
-+ Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
-    + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
-
-+ Request (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-
-+ Response 201 (application/json)
-
-
-## List settlements [GET /accounts/{accountId}/payment/{paymentId}/settlements]
-
-Retrieve a list of any settlements associated to this payment.
-
-+ Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
-    + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
-
-+ Request (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-
-+ Response 201 (application/json)
-
-
-    + Body
-    
-            {
-                "meta": {
-                    "numberOfRecords": 1,
-                    "limit": 10,
-                    "page": 1
-                },
-                "settlements": [
-                    {
-                        "id": "670c8464-f7bf-45da-ba53-972abf7701e4",
-                        "merchantRefNum": "1486757872",
-                        "amount": 400,
-                        "currencyCode": "EUR",
-                        "paymentType": "SOFORT",
-                        "liveMode": true,
-                        "txnTime": "2017-02-10T20:17:51Z",
-                        "status": "COMPLETED",
-                        "links": [
-                            {
-                                "rel": "self",
-                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/settlements/670c8464-f7bf-45da-ba53-972abf7701e4"
-                            }
-                        ]
-                    }
-                ],
-                "links": [
-                    {
-                        "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4/settlements?limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
-                    }
-                ]
-            }
-            
-            
 # Void Authorizations [/voidauths]
 
-The voidauth resource is used to represent an authorization reversal.
+This is how you submit a Void Authorization (authorization reversal) request. You can void an Authorization only if it has not yet been settled.
 
-## Void a payment authorization [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
+## Void a Payment [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
 
-Reverse (cancel) an existing authorization, provided no settlements 
-(either full or partial) have been processed against that payment.
+This is how you submit a Void Authorization (authorization reversal) request. You can void an Authorization only if it has not yet been settled.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1475,9 +1260,9 @@ Reverse (cancel) an existing authorization, provided no settlements
                 ]              
             }    
 
-## Lookup void authorization [GET /accounts/{accountId}/payment/{paymentId}/voidauths/{voidauthId}]
+## Get Void Authorization by ID [GET /accounts/{accountId}/payment/{paymentId}/voidauths/{voidauthId}]
 
-Returns an individual void authorization.
+This is how you look up a Void Authorization request using the ID returned in the response to the original request.
 
 + Parameters
     + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
@@ -1492,6 +1277,23 @@ Returns an individual void authorization.
 
 + Response 200 (application/json)
 
+## List Void Authorizations [GET /accounts/{accountId}/payment/{paymentId}/voidauths]
+
+This is how you retrieve a list of any Void Authorizations associated to a payment.
+
++ Parameters
+    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
 
 # Settlements [/settlements]
 
@@ -1500,7 +1302,9 @@ the payment authorization.  You can settle all or part of an existing payment au
 
 Settlement is the process of capturing funds from a previous authorization request to your merchant account.  
 
-## Create a settlement [POST /accounts/{accountId}/payments/{paymentId}/settlements]
+## Settle an Authorization [POST /accounts/{accountId}/payments/{paymentId}/settlements]
+
+This is how you settle an authorization.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1526,7 +1330,9 @@ Settlement is the process of capturing funds from a previous authorization reque
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1001386530/settlements/30381792-1237-4868-8fd3-73196e94d009`
 
 
-## Lookup a settlement by id [GET /accounts/{accountId}/settlements/{settlementId}]
+## Get Settlement by ID [GET /accounts/{accountId}/settlements/{settlementId}]
+
+This is how you look up a Settlement request using the ID returned in the response to the original request.
 
 + Parameters
     + accountId (string, required, `1486757865`) - This is your unique account identifier.
@@ -1549,7 +1355,9 @@ Settlement is the process of capturing funds from a previous authorization reque
                 + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1001386530/settlements/30381792-1237-4868-8fd3-73196e94d009`
 
 
-## List settlements by merchantRefNum [GET /accounts/{accountId}/settlements/?merchantRefNum={merchantRefNum}]
+## Get Settlements Using Merchant Reference Number [GET /accounts/{accountId}/settlements/?merchantRefNum={merchantRefNum}]
+
+This is how you look up Settlements using the merchant reference number used in the original request. This returns a collection of settlement details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
 + Parameters
     + accountId (string, required, `1486757865`) - This is your unique account identifier.
@@ -1579,7 +1387,6 @@ Settlement is the process of capturing funds from a previous authorization reque
                         "amount": 400,
                         "currencyCode": "EUR",
                         "paymentType": "SOFORT",
-                        "liveMode": true,
                         "txnTime": "2017-02-10T20:17:51Z",
                         "status": "COMPLETED",
                         "links": [
@@ -1599,36 +1406,13 @@ Settlement is the process of capturing funds from a previous authorization reque
             }
 
 
-## Refund a settlement [POST /accounts/{accountId}/settlements/{settlementId}/refunds]
+## List Settlements [GET /accounts/{accountId}/payment/{paymentId}/settlements]
 
-You can issue a refund request against a completed settlement.  It is possible to issue either a full or a 
-partial refund (or series of refunds against the intial settlement), hoowever the combined refund amount cannot
-exceed the original settlement amount.
-
-> NOTE: You can also issue a refund against the payment.  Choose the right method depending upon your integration needs.
+This is how you retrieve a list of any Settlements associated to a payment.
 
 + Parameters
-    + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + settlementId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique payment identifier.
-
-+ Request (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-    + Attributes
-        + Include Refund Request
-     
-
-+ Response 201 (application/json)
-
-    + Attributes (Refund Response)
-
-
-## List returns [GET /accounts/{accountId}/settlements/{settlementId}/returns]
-
-Retrieve a list of any returns associated to this settlement.
+    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
 
 + Request (application/json)
 
@@ -1638,6 +1422,7 @@ Retrieve a list of any returns associated to this settlement.
 
 
 + Response 201 (application/json)
+
 
     + Body
     
@@ -1647,20 +1432,19 @@ Retrieve a list of any returns associated to this settlement.
                     "limit": 10,
                     "page": 1
                 },
-                "returns": [
+                "settlements": [
                     {
-                        "id": "455dc29c-26f3-43fb-b086-9b76672b17c2",
-                        "merchantRefNum": "1487029009",
+                        "id": "670c8464-f7bf-45da-ba53-972abf7701e4",
+                        "merchantRefNum": "1486757872",
                         "amount": 400,
                         "currencyCode": "EUR",
                         "paymentType": "SOFORT",
-                        "txnTime": "2017-02-13T23:38:29Z",
-                        "liveMode": true,
+                        "txnTime": "2017-02-10T20:17:51Z",
                         "status": "COMPLETED",
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/returns/455dc29c-26f3-43fb-b086-9b76672b17c2"
+                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/settlements/670c8464-f7bf-45da-ba53-972abf7701e4"
                             }
                         ]
                     }
@@ -1668,24 +1452,23 @@ Retrieve a list of any returns associated to this settlement.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
-                    },
-                    {
-                        "rel": "settlement",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4/settlements?limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
                     }
                 ]
-            }    
-
+            }
 
 # Returns [/returns]
 
-Returns transactions will be created by Paysafe if we receive a no credit notification from the service provider.  As a merchant you 
+Returns transactions will be created by Paysafe if we receive a **no credit** notification from the service provider.  As a merchant you 
 cannot create a return directly.  
 
-> Note: Currently only Sofort supports return.
+> Note: Currently only Sofort supports returns.
 
-## Lookup a return [GET /accounts/{accountId}/returns/{returnId}]
+## Get Return by ID [GET /accounts/{accountId}/returns/{returnId}]
+
+QUESTION: WHERE DOES MERCHANT GET RETURN ID?
+
+This is how you look up a Return using an ID.
 
 + Parameters
     + accountId (string, required, `1486757865`) - This is your unique account identifier.
@@ -1716,7 +1499,6 @@ cannot create a return directly.
                         "currencyCode": "EUR",
                         "paymentType": "SOFORT",
                         "txnTime": "2017-02-10T20:20:00Z",
-                        "liveMode": true,
                         "status": "COMPLETED",
                         "links": [
                             {
@@ -1739,15 +1521,65 @@ cannot create a return directly.
             }    
 
 
+## List Returns [GET /accounts/{accountId}/settlements/{settlementId}/returns]
+
+This is how you retrieve a list of any returns associated to a settlement.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 201 (application/json)
+
+    + Body
+    
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "returns": [
+                    {
+                        "id": "455dc29c-26f3-43fb-b086-9b76672b17c2",
+                        "merchantRefNum": "1487029009",
+                        "amount": 400,
+                        "currencyCode": "EUR",
+                        "paymentType": "SOFORT",
+                        "txnTime": "2017-02-13T23:38:29Z",
+                        "status": "COMPLETED",
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/returns/455dc29c-26f3-43fb-b086-9b76672b17c2"
+                            }
+                        ]
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
+                    },
+                    {
+                        "rel": "settlement",
+                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
+                    }
+                ]
+            }
+
 # Return Reversals [/returnreversals]
 
-Return reversal transactions will be automatically created by Paysafe if we receive a late credit notification after already issuing a return.
+Return reversal transactions will be automatically created by Paysafe if we receive a late credit notification after we have already issued a return.
 
-> Note: Currently only Sofort supports return reversal.
+> Note: Currently only Sofort supports return reversals.
 
-## List return reversals [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
+## List Return Reversals [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
 
-Returns a collection of return reversal details.
+This is how you retrieve a collection of return reversal details.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1763,9 +1595,11 @@ Returns a collection of return reversal details.
 + Response 201 (application/json)
                                                 
 
-## Lookup Return Reversal [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
+## Get Return Reversal by ID [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
 
-Returns an individual return reversal detail.
+QUESTION: WHERE DOES MERCHANT GET THE RETURN REVERSAL ID?
+
+This is how you retrieve details for a single return reversal.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1783,11 +1617,61 @@ Returns an individual return reversal detail.
 # Refunds [/refunds]
 
 A Refund allows you to refund back to a customer an amount that has previously been settled. You can create a refund 
-against an existing payment OR settlement.
+against either a payment or a settlement. You can issue either a full or a 
+partial refund (or series of refunds against the intial settlement), provided the combined refund amount does not
+exceed the original settlement amount.
 
-## Lookup Refund by id [GET /accounts/{accountId}/refunds/{refundId}]
+## Refund a Payment [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 
-Returns an individual refund detail.
+This is how you submit a Refund request against a completed payment.
+
+> NOTE: You can also issue a refund against the settlement.  Choose the right method depending upon your integration needs.
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + paymentId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique payment identifier.
+
++ Attributes
+    + Include Refund Request
+     
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
++ Response 201 (application/json)
+
+    + Attributes
+     + Include Refund Response
+
+## Refund a Settlement [POST /accounts/{accountId}/settlements/{settlementId}/refunds]
+
+This is how you submit a Refund request against a completed settlement.
+
+> NOTE: You can also issue a refund against the payment.  Choose the right method depending upon your integration needs.
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + settlementId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique payment identifier.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Attributes
+        + Include Refund Request
+     
+
++ Response 201 (application/json)
+
+    + Attributes (Refund Response)
+
+## Get Refund by ID [GET /accounts/{accountId}/refunds/{refundId}]
+
+This is how you look up a Refund request using the ID returned in the response to the original request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1809,10 +1693,9 @@ Returns an individual refund detail.
                 + rel: `self`
                 + href: `https://api.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
 
-## Lookup Refund by merchantRefNum [GET /accounts/{accountId}/refunds/?merchantRefNum={merchantRefNum}]
+## Get Refunds Using Merchant Reference Number [GET /accounts/{accountId}/refunds/?merchantRefNum={merchantRefNum}]
 
-Returns a collection of refund details, as *merchantRefNum* could be used for multiple requests when *dupCheck* 
-is disabled.
+This is how you look up Refunds using the merchant reference number used in the original request. This returns a collection of refund details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
 <br>
 <br>
@@ -1851,6 +1734,73 @@ is disabled.
 
 # Data Structures
 
+## `billingDetails`
+
++ `billingDetails` (object, optional) = This is the billing address of the customer.
+    + `street1`: `Street line 1` (string, required)
+    + `street2`: `Street line 2` (string, optional)
+    + `city`: `Calgary` (string, required)
+    + `state`: `AB` (string, required)
+    + `country`: `CA` (string, required)
+    + `zip`: `T3H3L3` (string, required)
+
+## `boku`
+
++ `boku` (object) - OPTIONAL attributes that can be passed that when making a BOKU payment request. 
+    + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the customers statement.
+    + `conumerId`: `CUS_12345677` (string, required) - Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.
+    + `consumerCountry` : `US` (string, required) - The ISO 3166-1 Alpha 2-code for the customers mobile country of registration.(e.g. Germany = DE, JP=Japan. CA=Canada)
+    + `consumerMobilePhone`: `17802323333` (string, required) - The customers mobile phone number.  Full number including international dialing code (country code).
+
+## `bokuGatewayResponse`
+
++ `gatewayResponse` (object)
+    + `processor`: `BOKU` (string)
+    + `action`: `prepare` (string)
+    + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string)
+    + `result-code`: `0`
+    + `result-msg`: `Operation Successful` (string)
+
+## giropay
++ giropay (object, optional) - Attributes that can be passed that when making a GIROPAY payment request. 
+
+    + Properties
+        + descriptor: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
+
+## `giropayGatewayResponse`
+
++ `gatewayResponse` (object)
+    + `processor`: `GIROPAY` (string)
+    + `txId`: `SIM001270` (string)
+    + `returnCode`: `0`
+
+## ideal
++ ideal (object, optional) - Attributes that can be passed that when making a iDEAL payment request. 
+
+    + Properties
+        + descriptor: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
+        + sepa (object)
+            + bankName: `ING` (string, required)
+            + country: `NL` (string, required)
+
+## idealGatewayResponse
+
++ `gatewayResponse` (object)
+    + code: `000.200.000`
+    + description: `Transaction Pending`
+    + id: `4867bb8ce543409dbe1187849af28107`
+    + processor: `IDEAL`
+    + paymentType: `DB`
+
+## Links Payment
++ links (array, required) - This is an array of [links](#link).
+    + (object)
+        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+        + href:`https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21` (string, required) - This is the URI of the resource.
+    + (object)
+        + rel:redirect_payment (string, required) - This is the link to which the customer can be redirected to confirm payment.
+        + href:`https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc` (string, required) - This is the URI of the resource.        
+
 ## Payment Request Base
 
 + `merchantRefNum`: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
@@ -1879,7 +1829,6 @@ is disabled.
 + Include Profile Response
 + Include billingDetails
 + Include returnLinks
-+ `liveMode`: `false` (string) - This indicates whether this is a Live or Test transaction.
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 + `status`: `INITIATED` (string) - This is the status of the transaction request.
 + `statusReason`: `USER_CANCELLED` (enum)
@@ -1889,6 +1838,49 @@ is disabled.
         + `AUTH_VOIDED`
         + `AUTH_EXPIRED`        
         
+## `paymentType`
+
++ `paymentType` (enum, required) - Specify the type of payment you are requesting. 
+    + Members
+        + `IDEAL`
+        + `BOKU`
+        + `GIROPAY`
+        + `NETELLER`
+        + `PAYSAFECARD`
+        + `PAYOLUTION`
+        + `SKRILL`
+        + `SOFORT`
+
+## `payolution`
+
++ `payolution` (object) - Parameters required for a Payolution payment request.
+    + `customerID`: `maxx_muster1980` (string)
+    + `sepa` (sepa)
+    + `paymentInformation` (payolutionPaymentInformation)
+    + `analysis` (array[payolutionAnalysis])
+
+## `payolutionPaymentInformation` 
+
++ `paymentReference`: `YTTR-WMQX-KLGW` (string)
++ `iban`: `AT611904300234573201456` (string)
++ `bic`: `BFRILI22XXX` (string)
++ `bankName`: `Musterbank` (string)
++ `accountHolderName`: `Test Merchant` (string)
+
+## `payolutionAnalysis`
+
++ `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
++ `value`: `TOP` (string)
+
+## `payonGatewayResponse`
+
++ `gatewayResponse` (object)
+    + `code`: `000.100.110` (string)
+    + `description`: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
+    + `id`: `9bcaa7f0dba44c64981881401794abby`
+    + `processor`: `PAYON`
+    + `paymentType`: `RF` (string)    
+
 ## Profile Request 
 
 + `profile` (object, optional) - These are some details about the customer.
@@ -1905,16 +1897,6 @@ is disabled.
     + `email`: `stan.smith@fox.com` (string)
     + `ip`: `127.0.0.1` (string)
 
-## `billingDetails`
-
-+ `billingDetails` (object, optional) = This is the billing address of the customer.
-    + `street1`: `Street line 1` (string, required)
-    + `street2`: `Street line 2` (string, optional)
-    + `city`: `Calgary` (string, required)
-    + `state`: `AB` (string, required)
-    + `country`: `CA` (string, required)
-    + `zip`: `T3H3L3` (string, required)
-
 ## Refund Request
 
 + `merchantRefNum`: `xyz` (string, required) - This is the merchant reference number.
@@ -1926,7 +1908,6 @@ is disabled.
 ## Refund Response
 
 + `id`: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the refund id.  *\*\*Assigned by Paysafe* 
-+ `liveMode`: `true` (boolean) - This indicates whether this is a Live or Test transaction.
 + `merchantRefNum`: `xyz` (string) - This is your unique idenitfier for this request.
 + `amount`: `400` (number) - This is the amount of the refund in minor units (e.g., $50.00 USD => 5000, 50 YEN -> 50).
 + `currencyCode`: `EUR` (string) - This is the currency of the payment.
@@ -1938,24 +1919,6 @@ is disabled.
     + ([object])
         + `rel`: `self`
         + `href`: `https://api.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
-
-## Settlement Request
-
-+ `merchantRefNum`: `1489522059` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
-+ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
-+ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
-+ `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
-
-## Settlement Response
-
-+ `id`: `30381792-1237-4868-8fd3-73196e94d009` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
-+ `merchantRefNum`: `1489522059` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
-+ `amount`: `100` (number) - This is the amount of the request, in minor units.
-+ `currencyCode`: `EUR` (string) - This is the currency of the payment.
-+ `liveMode`: `false` (string) - This indicates whether this is a Live or Test transaction.
-+ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
-+ `status`: `COMPLETED` (string) - This is the status of the setllement request.
 
 ## `returnLinks`
 
@@ -1971,48 +1934,23 @@ is disabled.
                 + `on_error`
         + `href`: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the customer to.
 
-## `paymentType`
+## Settlement Request
 
-+ `paymentType` (enum, required) - Specify the type of payment you are requesting. 
-    + Members
-        + `BOKU`
-        + `GIROPAY`
-        + `IDEAL` 
-        + `NETELLER`
-        + `PAYSAFECARD`
-        + `PAYOLUTION`
-        + `SKRILL`
-        + `SOFORT`
++ `merchantRefNum`: `1489522059` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
++ `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
 
-## `boku`
+## Settlement Response
 
-+ `boku` (object) - OPTIONAL attributes that can be passed that when making a BOKU payment request. 
-    + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the customers statement.
-    + `conumerId`: `CUS_12345677` (string, required) - Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.
-    + `consumerCountry` : `US` (string, required) - The ISO 3166-1 Alpha 2-code for the customers mobile country of registration.(e.g. Germany = DE, JP=Japan. CA=Canada)
-    + `consumerMobilePhone`: `17802323333` (string, required) - The customers mobile phone number.  Full number including international dialing code (country code).
++ `id`: `30381792-1237-4868-8fd3-73196e94d009` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
++ `merchantRefNum`: `1489522059` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
++ `amount`: `100` (number) - This is the amount of the request, in minor units.
++ `currencyCode`: `EUR` (string) - This is the currency of the payment.
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
++ `status`: `COMPLETED` (string) - This is the status of the setllement request.
 
-## `bokuGatewayResponse`
-
-+ `gatewayResponse` (object)
-    + `processor`: `BOKU` (string)
-    + `action`: `prepare` (string)
-    + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string)
-    + `result-code`: `0`
-    + `result-msg`: `Operation Successful` (string)            
-
-## `giropay`
-
-+ `giropay` (object) - OPTIONAL attributes that can be passed that when making a GIROPAY payment request. 
-    + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
-
-## `giropayGatewayResponse`
-
-+ `gatewayResponse` (object)
-    + `processor`: `GIROPAY` (string)
-    + `txId`: `SIM001270` (string)
-    + `returnCode`: `0`
-    
 ## `sepa` 
 
 + `country`: `NL` (string) - The ISO 3166-1 Alpha 2-code for the customers bank (e.g. Germany = DE, JP=Japan. CA=Canada)
@@ -2020,36 +1958,6 @@ is disabled.
 + `iban`: `AZ21NABZ00000000137010001944` (string)
 + `accountHolderName`: `Max Mustermann` (string)
 
-## `payolutionPaymentInformation` 
-
-+ `paymentReference`: `YTTR-WMQX-KLGW` (string)
-+ `iban`: `AT611904300234573201456` (string)
-+ `bic`: `BFRILI22XXX` (string)
-+ `bankName`: `Musterbank` (string)
-+ `accountHolderName`: `Test Merchant` (string)
-
-## `payolutionAnalysis`
-
-+ `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
-+ `value`: `TOP` (string)
-
-## `payolution`
-
-+ `payolution` (object) - Parameters required for a Payolution payment request.
-    + `customerID`: `maxx_muster1980` (string)
-    + `sepa` (sepa)
-    + `paymentInformation` (payolutionPaymentInformation)
-    + `analysis` (array[payolutionAnalysis])
-    
-## `payonGatewayResponse`
-
-+ `gatewayResponse` (object)
-    + `code`: `000.100.110` (string)
-    + `description`: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
-    + `id`: `9bcaa7f0dba44c64981881401794abby`
-    + `processor`: `PAYON`
-    + `paymentType`: `RF` (string)    
-    
 ## `sofort`
 
 + `sofort` (object) - OPTIONAL attributes that can be passed that when making a SOFORT payment request. 
@@ -2062,12 +1970,4 @@ is disabled.
     + `description`: `Request successfully processed` (string)
     + `id`: `0000-014100-SOFRTSIM-0000`
     + `processor`: `SOFORT`
-    + `paymentType`: `DB` (string)    
-
-## `ideal`
-
-+ `ideal` (object) - OPTIONAL attributes that can be passed that when making a IDEAL payment request. 
-    + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
-    + `sepa` (object)
-        + `bankName`: `ING` (string, required)
-        + `country`: `NL` (string, required)
+    + `paymentType`: `DB` (string)
