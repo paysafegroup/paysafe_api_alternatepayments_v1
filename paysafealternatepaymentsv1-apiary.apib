@@ -913,7 +913,7 @@ Payment objects are used to define additional values that can be supplied with y
 |language                |string<br>`length=2`   |The 2 character preferred language code for the customer. (ie: EN, FR)|
 |logoUrl                 |string                 |he URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px width.<br>If logo width > height - at least 65px height<br>Avoid large images (much greater than 256 by 256px) to minimise the page loading time.|
 |detail1Description      |string                 |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text             |string                 |The detail1_text is shown next to the detail1_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334.|
+|detail1Text             |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334.|
 
 ```
 {
@@ -1121,26 +1121,126 @@ See [Payment Objects](#paymentObjects) for payment method-specific details, or s
 
 This is how you submit a Payment request. 
 
-**Note:** This example is for the iDEAL payment method.
+Once you have submited your request, if you are returned a status of INITIATED, and were provided a redirect_payment hateoas link, then you must redirect
+your consumer to the link to complete the request.
+
+**Note:** The provided example is for the iDEAL payment method.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
 
-+ Request Payment (application/json)
++ Attributes
+    + Include paymentBase
+    + Include paymentType            
+    + Include boku
+    + Include ideal
+    + Include giropay
+    + Include neteller
+    + Include paysafecard
+    + Include payolution
+    + Include skrill
+    + Include sofort
 
-    + Attributes
-        + Include Payment Request Base
-        + Include paymentType
-        + Include ideal
++ Request Create iDeal payment (application/json)
 
-+ Response 200 (application/json)
+    + Headers
 
-    + Attributes
-        + Include Payment Response Base
-        + Include idealGatewayResponse
-        + Include paymentType
-        + Include ideal
-        + Include Links Payment
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+              "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
+              "dupCheck": true,
+              "amount": 100,
+              "currencyCode": "EUR",
+              "profile": {
+                "firstName": "Stan",
+                "lastName": "Smith",
+                "email": "stan.smith@fox.com",
+                "ip": "127.0.0.1"
+              },
+              "billingDetails": {
+                "street1": "Street line 1",
+                "street2": "Street line 2",
+                "city": "Calgary",
+                "state": "AB",
+                "country": "CA",
+                "zip": "T3H3L3"
+              },
+              "returnLinks": [
+                {
+                  "rel": "default",
+                  "href": "https://mysite.com/return"
+                }
+              ],
+              "paymentType": "IDEAL",
+              "ideal": {
+                "descriptor": "sampledesc",
+                "sepa": {
+                  "bankName": "ing",
+                  "country": "NL"
+                }
+              }
+            }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+              "id": "25f6dadf-176a-415f-95c9-6ff39ff697ba",
+              "merchantRefNum": "b0ceaa3-42ad-442d-b85b-c3b70f24835d",
+              "amount": 100,
+              "currencyCode": "EUR",
+              "profile": {
+                "firstName": "Stan",
+                "lastName": "Smith",
+                "email": "stan.smith@fox.com",
+                "ip": "127.0.0.1"
+              },
+              "billingDetails": {
+                "street1": "Street line 1",
+                "street2": "Street line 2",
+                "city": "Calgary",
+                "state": "AB",
+                "country": "CA",
+                "zip": "T3H3L3"
+              },
+              "returnLinks": [
+                {
+                  "rel": "default",
+                  "href": "https://mysite.com/return"
+                }
+              ],
+              "liveMode": "false",
+              "txnTime": "2015-12-11T16:33:49Z",
+              "status": "INITIATED",
+              "gatewayResponse": {
+                "code": "000.100.110",
+                "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
+                "paymentType": "RF"
+              },
+              "paymentType": "IDEAL",
+              "ideal": {
+                "descriptor": "sampledesc",
+                "sepa": {
+                  "bankName": "ing",
+                  "country": "NL"
+                }
+              },
+              "links": [
+                {
+                  "rel": "self",
+                  "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21\""
+                },
+                {
+                  "rel": "redirect_payment",
+                  "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc"
+                }
+              ]
+            }
+ 
 
 ## Get Payment by ID [GET /accounts/{accountId}/payments/{paymentId}]
 
@@ -1158,14 +1258,65 @@ This is how you look up a Payment request using the ID returned in the response 
 
 + Response 200 (application/json)
 
-    + Attributes
-        + paymentType: `SOFORT` (string) - This is the type of payment.
-        + Include Payment Response Base
-        + Include payonGatewayResponse        
-        + links (array) - This is an array of related links. 
-            + (object)
-                + rel: `self`
-                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21"`
+    + Body
+
+            {
+                "id": "13c7873e-eccd-463d-b8ec-e3899f322a99",
+                "gatewayReconciliationId": "64d62a6e-d7da-43ca-9f18-52b4afaf2096",
+                "merchantRefNum": "GR-1506794436",
+                "amount": 105,
+                "currencyCode": "EUR",
+                "paymentType": "IDEAL",
+                "settleWithAuth": true,
+                "availableToSettle": 0,
+                "availableToRefund": 105,
+                "profile": {
+                    "firstName": "Greg",
+                    "lastName": "Roll",
+                    "email": "gregtest@email.com",
+                    "ip": "100.0.0.1"
+                },
+                "billingDetails": {
+                    "street1": "101 Bernies Bar",
+                    "street2": "Building 2",
+                    "zip": "t3h3l2",
+                    "city": "Neighneigh",
+                    "country": "NL",
+                    "state": "FL"
+                },
+                "ideal": {
+                    "sepa": {
+                        "bankName": "abn_amro",
+                        "country": "NL"
+                    }
+                },
+                "returnLinks": [
+                    {
+                        "rel": "default",
+                        "href": "http://www.codedrop.ca"
+                    }
+                ],
+                "liveMode": true,
+                "txnTime": "2017-09-30T18:00:37Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "000.000.000",
+                    "description": "Transaction succeeded",
+                    "id": "9499d89178e84387bfb002c985425535",
+                    "processor": "PAYON",
+                    "paymentType": "RC"
+                },
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments/13c7873e-eccd-463d-b8ec-e3899f322a99"
+                    },
+                    {
+                        "rel": "settlements",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments/13c7873e-eccd-463d-b8ec-e3899f322a99/settlements"
+                    }
+                ]
+            }
 
 
 ## Get Payments Using Merchant Reference Number [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
@@ -1175,7 +1326,7 @@ is disabled.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + merchantRefNum (string, required, `43903ab232`) - This is your unique payment identifier.
+    + merchantRefNum (string, required, `R-1506794436`) - This is your unique payment identifier.
 
 + Request (application/json)
 
@@ -1185,36 +1336,80 @@ is disabled.
 
 + Response 200 (application/json)
 
-    + Attributes
-        + meta (object)
-            + numberOfRecords: `1` (number) - The total of number of records in the collection
-            + limit: `10` (number) - The number of records returned in each page
-            + page: `1` (number) - The current page number
-        + payments (array)
-            + paymentType: `GIROPAY` (string) - This is the type of payment.
-            + (Payment Response Base)
-            + (payonGatewayResponse)
-        + links (array) - This is an array of related links. 
-            + (object)
-                + rel: `self`
-                + href: `https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/?merchantRefNum=ABC123`
+    + Body
 
-## Update a Payment [PATCH /accounts/{accountId}/payment/{paymentId}]
-
-This is how you update an Authorization to modify the amount (re authorization). This can be used to release a hold on previously authorized funds or to increase
-the amount of the authorization.
-
-+ Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
-    + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
-
-+ Request (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-+ Response 201 (application/json)
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "payments": [
+                    {
+                        "id": "13c7873e-eccd-463d-b8ec-e3899f322a99",
+                        "gatewayReconciliationId": "64d62a6e-d7da-43ca-9f18-52b4afaf2096",
+                        "merchantRefNum": "R-1506794436",
+                        "amount": 105,
+                        "currencyCode": "EUR",
+                        "paymentType": "IDEAL",
+                        "settleWithAuth": true,
+                        "availableToSettle": 0,
+                        "availableToRefund": 105,
+                        "profile": {
+                            "firstName": "John",
+                            "lastName": "Doe",
+                            "email": "john.doe@email.com",
+                            "ip": "100.0.0.1"
+                        },
+                        "billingDetails": {
+                            "street1": "101 Bernies Bar",
+                            "street2": "Building 2",
+                            "zip": "t3h3l2",
+                            "city": "Neighneigh",
+                            "country": "NL",
+                            "state": "FL"
+                        },
+                        "ideal": {
+                            "sepa": {
+                                "bankName": "abn_amro",
+                                "country": "NL"
+                            }
+                        },
+                        "returnLinks": [
+                            {
+                                "rel": "default",
+                                "href": "http://www.codedrop.ca"
+                            }
+                        ],
+                        "liveMode": true,
+                        "txnTime": "2017-09-30T18:00:37Z",
+                        "status": "COMPLETED",
+                        "gatewayResponse": {
+                            "code": "000.000.000",
+                            "description": "Transaction succeeded",
+                            "id": "9499d89178e84387bfb002c985425535",
+                            "processor": "PAYON",
+                            "paymentType": "RC"
+                        },
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments/13c7873e-eccd-463d-b8ec-e3899f322a99"
+                            },
+                            {
+                                "rel": "settlements",
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments/13c7873e-eccd-463d-b8ec-e3899f322a99/settlements"
+                            }
+                        ]
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments?merchantRefNum=GR-1506794436&limit=10&offset=0&startDate=2017-08-31T18:24:29Z&endDate=2017-09-30T18:24:30Z"
+                    }
+                ]
+            }
 
 # Void Authorizations [/voidauths]
 
@@ -1746,7 +1941,7 @@ This is how you look up Refunds using the merchant reference number used in the 
 
 ## `boku`
 
-+ `boku` (object) - OPTIONAL attributes that can be passed that when making a BOKU payment request. 
++ `boku` (object, optional) - OPTIONAL attributes that can be passed that when making a BOKU payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the customers statement.
     + `conumerId`: `CUS_12345677` (string, required) - Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.
     + `consumerCountry` : `US` (string, required) - The ISO 3166-1 Alpha 2-code for the customers mobile country of registration.(e.g. Germany = DE, JP=Japan. CA=Canada)
@@ -1761,9 +1956,9 @@ This is how you look up Refunds using the merchant reference number used in the 
     + `result-code`: `0`
     + `result-msg`: `Operation Successful` (string)
 
-## giropay
-+ giropay (object, optional) - Attributes that can be passed that when making a GIROPAY payment request. 
+## `giropay`
 
++ `giropay` (object, optional) - Attributes that can be passed that when making a GIROPAY payment request. 
     + Properties
         + descriptor: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
 
@@ -1774,16 +1969,13 @@ This is how you look up Refunds using the merchant reference number used in the 
     + `txId`: `SIM001270` (string)
     + `returnCode`: `0`
 
-## ideal
-+ ideal (object, optional) - Attributes that can be passed that when making a iDEAL payment request. 
+## `ideal`
 
-    + Properties
-        + descriptor: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
-        + sepa (object)
-            + bankName: `ING` (string, required)
-            + country: `NL` (string, required)
++ `ideal` (object, optional) - Attributes that can be passed that when making a iDEAL payment request. 
+    + `descriptor`: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customers statement.
+    + `sepa` (sepa)
 
-## idealGatewayResponse
+## `idealGatewayResponse`
 
 + `gatewayResponse` (object)
     + code: `000.200.000`
@@ -1792,55 +1984,71 @@ This is how you look up Refunds using the merchant reference number used in the 
     + processor: `IDEAL`
     + paymentType: `DB`
 
-## Links Payment
-+ links (array, required) - This is an array of [links](#link).
-    + (object)
-        + rel:self (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21` (string, required) - This is the URI of the resource.
-    + (object)
-        + rel:redirect_payment (string, required) - This is the link to which the customer can be redirected to confirm payment.
-        + href:`https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc` (string, required) - This is the URI of the resource.        
+## `neteller`
 
-## Payment Request Base
++ `neteller` (object)  - OPTIONAL attributes that can be passed that when making a NETELLER payment request. 
+    + `consumerId`: `john.doe@email.com` (string) : Email address or NETELLER Account Id of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
+    + `consumerVerificationId`: `123123` (string) : The consumers NETELLER secure Id, or two step authorization token generated on their device. 
+    + `language`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
+    + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
+    + `detail1Description` : `description` (string) : You can show additional details about the product in the More information section in the header of Quick Checkout.
+    + `detail1Text` : `detail text` (string) : The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a customer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
 
-+ `merchantRefNum`: `0b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
-+ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
-+ `settleWithAuth`: `true` (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
-
-    false - the request is not automatically settled, you have to post a subsequent settlement to capture funds
-    true - the request is settled (default)
-
-    If the merchant wants to find out whether an authorization has been settled, they should check the availableToSettle element. 
-    If the amount is 0, the authorization has been fully settled.
-
-+ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
-+ `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
-+ Include Profile Request
-+ Include billingDetails
-+ Include returnLinks
-
-## Payment Response Base
+## `paymentBase`
 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
-+ `merchantRefNum`: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _read only_
+    
++ `merchantRefNum`: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
+
+    + Default: true
+    
 + `settleWithAuth`: `true` (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
-+ `amount`: `100` (number) - This is the amount of the request, in minor units.
+
+    To find out whether an authorization has been settled, check the availableToSettle element. 
+    If the amount is 0, the authorization has been fully settled.
+    
+    + Default: true
+
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
+
+    _max=99999999999_
+    
 + `currencyCode`: `EUR` (string) - This is the currency of the payment.
-+ Include Profile Response
+
+    _length=3_
+
+    + Default: `The account currency`
+    
++ Include profile
 + Include billingDetails
 + Include returnLinks
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _read only_
+    
 + `status`: `INITIATED` (string) - This is the status of the transaction request.
+
+    _read only_
+    
 + `statusReason`: `USER_CANCELLED` (enum)
+
+    _read only_
+    
     + Members
         + `USER_CANCELLED`
         + `MERCHANT_CANCELLED`
         + `AUTH_VOIDED`
         + `AUTH_EXPIRED`        
-        
+
 ## `paymentType`
 
-+ `paymentType` (enum, required) - Specify the type of payment you are requesting. 
++ `paymentType` (enum, required) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
     + Members
         + `IDEAL`
         + `BOKU`
@@ -1859,7 +2067,7 @@ This is how you look up Refunds using the merchant reference number used in the 
     + `paymentInformation` (payolutionPaymentInformation)
     + `analysis` (array[payolutionAnalysis])
 
-## `payolutionPaymentInformation` 
+## `payolutionPaymentInformation`
 
 + `paymentReference`: `YTTR-WMQX-KLGW` (string)
 + `iban`: `AT611904300234573201456` (string)
@@ -1881,15 +2089,15 @@ This is how you look up Refunds using the merchant reference number used in the 
     + `processor`: `PAYON`
     + `paymentType`: `RF` (string)    
 
-## Profile Request 
+## `paysafecard`
 
-+ `profile` (object, optional) - These are some details about the customer.
-    + `firstName`: `Stan` (string, required)
-    + `lastName`: `Smith` (string, required)
-    + `email`: `stan.smith@fox.com` (string, required)
-    + `ip`: `127.0.0.1` (string, optional)
++ `paysafecard` (object)  - OPTIONAL attributes that can be passed that when making a SKRILL payment request. 
+    + `consumerId`: `john.doe@email.com` (string) : Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
+    + `ageRestriction`: `item xyz` (string) : A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. 
+    + `kycLevelRestriction`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
+    + `countryRestriction` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
 
-## Profile Response 
+## `profile` 
 
 + `profile` (object, optional) - These are some details about the customer.
     + `firstName`: `Stan` (string)
@@ -1897,7 +2105,7 @@ This is how you look up Refunds using the merchant reference number used in the 
     + `email`: `stan.smith@fox.com` (string)
     + `ip`: `127.0.0.1` (string)
 
-## Refund Request
+## `Refund Request`
 
 + `merchantRefNum`: `xyz` (string, required) - This is the merchant reference number.
 + `dupCheck`: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
@@ -1905,7 +2113,7 @@ This is how you look up Refunds using the merchant reference number used in the 
 + `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
 + `amount`: `100` (number, required) - This is the amount in minor units.
 
-## Refund Response
+## `Refund Response`
 
 + `id`: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the refund id.  *\*\*Assigned by Paysafe* 
 + `merchantRefNum`: `xyz` (string) - This is your unique idenitfier for this request.
@@ -1934,14 +2142,14 @@ This is how you look up Refunds using the merchant reference number used in the 
                 + `on_error`
         + `href`: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the customer to.
 
-## Settlement Request
+## `Settlement Request`
 
 + `merchantRefNum`: `1489522059` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
 + `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
 + `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 + `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
 
-## Settlement Response
+## `Settlement Response`
 
 + `id`: `30381792-1237-4868-8fd3-73196e94d009` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 + `merchantRefNum`: `1489522059` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
@@ -1951,12 +2159,22 @@ This is how you look up Refunds using the merchant reference number used in the 
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 + `status`: `COMPLETED` (string) - This is the status of the setllement request.
 
-## `sepa` 
+## `sepa`
 
 + `country`: `NL` (string) - The ISO 3166-1 Alpha 2-code for the customers bank (e.g. Germany = DE, JP=Japan. CA=Canada)
 + `bic`: `BARCGB22XXX` (string)
 + `iban`: `AZ21NABZ00000000137010001944` (string)
 + `accountHolderName`: `Max Mustermann` (string)
+
+## `skrill`
+
++ `skrill` (object)  - OPTIONAL attributes that can be passed that when making a SKRILL payment request. 
+    + `consumerId`: `john.doe@email.com` (string) : Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
+    + `recipientDescription`: `item xyz` (string) : A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. 
+    + `language`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
+    + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
+    + `detail1Description` : `description` (string) : You can show additional details about the product in the More information section in the header of Quick Checkout.
+    + `detail1Text` : `detail text` (string) : The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a customer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
 
 ## `sofort`
 
