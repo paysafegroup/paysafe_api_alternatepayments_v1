@@ -1130,7 +1130,6 @@ See [Payment Objects](#paymentObjects) for payment method-specific details, or s
 + Attributes
     + Include payment
     + Include paymentType
-    + Include Links Payment
     + Include boku
     + Include ideal
     + Include giropay
@@ -1139,6 +1138,7 @@ See [Payment Objects](#paymentObjects) for payment method-specific details, or s
     + Include payolution
     + Include skrill
     + Include sofort
+    + Include links    
 
 + Request Create iDeal payment (application/json)
 
@@ -1594,9 +1594,8 @@ Payment resource to find out the remaining amount available to settle.
     + paymentId (string, required, `21572c64-19eb-4d45-973f-fc03c6243158`) - This is your unique payment identifier.
 
 + Attributes
-    + Include Settlement Request
+    + Include settlement
     + Include paymentType
-    + Include Links Settlement    
     + Include boku
     + Include ideal
     + Include giropay
@@ -1605,6 +1604,7 @@ Payment resource to find out the remaining amount available to settle.
     + Include payolution
     + Include skrill
     + Include sofort    
+    + Include links     
 
 + Request Create Settlement (application/json)
 
@@ -1800,159 +1800,6 @@ This is how you retrieve a list of any Settlements associated to a payment.
                 ]
             }
 
-# Returns [/returns]
-
-Returns transactions will be created by Paysafe if we receive a **no credit** notification from the service provider.  As a merchant you 
-cannot create a return directly.  
-
-> Note: Currently only Sofort supports returns.
-
-## Get a Return by ID [GET /accounts/{accountId}/returns/{returnId}]
-
-This is how you look up a Return using an ID.
-
-+ Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
-    + returnId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique return identifier.
-
-+ Request Get Return (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-
-+ Response 200 (application/json)
-
-    + Body
-    
-            {
-                "meta": {
-                    "numberOfRecords": 1,
-                    "limit": 10,
-                    "page": 1
-                },
-                "returns": [
-                    {
-                        "id": "81294868-e69a-4410-b592-46e2ab5b5673",
-                        "merchantRefNum": "GR-1506977370",
-                        "amount": 400,
-                        "currencyCode": "EUR",
-                        "paymentType": "SOFORT",
-                        "txnTime": "2017-02-10T20:20:00Z",
-                        "status": "COMPLETED",
-                        "links": [
-                            {
-                                "rel": "self",
-                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/returns/81294868-e69a-4410-b592-46e2ab5b5673"
-                            }
-                        ]
-                    }
-                ],
-                "links": [
-                    {
-                        "rel": "self",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4/returns?limit=10&offset=0"
-                    },
-                    {
-                        "rel": "payments",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4"
-                    }
-                ]
-            }    
-
-
-## List Returns for a Settlement [GET /accounts/{accountId}/settlements/{settlementId}/returns]
-
-This is how you retrieve a list of any returns associated to a settlement.
-
-+ Request List Returns for a Settlement (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-
-+ Response 200 (application/json)
-
-    + Body
-    
-            {
-                "meta": {
-                    "numberOfRecords": 1,
-                    "limit": 10,
-                    "page": 1
-                },
-                "returns": [
-                    {
-                        "id": "455dc29c-26f3-43fb-b086-9b76672b17c2",
-                        "merchantRefNum": "GR-1506977370",
-                        "amount": 400,
-                        "currencyCode": "EUR",
-                        "paymentType": "SOFORT",
-                        "txnTime": "2017-02-13T23:38:29Z",
-                        "status": "COMPLETED",
-                        "links": [
-                            {
-                                "rel": "self",
-                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1487029001/returns/455dc29c-26f3-43fb-b086-9b76672b17c2"
-                            }
-                        ]
-                    }
-                ],
-                "links": [
-                    {
-                        "rel": "self",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
-                    },
-                    {
-                        "rel": "settlement",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
-                    }
-                ]
-            }
-
-# Return Reversals [/returnreversals]
-
-Return reversal transactions will be automatically created by Paysafe if we receive a late credit notification after we have already issued a return.
-
-> Note: Currently only Sofort supports return reversals.
-
-## List Return Reversals for a Return [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
-
-This is how you retrieve a collection of return reversal details.
-
-+ Parameters
-    + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + returnId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return identifier.
-
-+ Request List Return Reversals (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-
-+ Response 200 (application/json)
-                                                
-
-## Get a Return Reversal by ID [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
-
-This is how you retrieve details for a single return reversal.  You can identify return reversals through the List Return Reversals endpoint.
-
-+ Parameters
-    + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + returnReversalId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return reversal identifier.
-
-+ Request Get Return Reversal (application/json)
-
-    + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-
-
-+ Response 200 (application/json)
-
 # Refunds [/refunds]
 
 A Refund allows you to refund back to a customer an amount that has previously been settled. You can create a refund 
@@ -1971,9 +1818,9 @@ This is how you submit a Refund request against a completed payment.
     + paymentId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique payment identifier.
 
 + Attributes
-    + Include Refund Request
+    + Include refund
     + Include paymentType
-    + Include Links Refund
+    + Include links
      
 + Request Refund a Payment (application/json)
 
@@ -2190,6 +2037,162 @@ This is how you look up Refunds using the merchant reference number used in the 
                 ]
             }
 
+# Returns [/returns]
+
+Returns transactions will be created by Paysafe if we receive a **no credit** notification from the service provider.  As a merchant you 
+cannot create a return directly.  
+
+> Note: Currently only Sofort supports returns.
+
+## Get Return by ID [GET /accounts/{accountId}/returns/{returnId}]
+
+This is how you look up a Return using an ID.
+
++ Parameters
+    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + returnId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique return identifier.
+
++ Request Get Return (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "returns": [
+                    {
+                        "id": "81294868-e69a-4410-b592-46e2ab5b5673",
+                        "merchantRefNum": "GR-1506977370",
+                        "amount": 400,
+                        "currencyCode": "EUR",
+                        "paymentType": "SOFORT",
+                        "txnTime": "2017-02-10T20:20:00Z",
+                        "status": "COMPLETED",
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/returns/81294868-e69a-4410-b592-46e2ab5b5673"
+                            }
+                        ]
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4/returns?limit=10&offset=0"
+                    },
+                    {
+                        "rel": "payments",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4"
+                    }
+                ]
+            }    
+
+
+## List Returns for a Settlement [GET /accounts/{accountId}/settlements/{settlementId}/returns]
+
+This is how you retrieve a list of any returns associated to a settlement.
+
++ Parameters
+    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + settlementId (string, required, `2f6a9ba3-d1df-438a-b8f5-59106c8f830c`) - This is your unique settlement identifier.
+
++ Request List Returns for a Settlement (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "returns": [
+                    {
+                        "id": "455dc29c-26f3-43fb-b086-9b76672b17c2",
+                        "merchantRefNum": "GR-1506977370",
+                        "amount": 400,
+                        "currencyCode": "EUR",
+                        "paymentType": "SOFORT",
+                        "txnTime": "2017-02-13T23:38:29Z",
+                        "status": "COMPLETED",
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1487029001/returns/455dc29c-26f3-43fb-b086-9b76672b17c2"
+                            }
+                        ]
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
+                    },
+                    {
+                        "rel": "settlement",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
+                    }
+                ]
+            }
+
+# Return Reversals [/returnreversals]
+
+Return reversal transactions will be automatically created by Paysafe if we receive a late credit notification after we have already issued a return.
+
+> Note: Currently only Sofort supports return reversals.
+
+## List Return Reversals for a Return [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
+
+This is how you retrieve a collection of return reversal details.
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + returnId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return identifier.
+
++ Request List Return Reversals (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 200 (application/json)
+                                                
+
+## Get Return Reversal by ID [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
+
+This is how you retrieve details for a single return reversal.  You can identify return reversals through the List Return Reversals endpoint.
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + returnReversalId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return reversal identifier.
+
++ Request Get Return Reversal (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 200 (application/json)
+
 # Data Structures
 
 ## `billingDetails`
@@ -2256,38 +2259,18 @@ This is how you look up Refunds using the merchant reference number used in the 
     + processor: `IDEAL`
     + paymentType: `DB`
 
-## Links Payment
-+ links (array, required) - This is an array of links related to the resource.
-    + (object)
-        + rel:redirect_payment (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/2fe99088-a509-41f4-8d05-da35626ba199/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhY2QiOiIxMDAxMTQxNTUwIiwicHlkIjoiMmZlOTkwODgtYTUwOS00MWY0LThkMDUtZGEzNTYyNmJhMTk5IiwiZXhwIjoxNTA0ODg2MzY5fQ.uh347qFkCm8MMiCHx-nqtCKyHZwhHCSeB6x-Qjb-qKM`
-    + (object)
-        + rel:self 
-        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
+## `link`
++ rel: self 
++ href: `https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
 
-## Links Refund
-+ links (array) - This is an array of links related to the resource. 
-    + ([object])
-        + `rel`: `self`
-        + `href`: `https://api.test.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
+    
+## `links`
++ links (array[link]) - This is an array of links related to the resource.  
 
-## Links Settlement
-+ links (array, required) - This is an array of links related to the resource.
-    + (object)
-        + rel:payment (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payment/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
-    + (object)
-        + rel:self 
-        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/settlements/a99f93a7-a35c-4f9e-9b48-a7d588a53c32`
-
-## Links Void Auths
-+ links (array, required) - This is an array of links related to the resource.
-    + (object)
-        + rel:payment (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
-        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/a99f93a7-a35c-4f9e-9b48-a7d588a53c32`
-    + (object)
-        + rel:self 
-        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/voidauths/2fe99088-a509-41f4-8d05-da35626ba199`
+    Typically you will have reference to any parent resources, and a reference to the child resource (if applicable).
+    You may also see links for any call to action flows.  For example, when creating a payment that involves a redirect, the response will include a 'redirect_payment' rel that you must direct your consumer to.
+    
+    _Read Only_
 
 ## `neteller`
 
@@ -2437,7 +2420,7 @@ This is how you look up Refunds using the merchant reference number used in the 
     + `email`: `stan.smith@fox.com` (string)
     + `ip`: `127.0.0.1` (string)
 
-## `Refund Request`
+## `refund`
 
 + `id`: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 
@@ -2481,21 +2464,6 @@ This is how you look up Refunds using the merchant reference number used in the 
 
 + Include idealGatewayResponse
 
-## `Refund Response`
-
-+ `id`: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the refund id.  *\*\*Assigned by Paysafe* 
-+ `merchantRefNum`: `xyz` (string) - This is your unique idenitfier for this request.
-+ `amount`: `400` (number) - This is the amount of the refund in minor units (e.g., $50.00 USD => 5000, 50 YEN -> 50).
-+ `currencyCode`: `EUR` (string) - This is the currency of the payment.
-+ `paymentType`: `IDEAL` (string)
-+ `txnTime`: `2016-02-24T08:39:39Z` (string) - This is the datetime of the transaction in UTC. *\*\*Assigned by Paysafe*
-+ `status`: `COMPLETED` (string) - This is the current state of the transaction. *\*\*Assigned by Paysafe*
-+ Include payonGatewayResponse
-+ `links` (array) - This is an array of links related to the resource. 
-    + ([object])
-        + `rel`: `self`
-        + `href`: `https://api.test.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
-
 ## `returnLinks`
 
 + `returnLinks` (array) - This is an array of return links.
@@ -2510,7 +2478,7 @@ This is how you look up Refunds using the merchant reference number used in the 
                 + `on_error`
         + `href`: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the customer to.
 
-## `Settlement Request`
+## `settlement`
 
 + `id`: `30381792-1237-4868-8fd3-73196e94d009` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 
