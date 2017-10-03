@@ -156,15 +156,15 @@ Sample Response with List Data
         },
         "links": [{
             "rel": "self",
-            "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1000203713/payments/9769f140-0bd2-4fe7-b79b-338ccf8433fc"
+            "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1000203713/payments/9769f140-0bd2-4fe7-b79b-338ccf8433fc"
         }]
     }],
     "links": [{
         "rel": "next",
-        "href": "https://api.paysafe.com/ alternatepayments/v1/accounts/1000203713/payments?merchantRefNum=xyz&limit=10&offset=10&startDate=2016-06-06T19:04:43Z&endDate=2016-07-06T19:04:43Z"
+        "href": "https://api.test.paysafe.com/ alternatepayments/v1/accounts/1000203713/payments?merchantRefNum=xyz&limit=10&offset=10&startDate=2016-06-06T19:04:43Z&endDate=2016-07-06T19:04:43Z"
     }, {
         "rel": "self",
-        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1000203713/payments?merchantRefNum=xyz&limit=10&offset=0&startDate=2016-06-06T19:04:43Z&endDate=2016-07-06T19:04:43Z"
+        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1000203713/payments?merchantRefNum=xyz&limit=10&offset=0&startDate=2016-06-06T19:04:43Z&endDate=2016-07-06T19:04:43Z"
     }]
 }
 ```
@@ -246,19 +246,19 @@ our API, but rather can use the returned URL for the specific purpose as defined
 Below are sample HATEOAS links from an API response that returns a collection of payments associated to a specific merchant reference. Links
 are provided to navigate through the set of resources in the collection.
 ```
-GET https://api.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=10
+GET https://api.test.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=10
  
 ...result set
  
 "links": [{
     "rel": "self",
-    "href": "https://api.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=10"
+    "href": "https://api.test.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=10"
 },  {
     "rel": "prev",
-    "href": "https://api.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=0"
+    "href": "https://api.test.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=0"
 }, {
     "rel": "next",
-    "href": "https://api.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=20"
+    "href": "https://api.test.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=20"
 }]
 ```
 
@@ -454,7 +454,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |profile                 |[object](#profile)     |These are some details about the customer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |shippingDetails         |[object](#shippingDetails) |These are the shi8pping details for the payment.|
-|txnTime                 |datetime               |ISO 8601 format (UTC) This is the date and time the transaction was processed.  eg `2014-01-26T10:32:28Z`<br/><i>read only</i>|
+|txnTime                 |datetime               |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>read only</i>|
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>read only</i>|
@@ -1090,7 +1090,7 @@ a subsequent settlement request when you wish to capture the payment.  The abili
 > in order to complete your request. Please contact Paysafe Merchant Support to enable additional payment types and or currencies.
 
 
-## Create an authorized Payment [POST /accounts/{accountId}/payments]
+## Create an Authorized Payment [POST /accounts/{accountId}/payments]
 
 Submit a payment request using local payment methods that your customers are familiar with.  
 Once you have submited your request, if you are returned a redirect_payment hateoas link, then you must redirect
@@ -1129,7 +1129,8 @@ See [Payment Objects](#paymentObjects) for payment method-specific details, or s
 
 + Attributes
     + Include payment
-    + Include paymentType            
+    + Include paymentType
+    + Include Links Payment
     + Include boku
     + Include ideal
     + Include giropay
@@ -1148,7 +1149,7 @@ See [Payment Objects](#paymentObjects) for payment method-specific details, or s
     + Body
 
             {
-              "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
+              "merchantRefNum": "P1234",
               "dupCheck": true,
               "amount": 100,
               "currencyCode": "EUR",
@@ -1188,7 +1189,7 @@ See [Payment Objects](#paymentObjects) for payment method-specific details, or s
 
             {
               "id": "25f6dadf-176a-415f-95c9-6ff39ff697ba",
-              "merchantRefNum": "b0ceaa3-42ad-442d-b85b-c3b70f24835d",
+              "merchantRefNum": "P1234",
               "amount": 100,
               "currencyCode": "EUR",
               "profile": {
@@ -1230,11 +1231,11 @@ See [Payment Objects](#paymentObjects) for payment method-specific details, or s
               "links": [
                 {
                   "rel": "self",
-                  "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21\""
+                  "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21\""
                 },
                 {
                   "rel": "redirect_payment",
-                  "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc"
+                  "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc"
                 }
               ]
             }
@@ -1248,7 +1249,7 @@ This is how you look up a [Payment](#payment) using the payment ID.
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + paymentId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique payment identifier.
 
-+ Request (application/json)
++ Request Get Payment (application/json)
 
     + Headers
     
@@ -1261,7 +1262,7 @@ This is how you look up a [Payment](#payment) using the payment ID.
             {
                 "id": "13c7873e-eccd-463d-b8ec-e3899f322a99",
                 "gatewayReconciliationId": "64d62a6e-d7da-43ca-9f18-52b4afaf2096",
-                "merchantRefNum": "GR-1506794436",
+                "merchantRefNum": "P1234",
                 "amount": 105,
                 "currencyCode": "EUR",
                 "paymentType": "IDEAL",
@@ -1324,9 +1325,9 @@ is disabled.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + merchantRefNum (string, required, `R-1506794436`) - This is your unique payment identifier.
+    + merchantRefNum (string, required, `P1234`) - This is your unique payment identifier.
 
-+ Request (application/json)
++ Request List Payments (application/json)
 
     + Headers
     
@@ -1346,7 +1347,7 @@ is disabled.
                     {
                         "id": "13c7873e-eccd-463d-b8ec-e3899f322a99",
                         "gatewayReconciliationId": "64d62a6e-d7da-43ca-9f18-52b4afaf2096",
-                        "merchantRefNum": "R-1506794436",
+                        "merchantRefNum": "P1234",
                         "amount": 105,
                         "currencyCode": "EUR",
                         "paymentType": "IDEAL",
@@ -1413,7 +1414,7 @@ is disabled.
 
 This is how you submit a Void Authorization (authorization reversal) request. You can void an Authorization only if it has not yet been settled.
 
-## Void a previously authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
+## Void a Previously Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
 
 Reverse (cancel) an existing authorization. 
 
@@ -1422,9 +1423,10 @@ Reverse (cancel) an existing authorization.
     + paymentId (string, required, `6d62cd86-a268-48f1-a852-73d0ac1c4ece`) - This is your unique payment identifier.
 
 + Attributes
-    + merchantRefNum: `VA-1506981708` (string, required) - This is your unique identifier for this void request.
+    + Include voidAuth
+    + Include paymentType
 
-+ Request (application/json)
++ Request Void an Authorization (application/json)
 
     + Headers
     
@@ -1436,7 +1438,7 @@ Reverse (cancel) an existing authorization.
               "merchantRefNum":"VA-1506981708"
             }    
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
     
     + Body
@@ -1476,7 +1478,7 @@ This is how you look up a Void Authorization request using the ID returned in th
     + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
     + voidauthId (string, required, `1486757865`) - This is your unique voidauth identifier.
 
-+ Request (application/json)
++ Request Get Void Authorization (application/json)
 
     + Headers
     
@@ -1485,22 +1487,51 @@ This is how you look up a Void Authorization request using the ID returned in th
 
 + Response 200 (application/json)
 
+    
+    + Body
+    
+            {
+                "id": "a839679f-0a23-4b8d-a3f9-1a92074579ab",
+                "merchantRefNum": "VA-1506981708",
+                "amount": 1000,
+                "paymentType": "PAYOLUTION",
+                "currencyCode": "EUR",
+                "txnTime": "2017-10-02T22:01:47Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "0.0.0",
+                    "description": "The request was processed successfully.",
+                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
+                    "processor": "PAYOLUTION"
+                },
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001109280/voidauths/a839679f-0a23-4b8d-a3f9-1a92074579ab"
+                    },
+                    {
+                        "rel": "payment",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001109280/payments/6d62cd86-a268-48f1-a852-73d0ac1c4ece"
+                    }
+                ]
+            }
+
 ## List Void Authorizations [GET /accounts/{accountId}/payment/{paymentId}/voidauths]
 
-This is how you retrieve a list of any Void Authorizations associated to a payment.
+This is how you retrieve a list of any Void Authorizations associated to a payment. 
 
 + Parameters
     + accountId (string, required, `1486757865`) - This is your unique account identifier.
     + paymentId (string, required, `6d62cd86-a268-48f1-a852-73d0ac1c4ece`) - This is your unique payment identifier.
 
-+ Request (application/json)
++ Request List Void Authorizations (application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
     + Body
     
@@ -1553,24 +1584,42 @@ the payment authorization.  You can settle all or part of an existing payment au
 
 Settlement is the process of capturing funds from a previous authorization request to your merchant account.  
 
-## Settle an authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/settlements]
+## Settle an Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/settlements]
 
-You must manually settle an previously authorized payment if it was requested with 'settleWithAuth=false'.  You can query the 
-Payment resource to find out the remaining available to settle amount.
+You must manually settle a previously authorized payment if it was requested with *settleWithAuth* = *false*.  You can query the 
+Payment resource to find out the remaining amount available to settle.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + paymentId (string, required, `21572c64-19eb-4d45-973f-fc03c6243158`) - This is your unique payment identifier.
 
-+ Request (application/json)
++ Attributes
+    + Include Settlement Request
+    + Include paymentType
+    + Include Links Settlement    
+    + Include boku
+    + Include ideal
+    + Include giropay
+    + Include neteller
+    + Include paysafecard
+    + Include payolution
+    + Include skrill
+    + Include sofort    
+
++ Request Create Settlement (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
-        
-    + Attributes
-        + Include Settlement Request
-       
+
+    + Body
+
+            {
+                "merchantRefNum": "GR-1506977370",
+                "dupCheck": true,
+                "amount": 105,
+                "currencyCode": "EUR"
+            }
 
 + Response 201 (application/json)
 
@@ -1610,14 +1659,14 @@ This is how you look up a Settlement request using the ID returned in the respon
     + accountId (string, required, `1486757865`) - This is your unique account identifier.
     + settlementId (string, required, `a99f93a7-a35c-4f9e-9b48-a7d588a53c32`) - This is your unique settlement identifier.
 
-+ Request (application/json)
++ Request Get Settlement (application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
     + Body
     
@@ -1657,14 +1706,14 @@ This is how you look up Settlements using the merchant reference number used in 
     + accountId (string, required, `1486757865`) - This is your unique account identifier.
     + merchantRefNum (string, required, `1486757872`) - This is your unique payment identifier.
 
-+ Request (application/json)
++ Request List Settlements (application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
     + Body
     
@@ -1677,7 +1726,7 @@ This is how you look up Settlements using the merchant reference number used in 
                 "settlements": [
                     {
                         "id": "670c8464-f7bf-45da-ba53-972abf7701e4",
-                        "merchantRefNum": "1486757872",
+                        "merchantRefNum": "GR-1506977370",
                         "amount": 400,
                         "currencyCode": "EUR",
                         "paymentType": "SOFORT",
@@ -1686,7 +1735,7 @@ This is how you look up Settlements using the merchant reference number used in 
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/settlements/670c8464-f7bf-45da-ba53-972abf7701e4"
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/settlements/670c8464-f7bf-45da-ba53-972abf7701e4"
                             }
                         ]
                     }
@@ -1694,13 +1743,13 @@ This is how you look up Settlements using the merchant reference number used in 
                 "links": [
                     {
                         "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/settlements?merchantRefNum=1486757872&limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/settlements?merchantRefNum=1486757872&limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
                     }
                 ]
             }
 
 
-## List Settlements [GET /accounts/{accountId}/payment/{paymentId}/settlements]
+## List Settlements for a Payment [GET /accounts/{accountId}/payment/{paymentId}/settlements]
 
 This is how you retrieve a list of any Settlements associated to a payment.
 
@@ -1708,14 +1757,14 @@ This is how you retrieve a list of any Settlements associated to a payment.
     + accountId (string, required, `1486757865`) - This is your unique account identifier.
     + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
 
-+ Request (application/json)
++ Request List Settlements for a Payment(application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
 
     + Body
@@ -1729,7 +1778,7 @@ This is how you retrieve a list of any Settlements associated to a payment.
                 "settlements": [
                     {
                         "id": "670c8464-f7bf-45da-ba53-972abf7701e4",
-                        "merchantRefNum": "1486757872",
+                        "merchantRefNum": "GR-1506977370",
                         "amount": 400,
                         "currencyCode": "EUR",
                         "paymentType": "SOFORT",
@@ -1738,7 +1787,7 @@ This is how you retrieve a list of any Settlements associated to a payment.
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/settlements/670c8464-f7bf-45da-ba53-972abf7701e4"
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/settlements/670c8464-f7bf-45da-ba53-972abf7701e4"
                             }
                         ]
                     }
@@ -1746,7 +1795,7 @@ This is how you retrieve a list of any Settlements associated to a payment.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4/settlements?limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4/settlements?limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
                     }
                 ]
             }
@@ -1766,14 +1815,14 @@ This is how you look up a Return using an ID.
     + accountId (string, required, `1486757865`) - This is your unique account identifier.
     + returnId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique return identifier.
 
-+ Request (application/json)
++ Request Get Return (application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
     + Body
     
@@ -1786,7 +1835,7 @@ This is how you look up a Return using an ID.
                 "returns": [
                     {
                         "id": "81294868-e69a-4410-b592-46e2ab5b5673",
-                        "merchantRefNum": "1486757872",
+                        "merchantRefNum": "GR-1506977370",
                         "amount": 400,
                         "currencyCode": "EUR",
                         "paymentType": "SOFORT",
@@ -1795,7 +1844,7 @@ This is how you look up a Return using an ID.
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/returns/81294868-e69a-4410-b592-46e2ab5b5673"
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/returns/81294868-e69a-4410-b592-46e2ab5b5673"
                             }
                         ]
                     }
@@ -1803,11 +1852,11 @@ This is how you look up a Return using an ID.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4/returns?limit=10&offset=0"
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4/returns?limit=10&offset=0"
                     },
                     {
                         "rel": "payments",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4"
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4"
                     }
                 ]
             }    
@@ -1817,14 +1866,14 @@ This is how you look up a Return using an ID.
 
 This is how you retrieve a list of any returns associated to a settlement.
 
-+ Request (application/json)
++ Request List Returns for a Settlement (application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
     + Body
     
@@ -1837,7 +1886,7 @@ This is how you retrieve a list of any returns associated to a settlement.
                 "returns": [
                     {
                         "id": "455dc29c-26f3-43fb-b086-9b76672b17c2",
-                        "merchantRefNum": "1487029009",
+                        "merchantRefNum": "GR-1506977370",
                         "amount": 400,
                         "currencyCode": "EUR",
                         "paymentType": "SOFORT",
@@ -1846,7 +1895,7 @@ This is how you retrieve a list of any returns associated to a settlement.
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/returns/455dc29c-26f3-43fb-b086-9b76672b17c2"
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1487029001/returns/455dc29c-26f3-43fb-b086-9b76672b17c2"
                             }
                         ]
                     }
@@ -1854,11 +1903,11 @@ This is how you retrieve a list of any returns associated to a settlement.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c/returns?limit=10&offset=0"
                     },
                     {
                         "rel": "settlement",
-                        "href": "http://localhost:8011/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1487029001/settlements/2f6a9ba3-d1df-438a-b8f5-59106c8f830c"
                     }
                 ]
             }
@@ -1877,14 +1926,14 @@ This is how you retrieve a collection of return reversal details.
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + returnId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return identifier.
 
-+ Request (application/json)
++ Request List Return Reversals (application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
                                                 
 
 ## Get a Return Reversal by ID [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
@@ -1895,14 +1944,14 @@ This is how you retrieve details for a single return reversal.  You can identify
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + returnReversalId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return reversal identifier.
 
-+ Request (application/json)
++ Request Get Return Reversal (application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
 # Refunds [/refunds]
 
@@ -1923,17 +1972,51 @@ This is how you submit a Refund request against a completed payment.
 
 + Attributes
     + Include Refund Request
+    + Include paymentType
+    + Include Links Refund
      
-+ Request (application/json)
++ Request Refund a Payment (application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
-+ Response 201 (application/json)
+    + Body
 
-    + Attributes
-     + Include Refund Response
+            {
+                "merchantRefNum": "Ref-1506977370",
+                "dupCheck": true,
+                "paymentType": "IDEAL"
+                "amount": 400,
+                "currencyCode": "EUR"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "6565bce8-9ae2-4359-bc7c-48c2e560810b",
+                "merchantRefNum": "Ref-1506977370",
+                "amount": 400,
+                "currencyCode": "EUR",
+                "paymentType": "IDEAL",
+                "txnTime": "2016-02-24T08:39:39Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "000.100.110",
+                    "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
+                    "id": "9bcaa7f0dba44c64981881401794abby",
+                    "processor": "PAYON",
+                    "paymentType": "RF"
+                  },
+                "links": [
+                    {
+                      "rel": "self",
+                      "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b"
+                    }
+                  ]
+                }
 
 ## Refund a Settlement [POST /accounts/{accountId}/settlements/{settlementId}/refunds]
 
@@ -1945,19 +2028,48 @@ This is how you submit a Refund request against a completed settlement.
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + settlementId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique payment identifier.
 
-+ Request (application/json)
++ Request Refund a Settlement (application/json)
 
     + Headers
     
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
-    + Attributes
-        + Include Refund Request
-     
+    + Body
+
+            {
+                "merchantRefNum": "Ref-1506977370",
+                "dupCheck": true,
+                "paymentType": "IDEAL"
+                "amount": 400,
+                "currencyCode": "EUR"
+            }
 
 + Response 201 (application/json)
 
-    + Attributes (Refund Response)
+    + Body
+
+            {
+                "id": "6565bce8-9ae2-4359-bc7c-48c2e560810b",
+                "merchantRefNum": "Ref-1506977370",
+                "amount": 400,
+                "currencyCode": "EUR",
+                "paymentType": "IDEAL",
+                "txnTime": "2016-02-24T08:39:39Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "000.100.110",
+                    "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
+                    "id": "9bcaa7f0dba44c64981881401794abby",
+                    "processor": "PAYON",
+                    "paymentType": "RF"
+                  },
+                "links": [
+                    {
+                      "rel": "self",
+                      "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b"
+                    }
+                  ]
+                }
 
 ## Get Refund by ID [GET /accounts/{accountId}/refunds/{refundId}]
 
@@ -1967,7 +2079,7 @@ This is how you look up a Refund request using the ID returned in the response t
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + refundId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique refund identifier.
 
-+ Request (application/json)
++ Request Get Refund (application/json)
 
     + Headers
     
@@ -1975,15 +2087,36 @@ This is how you look up a Refund request using the ID returned in the response t
 
 + Response 200 (application/json)
 
-    + Attributes 
-    
-        + Include Refund Response
-        + links (array) - This is an array of related links.
-            + (object)
-                + rel: `self`
-                + href: `https://api.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
+    + Body
 
-## List Refunds by Merchant Reference Number [GET /accounts/{accountId}/refunds/?merchantRefNum={merchantRefNum}]
+            {
+                "id": "6565bce8-9ae2-4359-bc7c-48c2e560810b",
+                "merchantRefNum": "Ref-1506977370",
+                "amount": 400,
+                "currencyCode": "EUR",
+                "paymentType": "IDEAL",
+                "txnTime": "2016-02-24T08:39:39Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "000.100.110",
+                    "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
+                    "id": "9bcaa7f0dba44c64981881401794abby",
+                    "processor": "PAYON",
+                    "paymentType": "RF"
+                  },
+                "links": [
+                    {
+                      "rel": "self",
+                      "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1234567891/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b"
+                    }
+                    {
+                      "rel": "payment",
+                      "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1234567891/payments/25f6dadf-176a-415f-95c9-6ff39ff697ba"
+                    }                    
+                  ]
+                }
+
+## List Refunds by Merchant Reference Number [GET /accounts/{accountId}/payments/{paymentId}/refunds/?merchantRefNum={merchantRefNum}]
 
 This is how you look up Refunds using the merchant reference number used in the original request. This returns a collection of refund details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
@@ -2003,9 +2136,10 @@ This is how you look up Refunds using the merchant reference number used in the 
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + merchantRefNum (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique refund identifier.
+    + paymentId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba` - This is your unique payment identifier.
+    + merchantRefNum (string, required, `Ref-1506977370`) - This is your unique refund identifier.
 
-+ Request (application/json)
++ Request List Refunds (application/json)
 
     + Headers
     
@@ -2013,14 +2147,48 @@ This is how you look up Refunds using the merchant reference number used in the 
 
 + Response 200 (application/json)
 
-    + Attributes
+    + Body
     
-        + refunds (array)
-            + (Refund Response)
-        + links (array) - This is an array of related links.
-            + (object)
-                + rel: `self`
-                + href: `https://api.paysafe.com/v1/accounts/1466458515/refunds?merchantRefNum=1466458777&limit=10&offset=0&startDate=2016-05-21T22:17:47Z&endDate=2016-06-20T22:17:47Z`
+            {
+                "meta": {
+                    "numberOfRecords": 1,
+                    "limit": 10,
+                    "page": 1
+                },
+                "refunds": [
+                    {
+                        "id": "6565bce8-9ae2-4359-bc7c-48c2e560810b",
+                        "merchantRefNum": "Ref-1506977370",
+                        "amount": 400,
+                        "currencyCode": "EUR",
+                        "paymentType": "IDEAL",
+                        "txnTime": "2017-02-10T20:17:51Z",
+                        "status": "COMPLETED",
+                        "gatewayResponse": {
+                          "code": "000.100.110",
+                          "description": "Request successfully processed",
+                          "id": "9bcaa7f0dba44c64981881401794abby",
+                          "processor": "PAYON",
+                          "paymentType": "RF"
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b"
+                            }
+                            {
+                                "rel": "payment",
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/25f6dadf-176a-415f-95c9-6ff39ff697ba"
+                            }                            
+                        ]
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/refunds?merchantRefNum=1486757872&limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
+                    }
+                ]
+            }
 
 # Data Structures
 
@@ -2045,6 +2213,9 @@ This is how you look up Refunds using the merchant reference number used in the 
 ## `bokuGatewayResponse`
 
 + `gatewayResponse` (object)
+
+    _Read Only_
+    
     + `processor`: `BOKU` (string)
     + `action`: `prepare` (string)
     + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string)
@@ -2060,6 +2231,9 @@ This is how you look up Refunds using the merchant reference number used in the 
 ## `giropayGatewayResponse`
 
 + `gatewayResponse` (object)
+
+    _Read Only_
+    
     + `processor`: `GIROPAY` (string)
     + `txId`: `SIM001270` (string)
     + `returnCode`: `0`
@@ -2073,11 +2247,47 @@ This is how you look up Refunds using the merchant reference number used in the 
 ## `idealGatewayResponse`
 
 + `gatewayResponse` (object)
+
+    _Read Only_
+    
     + code: `000.200.000`
     + description: `Transaction Pending`
     + id: `4867bb8ce543409dbe1187849af28107`
     + processor: `IDEAL`
     + paymentType: `DB`
+
+## Links Payment
++ links (array, required) - This is an array of links related to the resource.
+    + (object)
+        + rel:redirect_payment (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/2fe99088-a509-41f4-8d05-da35626ba199/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhY2QiOiIxMDAxMTQxNTUwIiwicHlkIjoiMmZlOTkwODgtYTUwOS00MWY0LThkMDUtZGEzNTYyNmJhMTk5IiwiZXhwIjoxNTA0ODg2MzY5fQ.uh347qFkCm8MMiCHx-nqtCKyHZwhHCSeB6x-Qjb-qKM`
+    + (object)
+        + rel:self 
+        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
+
+## Links Refund
++ links (array) - This is an array of links related to the resource. 
+    + ([object])
+        + `rel`: `self`
+        + `href`: `https://api.test.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
+
+## Links Settlement
++ links (array, required) - This is an array of links related to the resource.
+    + (object)
+        + rel:payment (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payment/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
+    + (object)
+        + rel:self 
+        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/settlements/a99f93a7-a35c-4f9e-9b48-a7d588a53c32`
+
+## Links Void Auths
++ links (array, required) - This is an array of links related to the resource.
+    + (object)
+        + rel:payment (string, required) - This is the link type that allows different endpoints to be targeted depending on the end state of the transaction.
+        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/a99f93a7-a35c-4f9e-9b48-a7d588a53c32`
+    + (object)
+        + rel:self 
+        + href:`https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/voidauths/2fe99088-a509-41f4-8d05-da35626ba199`
 
 ## `neteller`
 
@@ -2093,9 +2303,9 @@ This is how you look up Refunds using the merchant reference number used in the 
 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 
-    _read only_
+    _Read Only_
     
-+ `merchantRefNum`: `b0ceaa3-42ad-442d-b85b-c3b70f24835d` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
 
     _length<=255_
 
@@ -2125,21 +2335,33 @@ This is how you look up Refunds using the merchant reference number used in the 
 + Include returnLinks
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 
-    _read only_
+    _Read Only_
     
-+ `status`: `INITIATED` (string) - This is the status of the transaction request.
++ `status`:`PROCESSING` (enum, required) - This is the status of the request.
 
-    _read only_
+    _Read Only_
     
+    + Members
+        + `RECEIVED`
+        + `PENDING`
+        + `PROCESSING`
+        + `COMPLETED`
+        + `CANCELLED`
+        + `FAILED`
+        + `ERROR`
+        + `EXPIRED`
+        
 + `statusReason`: `USER_CANCELLED` (enum)
 
-    _read only_
+    _Read Only_
     
     + Members
         + `USER_CANCELLED`
         + `MERCHANT_CANCELLED`
         + `AUTH_VOIDED`
-        + `AUTH_EXPIRED`        
+        + `AUTH_EXPIRED`
+
++ Include idealGatewayResponse
 
 ## `paymentType`
 
@@ -2175,9 +2397,24 @@ This is how you look up Refunds using the merchant reference number used in the 
 + `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
 + `value`: `TOP` (string)
 
+## `paysafecardGatewayResponse`
+
++ `gatewayResponse` (object)
+
+    _Read Only_
+    
+    + `code`: `000.100.110` (string)
+    + `description`: `Request successfully processed` (string)
+    + `id`: `9bcaa7f0dba44c64981881401794abby`
+    + `processor`: `PAYSAFECARD` (enum)
+    + `paymentType`: `DB` (string)
+
 ## `payonGatewayResponse`
 
 + `gatewayResponse` (object)
+
+    _Read Only_
+    
     + `code`: `000.100.110` (string)
     + `description`: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
     + `id`: `9bcaa7f0dba44c64981881401794abby`
@@ -2202,11 +2439,47 @@ This is how you look up Refunds using the merchant reference number used in the 
 
 ## `Refund Request`
 
-+ `merchantRefNum`: `xyz` (string, required) - This is the merchant reference number.
-+ `dupCheck`: `false` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
-+ `paymentType`: `IDEAL` (string, required) - This specifies the payment type of the transaction.
++ `id`: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+
+    _Read Only_
+
++ `merchantRefNum`: `GR-1506977370` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
+
+    _length<=255_
+
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
+
+    + Default: true
+
++ `amount`: `400` (number, required) - This is the amount of the request, in minor units.
+
+    _max=99999999999_
+
 + `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
-+ `amount`: `100` (number, required) - This is the amount in minor units.
+
+    _length=3_
+
+    + Default: `The account currency`
+
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `status`: `PROCESSING` (enum) - This is the status of the transaction request.
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `PENDING`
+        + `PROCESSING`
+        + `COMPLETE`
+        + `CANCELLED`
+        + `FAILED`
+        + `ERROR`
+        + `EXPIRED`    
+
++ Include idealGatewayResponse
 
 ## `Refund Response`
 
@@ -2221,7 +2494,7 @@ This is how you look up Refunds using the merchant reference number used in the 
 + `links` (array) - This is an array of links related to the resource. 
     + ([object])
         + `rel`: `self`
-        + `href`: `https://api.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
+        + `href`: `https://api.test.paysafe.com/v1/accounts/1466458515/refunds/6565bce8-9ae2-4359-bc7c-48c2e560810b`
 
 ## `returnLinks`
 
@@ -2239,20 +2512,51 @@ This is how you look up Refunds using the merchant reference number used in the 
 
 ## `Settlement Request`
 
-+ `merchantRefNum`: `1489522059` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
-+ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
-+ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
++ `id`: `30381792-1237-4868-8fd3-73196e94d009` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+
+    _Read Only_
+
++ `merchantRefNum`: `GR-1506977370` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
+
+    _length<=255_
+
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
+
+    + Default: true
+
++ `amount`: `105` (number, required) - This is the amount of the request, in minor units.
+
+    _max=99999999999_
+
 + `currencyCode`: `EUR` (string, required) - This is the currency of the payment.
 
-## `Settlement Response`
+    _length=3_
 
-+ `id`: `30381792-1237-4868-8fd3-73196e94d009` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
-+ `merchantRefNum`: `1489522059` (string) - This is the merchant reference number created by the merchant and submitted as part of the request.
-+ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.
-+ `amount`: `100` (number) - This is the amount of the request, in minor units.
-+ `currencyCode`: `EUR` (string) - This is the currency of the payment.
-+ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
-+ `status`: `COMPLETED` (string) - This is the status of the setllement request.
+    + Default: `The account currency`
+
++ `txnTime`: `2017-03-14T20:07:39Z` (string, required) - This is the date and time the transaction was processed
+
+    _Read Only_
+
++ `availableToRefund`: `100` (number, optional) - This is the amount of the authorization remaining to refund in minor units.  It is visible only if no refunds are done on any of the corresponding settlements for this payment.
+
+    _Read Only_
+
++ `status`:`COMPLETED` (enum, required) - This is the status of the request.
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `PENDING`
+        + `PROCESSING`
+        + `COMPLETED`
+        + `CANCELLED`
+        + `FAILED`
+        + `ERROR`
+        + `EXPIRED`
+
++ Include paysafecardGatewayResponse
 
 ## `sepa`
 
@@ -2279,8 +2583,51 @@ This is how you look up Refunds using the merchant reference number used in the 
 ## `sofortGatewayResponse`
 
 + `gatewayResponse` (object)
+
+    _Read Only_
     + `code`: `0` (string)
     + `description`: `Request successfully processed` (string)
     + `id`: `0000-014100-SOFRTSIM-0000`
     + `processor`: `SOFORT`
     + `paymentType`: `DB` (string)
+
+## `voidAuth`
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests.
+
+    _Read Only_
+    
++ `merchantRefNum`: `VA-1506981708` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
+
+    + Default: true
+    
++ `amount`: `100` (number, optional) - This is the amount of the request, in minor units.
+
+    _max=99999999999_
+    
++ `currencyCode`: `EUR` (string) - This is the currency of the payment.
+
+    _length=3_ 
+    _Read Only_
+
+    + Default: `The account currency`
+    
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+    
++ `status`:`COMPLETED` (enum, required) - This is the status of the request.
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `COMPLETED`
+        + `FAILED`
+        + `ERROR`
+
++ Include idealGatewayResponse
