@@ -245,6 +245,7 @@ our API, but rather can use the returned URL for the specific purpose as defined
 
 Below are sample HATEOAS links from an API response that returns a collection of payments associated to a specific merchant reference. Links
 are provided to navigate through the set of resources in the collection.
+
 ```
 GET https://api.test.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=10
  
@@ -339,7 +340,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |zip                     |string<br/>`length<=10`  |This is the postal/zip code in the billing address.|
 
 ```
-{
 "billingDetails": {
     "street1": "100QueenStreetWest",
     "street2": "Building 2",
@@ -347,7 +347,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "state": "ON",
     "country": "CA",
     "zip": "M5H2N2"
-}
 }
 ```
 
@@ -385,7 +384,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |links              |array of [object](#link)       |The link to the related resource.<br/><i>read only</i>|
 
 ```
-
 {
 "error": {
     "code": 5068,
@@ -404,8 +402,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
         "error": "Currency with value [USD] exceeds the maximum size of [3]."
     }]
 }
-}
-
 ```
 
 <a name="fieldError"></a>
@@ -565,7 +561,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "processor": "PAYON",
     "paymentType": "RF"
   }
-  }
+}
 ```
 
 <a name="return"></a>
@@ -638,7 +634,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
         "paymentType": "DB"
     }
 }
-
 ```
 
 <a name="sepa"></a>
@@ -653,14 +648,12 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |iban                    |string<br/>`length=1-34` |This is the International Bank Account Number for the customer's bank account.|
 
 ```
-{
 "sepa": {
     "bankName": "ING",
     "country": "NL",
     "accountHolderName": "John Doe",
     "bic": "ABNANL2APIP",
     "iban": "DE89370400440532013000"      
-}
 }
 ```
 
@@ -680,8 +673,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |zip                     |string                  |This is the recipient's post code.|
 
 ```
-{
-"shippingDetails":{
+"shippingDetails": {
     "carrier":"UPS",
     "shipMethod":"N",
     "recipientName":"Jane Smith",
@@ -690,7 +682,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "state":"ON",
     "country":"CA",
     "zip":"M5H 2N2"
-}
 }
 ```
 
@@ -743,13 +734,11 @@ Payment objects are used to define additional values that can be supplied with y
 |consumerMobilePhone     |string                 |<b>(required)</b> The customers mobile phone number.|
 
 ```
-{
 "boku": {
     "descriptor": "custom descriptor",
     "consumerId": "CUS_12345678",
     "consumerCountry": "GB",
     "consumerMobilePhone": "44292102029"
-}
 }
 ```
 
@@ -767,7 +756,6 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
 
 ```
-{
 "giropay": {
     "descriptor": "custom descriptor",
     "sepa": {
@@ -775,7 +763,6 @@ Payment objects are used to define additional values that can be supplied with y
         "bic": "ABNANL2APIP",
         "iban": "DE89370400440532013000"                
     }
-}
 }
 ```
 
@@ -795,14 +782,12 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa.accountHolderName  |string                 |The account holders name.|
 
 ```
-{
 "ideal": {
     "descriptor": "custom descriptor",
     "sepa": {
         "bankName": "abn_amro",
         "country": "NL"
     }
-}
 }
 ```
 
@@ -822,7 +807,6 @@ Payment objects are used to define additional values that can be supplied with y
 |detail1Text                    |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334.|
 
 ```
-{
 "neteller":{
     "netellerAccount":"neteller.account@example.org",
     "netellerSecureId":"123456",
@@ -831,7 +815,6 @@ Payment objects are used to define additional values that can be supplied with y
     "logoUrl":"http://www.paysafe.com/icon.jpg",    
     "detail1Description":"Details 1 description",
     "detail1Text":"Details 1 text"
-}
 }
 ```
 
@@ -852,7 +835,6 @@ Payment objects are used to define additional values that can be supplied with y
 |analysis                                        |object|                ||
 
 ```
-{
 "payolution": {
     "descriptor": "Order with ID 4ab2",
     "paymentInformation": {
@@ -876,7 +858,6 @@ Payment objects are used to define additional values that can be supplied with y
         "value": "23498739478"
     }]
 }
-}
 ```
 <a name="paysafecard"></a>
 ## paysafecard 
@@ -891,13 +872,11 @@ Payment objects are used to define additional values that can be supplied with y
 |countryRestriction             |string<br>`length=2`   |2 letter code the country to which the transaction will be restricted to.|
 
 ```
-{
 "paysafecard": {
     "consumerId": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation",
     "minAgeRestriction": 18,
     "kycLevelRestriction": "SIMPLE",
     "countryRestriction": "DE"
-}
 }
 ```
 
@@ -916,7 +895,6 @@ Payment objects are used to define additional values that can be supplied with y
 |detail1Text             |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334.|
 
 ```
-{
 "skrill":{
     "payFromEmail": "johndoe@email.com",
     "recipientDescription":"logo_url_alt_text",
@@ -924,7 +902,6 @@ Payment objects are used to define additional values that can be supplied with y
     "logoUrl":"http://www.paysafe.com/icon.jpg",
     "detail1Description":"Details 1 description",
     "detail1Text":"Details 1 text"
-}
 }
 ```
 
@@ -939,12 +916,10 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa                    |[object](#sepa)        |The customers SEPA bank account details.|
 
 ```
-{
 "sofort": {
     "descriptor": "custom descriptor",
     "sepa": {
     }
-}
 }
 ```
 
@@ -1068,7 +1043,7 @@ This call returns a status of READY if the API is available.
 + Response 200 (application/json)
 
   + Body
-    
+
             {
                 "status" : "READY"
             }
@@ -1111,7 +1086,6 @@ For example, an iDeal payment requires the following attributes are included in 
        }
     }
     ... other payment attributes here ...
-|
 ```
 
 See [Payment Objects](#paymentObjects) for payment method-specific details, or select payment type below.
@@ -1316,7 +1290,6 @@ This is how you look up a [Payment](#payment) using the payment ID.
                     }
                 ]
             }
-
 
 ## List Payments by Merchant Reference Number [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 
@@ -2262,7 +2235,6 @@ This is how you retrieve details for a single return reversal.  You can identify
 ## `link`
 + rel: self 
 + href: `https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
-
     
 ## `links`
 + links (array[link]) - This is an array of links related to the resource.  
@@ -2349,6 +2321,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 ## `paymentType`
 
 + `paymentType` (enum, required) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
     + Members
         + `IDEAL`
         + `BOKU`
@@ -2553,6 +2526,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 + `gatewayResponse` (object)
 
     _Read Only_
+    
     + `code`: `0` (string)
     + `description`: `Request successfully processed` (string)
     + `id`: `0000-014100-SOFRTSIM-0000`
