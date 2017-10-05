@@ -604,7 +604,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>read only</i>|
 |merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
-|amount                  |number                 |<i>stat</i> This is the amount of the request, in minor units.|
+|amount                  |number                 |<b>(required)</b> This is the amount of the request, in minor units.|
 |currencyCode            |string                 |This is the currency of the payment.|
 |paymentType             |enum                   |Payment type of the original payment.|
 |[Payment Object](#paymentObjects)|object        |Optional payment object depending upon the paymentType.|
@@ -798,18 +798,18 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|netellerAccount                |string                 ||
-|netellerSecureId               |string                 ||
+|consumerId                     |string                 |Email address or NETELLER Account Id of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|consumerVerificationId         |string                 |The consumers NETELLER secure Id, or two step authorization token generated on their device.|
 |recipientDescription           |string<br>`length<=30` |A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
 |language                       |string<br>`length=2`   |The 2-character preferred language code for the customer (e.g., EN, FR).|
 |logoUrl                        |string                 |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
 |detail1Description             |string                 |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text                    |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334.|
+|detail1Text                    |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file.|
 
 ```
-"neteller":{
-    "netellerAccount":"neteller.account@example.org",
-    "netellerSecureId":"123456",
+"neteller": {
+    "consumerId":"neteller.account@example.org",
+    "consumerVerivicationId":"123456",
     "recipientDescription":"logo_url_alt_text",
     "language":"EN",
     "logoUrl":"http://www.paysafe.com/icon.jpg",    
@@ -887,16 +887,16 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|payFromEmail            |string                 |Email address of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|consumerId              |string                 |Email address of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
 |recipientDescription    |string<br>`length<=30` |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
 |language                |string<br>`length=2`   |The 2-character preferred language code for the customer (e.g., EN, FR).|
 |logoUrl                 |string                 |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
 |detail1Description      |string                 |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text             |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334.|
+|detail1Text             |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file.|
 
 ```
 "skrill":{
-    "payFromEmail": "johndoe@email.com",
+    "consumerId": "johndoe@email.com",
     "recipientDescription":"logo_url_alt_text",
     "language":"EN",
     "logoUrl":"http://www.paysafe.com/icon.jpg",
@@ -2188,15 +2188,16 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `bokuGatewayResponse`
 
-+ `gatewayResponse` (object)
++ `gatewayResponse` (object)- These are the details returned fromt the external gateway. 
 
     _Read Only_
-    
-    + `processor`: `BOKU` (string)
-    + `action`: `prepare` (string)
-    + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string)
-    + `result-code`: `0`
-    + `result-msg`: `Operation Successful` (string)
+
+    + Properties
+        + `processor`: `BOKU` (string)
+        + `action`: `prepare` (string)
+        + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string)
+        + `result-code`: `0`
+        + `result-msg`: `Operation Successful` (string)
 
 ## `giropay`
 
@@ -2206,13 +2207,14 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `giropayGatewayResponse`
 
-+ `gatewayResponse` (object)
++ `gatewayResponse` (object)- These are the details returned fromt the external gateway. 
 
     _Read Only_
-    
-    + `processor`: `GIROPAY` (string)
-    + `txId`: `SIM001270` (string)
-    + `returnCode`: `0`
+
+    + Properties
+        + `processor`: `GIROPAY` (string)
+        + `txId`: `SIM001270` (string)
+        + `returnCode`: `0`
 
 ## `ideal`
 
@@ -2222,15 +2224,16 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `idealGatewayResponse`
 
-+ `gatewayResponse` (object)
++ `gatewayResponse` (object)- These are the details returned fromt the external gateway. 
 
     _Read Only_
-    
-    + `code`: `000.200.000`
-    + `description`: `Transaction Pending`
-    + `id`: `4867bb8ce543409dbe1187849af28107`
-    + `processor`: `IDEAL`
-    + `paymentType`: `DB`
+
+    + Properties
+        + `code`: `000.200.000`
+        + `description`: `Transaction Pending`
+        + `id`: `4867bb8ce543409dbe1187849af28107`
+        + `processor`: `IDEAL`
+        + `paymentType`: `DB`
 
 
 ## `link`
@@ -2356,27 +2359,29 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `paysafecardGatewayResponse`
 
-+ `gatewayResponse` (object)
++ `gatewayResponse` (object) - These are the details returned fromt the external gateway. 
 
     _Read Only_
-    
-    + `code`: `000.100.110` (string)
-    + `description`: `Request successfully processed` (string)
-    + `id`: `9bcaa7f0dba44c64981881401794abby`
-    + `processor`: `PAYSAFECARD` (enum)
-    + `paymentType`: `DB` (string)
+
+    + Properties
+        + `code`: `000.100.110` (string)
+        + `description`: `Request successfully processed` (string)
+        + `id`: `9bcaa7f0dba44c64981881401794abby`
+        + `processor`: `PAYSAFECARD` (enum)
+        + `paymentType`: `DB` (string)
 
 ## `payonGatewayResponse`
 
-+ `gatewayResponse` (object)
++ `gatewayResponse` (object) - These are the details returned fromt the external gateway. 
 
     _Read Only_
-    
-    + `code`: `000.100.110` (string)
-    + `description`: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
-    + `id`: `9bcaa7f0dba44c64981881401794abby`
-    + `processor`: `PAYON`
-    + `paymentType`: `RF` (string)    
+
+    + Properties
+        + `code`: `000.100.110` (string)
+        + `description`: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
+        + `id`: `9bcaa7f0dba44c64981881401794abby`
+        + `processor`: `PAYON`
+        + `paymentType`: `RF` (string)    
 
 ## `paysafecard`
 
@@ -2524,15 +2529,16 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `sofortGatewayResponse`
 
-+ `gatewayResponse` (object)
++ `gatewayResponse` (object) - These are the details returned fromt the external gateway. 
 
     _Read Only_
-    
-    + `code`: `0` (string)
-    + `description`: `Request successfully processed` (string)
-    + `id`: `0000-014100-SOFRTSIM-0000`
-    + `processor`: `SOFORT`
-    + `paymentType`: `DB` (string)
+
+    + Properties
+        + `code`: `0` (string)
+        + `description`: `Request successfully processed` (string)
+        + `id`: `0000-014100-SOFRTSIM-0000`
+        + `processor`: `SOFORT`
+        + `paymentType`: `DB` (string)
 
 ## `voidAuth`
 
