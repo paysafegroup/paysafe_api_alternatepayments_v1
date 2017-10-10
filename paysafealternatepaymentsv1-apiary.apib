@@ -336,7 +336,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |street2                 |string<br/>`length<=50`  |This is the second line of the street address in the billing address, if required (e.g., apartment number).|
 |city                    |string<br/>`length<=40`  |This is the city in the billing address.|
 |state                   |string<br/>`length<=40`  |See Province Codes or State Codes for Canada or the United States.|
-|country                 |string<br/>`length=2`    |<b>(required)</b> The ISO 3166-1 Alpha 2-code for the customers billing address (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|country                 |string<br/>`length=2`    |<b>(required)</b> The ISO 3166-1 alpha-2 code for the customer's billing address (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |zip                     |string<br/>`length<=10`  |This is the postal/zip code in the billing address.|
 
 ```
@@ -440,7 +440,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |id                      |string                 |Unique system generated identifier for this payment.<br/><i>read only</i> |
-|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
+|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent settlement to capture funds.<br/><b>true</b> - the request is settled (default).<br/>If the merchant wants to find out whether an authorization has been settled, they should check the *availableToSettle* element.<br/>If the amount is 0, the authorization has been fully settled.|
 |amount                  |number                 |<b>(required)</b> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
@@ -602,7 +602,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>read only</i>|
-|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
+|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |amount                  |number                 |<b>(required)</b> This is the amount of the request, in minor units.|
 |currencyCode            |string                 |This is the currency of the payment.|
@@ -642,7 +642,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |Element                 |Type                     |Description |
 |---                     |---                      |--- |
 |bankName                |string                   |The name of the bank.|
-|country                 |string<br/>`length=2`    |The ISO 3166-1 Alpha 2-code for the customer's country of residence (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|country                 |string<br/>`length=2`    |The ISO 3166-1 alpha-2 code for the customer's country of residence (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |accountHolderName       |string<br/>`length<=50`  |This is the name of the customer or company.|
 |bic                     |string<br/>`length=8-11` |This is the Bank Identifier Code for the customer's bank account.|
 |iban                    |string<br/>`length=1-34` |This is the International Bank Account Number for the customer's bank account.|
@@ -669,7 +669,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |street2                 |string<br/>`length<=50` |This is the second line of the street address in the shipping address, if required (e.g., apartment number).|
 |city                    |string<br/>`length<=40` |This is the city in which the recipient resides.|
 |state                   |string                  |See Province Codes or State Codes for Canada or the United States.|
-|country                 |enum                    |The ISO 3166-1 Alpha 2-code for the customers shipping address (e.g. Germany = DE, JP=Japan. CA=Canada)|
+|country                 |enum                    |The ISO 3166-1 alpha-2 code for the customer's shipping address (e.g. Germany = DE, JP=Japan. CA=Canada)|
 |zip                     |string                  |This is the recipient's post code.|
 
 ```
@@ -692,7 +692,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>read only</i> |
-|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.|
+|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |amount                  |number                 |This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japanese yen, which has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
@@ -730,7 +730,7 @@ Payment objects are used to define additional values that can be supplied with y
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=20` |<b>(required)</b> Descriptor to display on customer's statement.|
 |consumerId              |string<br/>`length=255`|<b>(required)</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
-|consumerCountry         |string                 |<b>(required)</b> The ISO 3166-1 Alpha 2-code for the country of registration for the customers mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|consumerCountry         |string                 |<b>(required)</b> The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |consumerMobilePhone     |string                 |<b>(required)</b> The customer's mobile phone number.|
 
 ```
@@ -776,7 +776,7 @@ Payment objects are used to define additional values that can be supplied with y
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customer's SEPA bank account details (if applicable). |
 |sepa.bankName           |enum                   |<b>(required)</b> The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
-|sepa.country            |enum                   |<b>(required)</b> The ISO 3166-1 Alpha 2-code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|sepa.country            |enum                   |<b>(required)</b> The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
 |sepa.accountHolderName  |string                 |The account holder's name.|
@@ -804,7 +804,7 @@ Payment objects are used to define additional values that can be supplied with y
 |language                       |string<br>`length=2`   |The 2-character preferred language code for the customer (e.g., EN, FR).|
 |logoUrl                        |string                 |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
 |detail1Description             |string                 |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text                    |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file.|
+|detail1Text                    |string                 |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 ```
 "neteller": {
@@ -869,7 +869,7 @@ Payment objects are used to define additional values that can be supplied with y
 |consumerId                     |string                 |The unique identifier of the customer at the merchant.|
 |ageRestriction                 |number                 |Minimum age restriction for the transaction.|
 |kycLevelestriction             |string                 |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
-|countryRestriction             |string<br>`length=2`   |2-letter code the country to which the transaction will be restricted.|
+|countryRestriction             |string<br>`length=2`   |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
 
 ```
 "paysafecard": {
@@ -892,7 +892,7 @@ Payment objects are used to define additional values that can be supplied with y
 |language                |string<br>`length=2`   |The 2-character preferred language code for the customer (e.g., EN, FR).|
 |logoUrl                 |string                 |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
 |detail1Description      |string                 |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text             |string                 |The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file.|
+|detail1Text             |string                 |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 ```
 "skrill":{
@@ -1448,8 +1448,9 @@ Reverse (cancel) an existing authorization.
 This is how you look up a Void Authorization request using the ID returned in the response to the original request.
 
 + Parameters
-    + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
-    + voidauthId (string, required, `1486757865`) - This is your unique voidauth identifier.
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + paymentId (string, required, `6d62cd86-a268-48f1-a852-73d0ac1c4ece`) - This is your unique payment identifier.
+    + voidauthId (string, required, `a839679f-0a23-4b8d-a3f9-1a92074579ab`) - This is your unique voidauth identifier.
 
 + Request Get Void Authorization (application/json)
 
@@ -1494,7 +1495,7 @@ This is how you look up a Void Authorization request using the ID returned in th
 This is how you retrieve a list of any Void Authorizations associated to a payment. 
 
 + Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + paymentId (string, required, `6d62cd86-a268-48f1-a852-73d0ac1c4ece`) - This is your unique payment identifier.
 
 + Request List Void Authorizations (application/json)
@@ -1553,9 +1554,9 @@ This is how you retrieve a list of any Void Authorizations associated to a payme
 # Settlements [/settlements]
 
 If you specified delayed (manual) settlement on your payment request, then you must manually POST the settlement against 
-the payment authorization.  You can settle all or part of an existing payment authorization.
+the payment authorization.  Settlement is the process of capturing funds from a previous authorization request to your merchant account.
 
-Settlement is the process of capturing funds from a previous authorization request to your merchant account.  
+You can settle all or part of an existing payment authorization.
 
 ## Settle an Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/settlements]
 
@@ -1629,7 +1630,7 @@ Payment resource to find out the remaining amount available to settle.
 This is how you look up a Settlement request using the ID returned in the response to the original request.
 
 + Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + settlementId (string, required, `a99f93a7-a35c-4f9e-9b48-a7d588a53c32`) - This is your unique settlement identifier.
 
 + Request Get Settlement (application/json)
@@ -1676,8 +1677,8 @@ This is how you look up a Settlement request using the ID returned in the respon
 This is how you look up Settlements using the merchant reference number used in the original request. This returns a collection of settlement details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
 + Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
-    + merchantRefNum (string, required, `1486757872`) - This is your unique payment identifier.
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + merchantRefNum (string, required, `GR-1506977370`) - This is your unique payment identifier.
 
 + Request List Settlements (application/json)
 
@@ -1727,7 +1728,7 @@ This is how you look up Settlements using the merchant reference number used in 
 This is how you retrieve a list of any Settlements associated to a payment.
 
 + Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + paymentId (string, required, `670c8464-f7bf-45da-ba53-972abf7701e4`) - This is your unique payment identifier.
 
 + Request List Settlements for a Payment(application/json)
@@ -1775,10 +1776,11 @@ This is how you retrieve a list of any Settlements associated to a payment.
 
 # Refunds [/refunds]
 
-A Refund allows you to refund back to a customer an amount that has previously been settled. You can create a refund 
-against either a payment or a settlement. You can issue either a full or a 
-partial refund (or series of refunds against the intial settlement), provided the combined refund amount does not
+A Refund allows you to refund back to a customer an amount that has previously been settled. You can issue either a full or a 
+partial refund (or series of refunds) against the intial settlement, provided the combined refund amount does not
 exceed the original settlement amount.
+
+You can create a refund against either a payment or a settlement. **Note:** If you process a partial refund against a settlement using the *settlements/settlementId/refunds* endpoint, if you want to refund any of the remaining amount you must use the same endpoint. Similarly, if you process a partial refund against a payment authorization using the *payments/paymentId/refunds* endpoint, if you want to refund any of the remaining amount you must use the same endpoint.
 
 ## Refund a Payment [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 
@@ -1991,24 +1993,25 @@ This is how you look up Refunds using the merchant reference number used in the 
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/refunds?merchantRefNum=1486757872&limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1234567891/refunds?merchantRefNum=1486757872&limit=10&offset=0&startDate=2017-01-11T20:29:46Z&endDate=2017-02-10T20:29:47Z"
                     }
                 ]
             }
 
 # Returns [/returns]
 
-Returns transactions will be created by Paysafe if we receive a **no credit** notification from the service provider.  As a merchant you 
-cannot create a return directly.  
+Returns transactions will be created by Paysafe if we receive a **no credit** notification from the service provider, indicating that the Alternate Payments request never settled.  
 
-> Note: Currently only Sofort supports returns.
+As a merchant, you cannot create a return directly.  
+
+> **Note:** Currently only Sofort supports returns.
 
 ## Get Return by ID [GET /accounts/{accountId}/returns/{returnId}]
 
 This is how you look up a Return using an ID.
 
 + Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + returnId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique return identifier.
 
 + Request Get Return (application/json)
@@ -2063,7 +2066,7 @@ This is how you look up a Return using an ID.
 This is how you retrieve a list of any returns associated to a settlement.
 
 + Parameters
-    + accountId (string, required, `1486757865`) - This is your unique account identifier.
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + settlementId (string, required, `2f6a9ba3-d1df-438a-b8f5-59106c8f830c`) - This is your unique settlement identifier.
 
 + Request List Returns for a Settlement (application/json)
@@ -2113,9 +2116,9 @@ This is how you retrieve a list of any returns associated to a settlement.
 
 # Return Reversals [/returnreversals]
 
-Return reversal transactions will be automatically created by Paysafe if we receive a late credit notification after we have already issued a return.
+Return reversal transactions will be automatically created by Paysafe if we receive a **late credit** notification after we have already issued a return.
 
-> Note: Currently only Sofort supports return reversals.
+> **Note:** Currently only Sofort supports return reversals.
 
 ## List Return Reversals for a Return [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
 
@@ -2155,6 +2158,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + returnId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique return identifier.
     + returnReversalId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return reversal identifier.
 
 + Request Get Return Reversal (application/json)
@@ -2180,15 +2184,15 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `boku`
 
-+ `boku` (object, optional) - Optional attributes that can be passed that when making a BOKU payment request. 
++ `boku` (object, optional) - Optional attributes that can be passed when making a BOKU payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the customer's statement.
     + `consumerId`: `CUS_12345677` (string, required) - Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.
-    + `consumerCountry` : `US` (string, required) - The ISO 3166-1 Alpha 2-code for the customer's mobile country of registration (e.g., Germany = DE, JP=Japan. CA=Canada).
+    + `consumerCountry` : `US` (string, required) - The ISO 3166-1 alpha-2 code for the customer's mobile country of registration (e.g., Germany = DE, JP=Japan. CA=Canada).
     + `consumerMobilePhone`: `17802323333` (string, required) - The customer's mobile phone number.  Full number including international dialing code (country code).
 
 ## `bokuGatewayResponse`
 
-+ `gatewayResponse` (object)- These are the details returned fromt the external gateway. 
++ `gatewayResponse` (object)- These are the details returned from the external gateway. 
 
     _Read Only_
 
@@ -2207,7 +2211,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `giropayGatewayResponse`
 
-+ `gatewayResponse` (object)- These are the details returned fromt the external gateway. 
++ `gatewayResponse` (object)- These are the details returned from the external gateway. 
 
     _Read Only_
 
@@ -2218,13 +2222,13 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `ideal`
 
-+ `ideal` (object, optional) - Optional attributes that can be passed that when making an iDEAL payment request. 
++ `ideal` (object, optional) - Optional attributes that can be passed when making an IDEAL payment request. 
     + `descriptor`: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
     + `sepa` (sepa)
 
 ## `idealGatewayResponse`
 
-+ `gatewayResponse` (object)- These are the details returned fromt the external gateway. 
++ `gatewayResponse` (object)- These are the details returned from the external gateway. 
 
     _Read Only_
 
@@ -2250,13 +2254,13 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `neteller`
 
-+ `neteller` (object)  - Optional attributes that can be passed that when making a NETELLER payment request. 
-    + `consumerId`: `john.doe@email.com` (string) : Email address or NETELLER Account Id of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
-    + `consumerVerificationId`: `123123` (string) : The consumers NETELLER secure Id, or two step authorization token generated on their device. 
++ `neteller` (object)  - Optional attributes that can be passed when making a NETELLER payment request. 
+    + `consumerId`: `john.doe@email.com` (string) : Email address or NETELLER account ID of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
+    + `consumerVerificationId`: `123123` (string) : The consumer's NETELLER secure ID, or two-step authorization token generated on their device. 
     + `language`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
     + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
-    + `detail1Description` : `description` (string) : You can show additional details about the product in the More information section in the header of Quick Checkout.
-    + `detail1Text` : `detail text` (string) : The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a customer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
+    + `detail1Description` : `description` (string) : You can show additional details about the product in the More Information section in the header of Quick Checkout.
+    + `detail1Text` : `detail text` (string) : The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a customer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
 
 ## `payment`
 
@@ -2338,7 +2342,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `payolution`
 
-+ `payolution` (object) - Parameters required for a Payolution payment request.
++ `payolution` (object) - Parameters required for a PAYOLUTION payment request.
     + `customerID`: `maxx_muster1980` (string) 
     + `sepa` (sepa)
     + `paymentInformation` (payolutionPaymentInformation)
@@ -2359,7 +2363,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `paysafecardGatewayResponse`
 
-+ `gatewayResponse` (object) - These are the details returned fromt the external gateway. 
++ `gatewayResponse` (object) - These are the details returned from the external gateway. 
 
     _Read Only_
 
@@ -2372,7 +2376,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `payonGatewayResponse`
 
-+ `gatewayResponse` (object) - These are the details returned fromt the external gateway. 
++ `gatewayResponse` (object) - These are the details returned from the external gateway. 
 
     _Read Only_
 
@@ -2385,11 +2389,11 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `paysafecard`
 
-+ `paysafecard` (object)  - Optional attributes that can be passed  when making a Paysafecard payment request. 
++ `paysafecard` (object)  - Optional attributes that can be passed  when making a PAYSAFECARD payment request. 
     + `consumerId`: `john.doe@email.com` (string) : Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
     + `ageRestriction`: `item xyz` (string) : A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. 
     + `kycLevelRestriction`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
-    + `countryRestriction` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
+    + `countryRestriction` : `DE` (string) : The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.
 
 ## `profile` 
 
@@ -2401,11 +2405,11 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `refund`
 
-+ `id`: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
++ `id`: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
 
     _Read Only_
 
-+ `merchantRefNum`: `GR-1506977370` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
++ `merchantRefNum`: `GR-1506977370` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.
 
     _length<=255_
 
@@ -2459,11 +2463,11 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `settlement`
 
-+ `id`: `30381792-1237-4868-8fd3-73196e94d009` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
++ `id`: `30381792-1237-4868-8fd3-73196e94d009` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Refunds.
 
     _Read Only_
 
-+ `merchantRefNum`: `GR-1506977370` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you override and set *dupCheck* to false.
++ `merchantRefNum`: `GR-1506977370` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.
 
     _length<=255_
 
@@ -2485,7 +2489,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
     _Read Only_
 
-+ `availableToRefund`: `100` (number, optional) - This is the amount of the authorization remaining to refund in minor units.  It is visible only if no refunds are done on any of the corresponding settlements for this payment.
++ `availableToRefund`: `100` (number, optional) - This is the amount of the authorization remaining to refund, in minor units.  It is visible only if no refunds are done on any of the corresponding settlements for this payment.
 
     _Read Only_
 
@@ -2507,29 +2511,29 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `sepa`
 
-+ `country`: `NL` (string) - The ISO 3166-1 Alpha 2-code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).
++ `country`: `NL` (string) - The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).
 + `bic`: `BARCGB22XXX` (string)
 + `iban`: `AZ21NABZ00000000137010001944` (string)
 + `accountHolderName`: `Max Mustermann` (string)
 
 ## `skrill`
 
-+ `skrill` (object)  - Optional attributes that can be passed that when making a SKRILL payment request. 
++ `skrill` (object)  - Optional attributes that can be passed when making a SKRILL payment request. 
     + `consumerId`: `john.doe@email.com` (string) : Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
     + `recipientDescription`: `item xyz` (string) : A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. 
     + `language`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
     + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
     + `detail1Description` : `description` (string) : You can show additional details about the product in the More information section in the header of Quick Checkout.
-    + `detail1Text` : `detail text` (string) : The detail1\_text is shown next to the detail1\_description in the More Information section in the header of the payment form with the other payment details. The detail1\_description combined with the detail1_text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a customer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
+    + `detail1Text` : `detail text` (string) : The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a customer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
 
 ## `sofort`
 
-+ `sofort` (object) - Optional attributes that can be passed that when making a SOFORT payment request. 
++ `sofort` (object) - Optional attributes that can be passed when making a SOFORT payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
 
 ## `sofortGatewayResponse`
 
-+ `gatewayResponse` (object) - These are the details returned fromt the external gateway. 
++ `gatewayResponse` (object) - These are the details returned from the external gateway. 
 
     _Read Only_
 
@@ -2558,7 +2562,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
     _max=99999999999_
     
-+ `currencyCode`: `EUR` (string) - This is the currency of the payment.
++ `currencyCode`: `EUR` (string) - This is the currency of the request.
 
     _length=3_ 
     _Read Only_
