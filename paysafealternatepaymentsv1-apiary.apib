@@ -866,9 +866,9 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|consumerId                     |string                 |The unique identifier of the customer at the merchant.|
+|consumerId                     |string                 |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
 |ageRestriction                 |number                 |Minimum age restriction for the transaction.|
-|kycLevelestriction             |string                 |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
+|kycLevelRestriction            |string                 |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
 |countryRestriction             |string<br>`length=2`   |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
 
 ```
