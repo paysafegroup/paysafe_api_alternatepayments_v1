@@ -72,6 +72,7 @@ an extended deprecation cycle \(~2 years\) from prior versions to allow all cons
 
 ***
 
+<a name="apikey" title="Authentication"></a>
 ## Authentication 
 
 In order for you to use the Paysafe REST API, Paysafe must first set you up on their system
@@ -95,6 +96,7 @@ For additional details, please refer to [http://en.wikipedia.org/wiki/Basic_acce
 **Note:** Your Production API key will be different from your Test API key. Contact your account manager for details. You must keep your API keys safe and ensure that it is used appropriately for your needs.
 
 
+<a name="pagination" title="Pagination"></a>
 ## Pagination
 
 API calls that return multiple resources will wrap the response as a named JSON array.  For example, a collection of "payment" objects would
@@ -170,6 +172,7 @@ Sample Response with List Data
 ```
 
 
+<a name="globalinvalidcharacters" title="Global Invalid Characters"></a>
 ## Global Invalid Characters
 
 You must not include any of the characters in the following table as values in any of your request parameters. If you do, your request will result in an error.
@@ -327,7 +330,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 # Common Objects
 
-<a name="billingDetails"></a>
+<a name="billingDetails" title="billingDetails Object"></a>
 ## billingDetails
 
 |Element                 |Type                     |Description |
@@ -350,7 +353,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="date"></a>
+<a name="date" title="date Object"></a>
 ## date
 
 |Element                 |Type                   |Description |
@@ -368,7 +371,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="error"></a>
+<a name="error" title="error Object"></a>
 ## error
 
 |Element            |Type                           |Description|
@@ -404,7 +407,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="fieldError"></a>
+<a name="fieldError" title="fieldError Object"></a>
 ## fieldError
 
 |Element                 |Type                   |Description |
@@ -419,7 +422,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="link"></a>
+<a name="link" title="link Object"></a>
 ## link
 
 |Element                 |Type                   |Description |
@@ -434,7 +437,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="payment"></a>
+<a name="payment" title="payment Object"></a>
 ## payment
 
 |Element                 |Type                   |Description |
@@ -495,7 +498,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="profile"></a>
+<a name="profile" title="profile Object"></a>
 ## profile
 
 |Element                 |Type                     |Description |
@@ -530,7 +533,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="refund"></a>
+<a name="refund" title="refund Object"></a>
 ## refund
 
 |Element                 |Type                         |Description |
@@ -564,7 +567,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="return"></a>
+<a name="return" title="return Object"></a>
 ## return
 
 |Element                 |Type                         |Description |
@@ -587,7 +590,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="returnLink"></a>
+<a name="returnLink" title="returnLink Object"></a>
 ## returnLink
 
 |Element                 |Type                   |Description |
@@ -596,7 +599,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |href                    |string<br/>`length=X`  |The TLS secured endpoint to return the customer to.|
 
 
-<a name="settlement"></a>
+<a name="settlement" title="settlement Object"></a>
 ## settlement
 
 |Element                 |Type                   |Description |
@@ -636,7 +639,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="sepa"></a>
+<a name="sepa" title="sepa Object"></a>
 ## sepa
 
 |Element                 |Type                     |Description |
@@ -657,7 +660,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="shippingDetails"></a>
+<a name="shippingDetails" title="shippingDetails Object"></a>
 ## shippingDetails
 
 |Element                 |Type                    |Description |
@@ -686,7 +689,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 ```
 
 
-<a name="voidauth"></a>
+<a name="voidauth" title="voidAuth Object"></a>
 ## voidauth
 
 |Element                 |Type                   |Description |
@@ -714,12 +717,12 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="paymentObjects"></a>
+<a name="paymentObjects" title="Payment Objects"></a>
 # Payment Objects
 
 Payment objects are used to define additional values that can be supplied with your request depending on the payment type you are requesting.  These objects are nested as part of your Payment request.
 
-<a name="boku"></a>
+<a name="boku" title="Boku Payment Object"></a>
 ## boku
 
 ![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)
@@ -742,7 +745,7 @@ Payment objects are used to define additional values that can be supplied with y
 }
 ```
 
-<a name="giropay"></a>
+<a name="giropay" title="Giropay Payment Object"></a>
 ## giropay
 
 ![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png) 
@@ -766,7 +769,7 @@ Payment objects are used to define additional values that can be supplied with y
 }
 ```
 
-<a name="ideal"></a>
+<a name="ideal" title="iDEAL Payment Object"></a>
 ## ideal 
 
 ![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)
@@ -791,7 +794,7 @@ Payment objects are used to define additional values that can be supplied with y
 }
 ```
 
-<a name="neteller"></a>
+<a name="neteller" title="NETELLER Payment Object"></a>
 ## neteller 
 
 ![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)
@@ -818,7 +821,7 @@ Payment objects are used to define additional values that can be supplied with y
 }
 ```
 
-<a name="payolution"></a>
+<a name="payolution" title="Payolution Payment Object"></a>
 ## payolution 
 
 ![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)
@@ -859,7 +862,7 @@ Payment objects are used to define additional values that can be supplied with y
     }]
 }
 ```
-<a name="paysafecard"></a>
+<a name="paysafecard" title="Paysafecard Payment Object"></a>
 ## paysafecard 
 
 ![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)
@@ -880,7 +883,7 @@ Payment objects are used to define additional values that can be supplied with y
 }
 ```
 
-<a name="skrill"></a>
+<a name="skrill" title="Skrill Payment Object"></a>
 ## skrill
 
 ![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)
@@ -905,7 +908,7 @@ Payment objects are used to define additional values that can be supplied with y
 }
 ```
 
-<a name="sofort"></a>
+<a name="sofort" title="Sofort Payment Object"></a>
 ## sofort
 
 ![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)
@@ -1036,6 +1039,16 @@ These errors are specific to the Alternate Payments API.
 |402           |ALTERNATE-PAYMENTS-GATEWAY-13 |Transaction not refundable yet          |The transaction is not refundable yet.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-14 |Partial settlements not possible        |Partial settlements are not possible with the selected payment method.|
 
+# Legal and Community
+<ul>
+<li><a href="https://www.paysafe.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
+<li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
+<li><a href="http://www.paysafe.com/regulatory-disclosure/" target="_blank">Regulatory Disclosures</a></li>
+<li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
+<li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
+<li><a href="http://community.paysafe.com/spaces/10/index.html" target="_blank">Paysafe Blog</a></li>
+</ul>
+
 # Verify That the Service Is Accessible [GET /monitor]
 
 This call returns a status of READY if the API is available.
@@ -1049,6 +1062,7 @@ This call returns a status of READY if the API is available.
             }
 
 # Payments [/payments]
+<a name="payments" title="Payments"></a>
 
 The payments resource represents a payment authorization.  
 
@@ -1066,6 +1080,7 @@ a subsequent settlement request when you wish to capture the payment.  The abili
 
 
 ## Create an Authorized Payment [POST /accounts/{accountId}/payments]
+<a name="createauthorization" title="Create an Authorized Payment"></a>
 
 Submit a payment request using local payment methods that your customers are familiar with.  
 Once you have submited your request, if you are returned a *redirect_payment* HATEOAS link, then you must redirect
@@ -1216,6 +1231,7 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
  
 
 ## Get Payment by ID [GET /accounts/{accountId}/payments/{paymentId}]
+<a name="getpayment" title="Look Up a Payment"></a>
 
 This is how you look up a [Payment](#payment) using the payment ID.
 
@@ -1292,6 +1308,7 @@ This is how you look up a [Payment](#payment) using the payment ID.
             }
 
 ## List Payments by Merchant Reference Number [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
+<a name="listpayment" title="List Payments by Merchant Reference Number"></a>
 
 This is how you look up Payments using the merchant reference number used in the original request. This returns a collection of payment details, as *merchantRefNum* could be used for multiple requests when *dupCheck*
 is disabled.
@@ -1384,10 +1401,12 @@ is disabled.
             }
 
 # Void Authorizations [/voidauths]
+<a name="voidauths" title="Void Authorizations"></a>
 
 This is how you submit a Void Authorization (authorization reversal) request. You can void an Authorization only if it has not yet been settled.
 
 ## Void a Previously Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
+<a name="voidauth" title="Void a Previously Authorized Payment"></a>
 
 Reverse (cancel) an existing authorization. 
 
@@ -1444,6 +1463,7 @@ Reverse (cancel) an existing authorization.
             }
 
 ## Get Void Authorization by ID [GET /accounts/{accountId}/payment/{paymentId}/voidauths/{voidauthId}]
+<a name="getvoidauth" title="Look Up a Void Authorization"></a>
 
 This is how you look up a Void Authorization request using the ID returned in the response to the original request.
 
@@ -1491,6 +1511,7 @@ This is how you look up a Void Authorization request using the ID returned in th
             }
 
 ## List Void Authorizations [GET /accounts/{accountId}/payment/{paymentId}/voidauths]
+<a name="listvoidauth" title="List Void Authorizations"></a>
 
 This is how you retrieve a list of any Void Authorizations associated to a payment. 
 
@@ -1552,6 +1573,7 @@ This is how you retrieve a list of any Void Authorizations associated to a payme
             }    
 
 # Settlements [/settlements]
+<a name="settlements" title="Settlements"></a>
 
 If you specified delayed (manual) settlement on your payment request, then you must manually POST the settlement against 
 the payment authorization.  Settlement is the process of capturing funds from a previous authorization request to your merchant account.
@@ -1559,6 +1581,7 @@ the payment authorization.  Settlement is the process of capturing funds from a 
 You can settle all or part of an existing payment authorization.
 
 ## Settle an Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/settlements]
+<a name="settlement" title="Settle a Previously Authorized Payment"></a>
 
 You must manually settle a previously authorized payment if it was requested with *settleWithAuth* = *false*.  You can query the 
 Payment resource to find out the remaining amount available to settle.
@@ -1626,6 +1649,7 @@ Payment resource to find out the remaining amount available to settle.
             }
 
 ## Get Settlement by ID [GET /accounts/{accountId}/settlements/{settlementId}]
+<a name="getsettlement" title="Look Up a Settlement"></a>
 
 This is how you look up a Settlement request using the ID returned in the response to the original request.
 
@@ -1673,6 +1697,7 @@ This is how you look up a Settlement request using the ID returned in the respon
 
 
 ## List Settlements by Merchant Reference Number [GET /accounts/{accountId}/settlements/?merchantRefNum={merchantRefNum}]
+<a name="listsettlement" title="List Settlements by Merchant Reference Number"></a>
 
 This is how you look up Settlements using the merchant reference number used in the original request. This returns a collection of settlement details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
@@ -1724,6 +1749,7 @@ This is how you look up Settlements using the merchant reference number used in 
 
 
 ## List Settlements for a Payment [GET /accounts/{accountId}/payment/{paymentId}/settlements]
+<a name="listsettlementsid" title="List Settlements for a Payment"></a>
 
 This is how you retrieve a list of any Settlements associated to a payment.
 
@@ -1775,6 +1801,7 @@ This is how you retrieve a list of any Settlements associated to a payment.
             }
 
 # Refunds [/refunds]
+<a name="refunds" title="Refunds"></a>
 
 A Refund allows you to refund back to a customer an amount that has previously been settled. You can issue either a full or a 
 partial refund (or series of refunds) against the intial settlement, provided the combined refund amount does not
@@ -1783,6 +1810,7 @@ exceed the original settlement amount.
 You can create a refund against either a payment or a settlement. **Note:** If you process a partial refund against a settlement using the *settlements/settlementId/refunds* endpoint, if you want to refund any of the remaining amount you must use the same endpoint. Similarly, if you process a partial refund against a payment authorization using the *payments/paymentId/refunds* endpoint, if you want to refund any of the remaining amount you must use the same endpoint.
 
 ## Refund a Payment [POST /accounts/{accountId}/payments/{paymentId}/refunds]
+<a name="refundpayment" title="Refund a Payment"></a>
 
 This is how you submit a Refund request against a completed payment.
 
@@ -1841,6 +1869,7 @@ This is how you submit a Refund request against a completed payment.
                 }
 
 ## Refund a Settlement [POST /accounts/{accountId}/settlements/{settlementId}/refunds]
+<a name="refundsettlement" title="Refund a Settlement"></a>
 
 This is how you submit a Refund request against a completed settlement.
 
@@ -1894,6 +1923,7 @@ This is how you submit a Refund request against a completed settlement.
                 }
 
 ## Get Refund by ID [GET /accounts/{accountId}/refunds/{refundId}]
+<a name="getrefund" title="Look Up a Refund"></a>
 
 This is how you look up a Refund request using the ID returned in the response to the original request.
 
@@ -1939,6 +1969,7 @@ This is how you look up a Refund request using the ID returned in the response t
                 }
 
 ## List Refunds by Merchant Reference Number [GET /accounts/{accountId}/payments/{paymentId}/refunds/?merchantRefNum={merchantRefNum}]
+<a name="listrefund" title="List Refunds by Merchant Reference Number"></a>
 
 This is how you look up Refunds using the merchant reference number used in the original request. This returns a collection of refund details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
@@ -1999,6 +2030,7 @@ This is how you look up Refunds using the merchant reference number used in the 
             }
 
 # Returns [/returns]
+<a name="returns" title="Returns"></a>
 
 Returns transactions will be created by Paysafe if we receive a **no credit** notification from the service provider, indicating that the Alternate Payments request never settled.  
 
@@ -2007,6 +2039,7 @@ As a merchant, you cannot create a return directly.
 > **Note:** Currently only Sofort supports returns.
 
 ## Get Return by ID [GET /accounts/{accountId}/returns/{returnId}]
+<a name="getreturn" title="Look Up a Return"></a>
 
 This is how you look up a Return using an ID.
 
@@ -2062,6 +2095,7 @@ This is how you look up a Return using an ID.
 
 
 ## List Returns for a Settlement [GET /accounts/{accountId}/settlements/{settlementId}/returns]
+<a name="listreturns" title="List Returns for a Settlement"></a>
 
 This is how you retrieve a list of any returns associated to a settlement.
 
@@ -2115,12 +2149,14 @@ This is how you retrieve a list of any returns associated to a settlement.
             }
 
 # Return Reversals [/returnreversals]
+<a name="returnreversals" title="Return Reversals"></a>
 
 Return reversal transactions will be automatically created by Paysafe if we receive a **late credit** notification after we have already issued a return.
 
 > **Note:** Currently only Sofort supports return reversals.
 
 ## List Return Reversals for a Return [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
+<a name="listreturnreversals" title="List Return Reversals for a Return"></a>
 
 This is how you retrieve a collection of return reversal details.
 
@@ -2139,22 +2175,9 @@ This is how you retrieve a collection of return reversal details.
                                                 
 
 ## Get Return Reversal by ID [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
+<a name="getreturnreversal" title="Look Up a Return Reversal"></a>
 
 This is how you retrieve details for a single return reversal.  You can identify return reversals through the List Return Reversals endpoint.
-
-<br>
-<br>
-<br>
-<a name="footer">
-<h1>Legal and Community</h1>
-<ul class="footer-menu">
-<li><a href="https://www.paysafe.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
-<li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
-<li><a href="http://www.paysafe.com/regulatory-disclosure/" target="_blank">Regulatory Disclosures</a></li>
-<li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
-<li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
-<li><a href="http://community.paysafe.com/spaces/10/index.html" target="_blank">Paysafe Blog</a></li>
-</ul>
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
