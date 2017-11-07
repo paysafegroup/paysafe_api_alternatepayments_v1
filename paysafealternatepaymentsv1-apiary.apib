@@ -10,6 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2017-12-01            |- Added support for Skrill standalone credit|
 |v1             |2017-08-28            |- Added Paysafecard, Skrill, Neteller, Payolution|
 |v1             |2017-08-09            |- Added /monitor endpoint|
 |v1             |2017-05-06            |- Replaced error 5283 with 5031|
@@ -695,6 +696,46 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
+<a name="standaloneCredit" title="standaloneCredit Object"></a>
+## standaloneCredit
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>read only</i> |
+|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
+|dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|amount                  |number                 |This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japanese yen, which has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
+|currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
+|profile                 |[object](#profile)     |These are some details about the customer.|
+|billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
+|txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>read only</i>|
+|error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
+
+```
+{
+  "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
+  "dupCheck": true,
+  "amount": 100,
+  "currencyCode": "EUR",
+  "profile": {
+    "firstName": "Stan",
+    "lastName": "Smith",
+    "email": "stan.smith@fox.com",
+    "ip": "127.0.0.1"
+  },
+  "billingDetails": {
+    "street1": "Street line 1",
+    "street2": "Street line 2",
+    "city": "Calgary",
+    "state": "AB",
+    "country": "CA",
+    "zip": "T3H3L3"
+  },
+  "status":"COMPLETED",
+  "txnTime":"2014-03-14T15:12:18Z"  
+}
+```
 
 <a name="voidauth" title="voidAuth Object"></a>
 ## voidauth
@@ -2199,6 +2240,42 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 
 + Response 200 (application/json)
+
+# Standalone Credits [/standalonecredits]
+<a name="standalonecredits" title="Standalone Credits"></a>
+
+Standalone Credits allow merchants to issue credits to cardholders without requiring a previous Authorization/Settlement.
+
+## Create a Standalone Credit [POST /accounts/{accountId}/standalonecredits]
+<a name="createstandalonecredit" title="Create a Standalone Credit"></a>
+
+
++ Request Create Standalone Credit (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 200 (application/json)
+                                                
+
+## Get Standalone Credit by ID [GET /accounts/{accountId}/standalonecredits/{standaloneCreditId}]
+<a name="getstandalonecredit" title="Get standalone Credit by ID"></a>
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + standaloneCreditId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique standalonecredit identifier.
+
++ Request Get Standalone Credit (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+
++ Response 200 (application/json)
+
 
 # Data Structures
 
