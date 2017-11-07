@@ -453,6 +453,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |profile                 |[object](#profile)     |These are some details about the customer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |shippingDetails         |[object](#shippingDetails) |These are the shipping details for the payment.|
+|returnLinks             |[object](#returnLinks) |The url endpoint to redirect the customer to. You can customize the return url based on the transaction status. ('default' is mandatory)|gr
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>read only</i>|
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
@@ -598,6 +599,12 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |rel                     |string<br/>`length=X`  |Options:<ul><li><b>default</b> - The default return URL, which will be used if specific status return URL is not defined.</li><li><b>on\_pending</b></li><li><b>on\_completed</b></li><li><b>on\_failed</b></li><li><b>on\_cancelled</b></li><li><b>on\_error</b></li>|
 |href                    |string<br/>`length=X`  |The TLS secured endpoint to return the customer to.|
 
+```
+{
+  "rel": "default",
+  "href": "https://mysite.com/return"
+}
+```
 
 <a name="settlement" title="settlement Object"></a>
 ## settlement
@@ -2032,7 +2039,7 @@ This is how you look up Refunds using the merchant reference number used in the 
 # Returns [/returns]
 <a name="returns" title="Returns"></a>
 
-Returns transactions will be created by Paysafe if we receive a **no credit** notification from the service provider, indicating that the Alternate Payments request never settled.  
+Returns transactions will be created by Paysafe if we receive a chargeback or return notification from the service provider, indicating that the Alternate Payments request never settled.  
 
 As a merchant, you cannot create a return directly.  
 
