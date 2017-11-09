@@ -1076,7 +1076,7 @@ The payments resource represents a payment authorization.
 A Payment and Settlement work in conjunction and a complete transaction will always have both resources associated to it (Payment + Settlement).  
 
 When requesting a payment, by default it will include automatic settlement (*settleWithAuth* = *true*). This will trigger creation of a corresponding settlement record.  The
-settlement record represents the actual capture of funds to your merchant account. For cases  when *authWithSettle* is *true*, the corresponding settlement will have the same 
+settlement record represents the actual capture of funds to your merchant account. For cases  when *settleWithAuth* is *true*, the corresponding settlement will have the same 
 resource identifier (ID) as the payment because it was created from the same request.
 
 Alternatively, you can choose delayed settlement (*settleWithAuth* = *false*). In this case, the Payment only represents an Authorization for the Payment and you must complete 
