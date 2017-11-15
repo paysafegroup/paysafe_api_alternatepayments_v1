@@ -10,6 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2017-11-15            |- Added RapidTransfer|
 |v1             |2017-08-28            |- Added Paysafecard, Skrill, Neteller, Payolution|
 |v1             |2017-08-09            |- Added /monitor endpoint|
 |v1             |2017-05-06            |- Replaced error 5283 with 5031|
@@ -890,6 +891,28 @@ Payment objects are used to define additional values that can be supplied with y
 }
 ```
 
+<a name="rapidRransfer" title="Rapid Transfer Payment Object"></a>
+## rapidtransfer 
+
+![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)
+![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/20171115_add_rapidtransfer_payment/images/payment_icons/rapidtransfer.png)
+
+|Element                        |Type                   |Description |
+|---                            |---                    |--- |
+|descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                           |[object](#sepa)        |The customer's SEPA bank account details (if applicable). |
+|sepa.bankName                  |enum                   |The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
+|sepa.country                   |enum                   |The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|sepa.iban                      |string                 |The International Bank Account Number (IBAN) of the account.|
+|sepa.bic                       |string                 |The Bank Identifier Code (BIC) of the account.|
+|sepa.accountHolderName         |string                 |The account holder's name.|
+
+```
+"rapidtransfer": {
+    "descriptor": "custom descriptor"
+}
+```
+
 <a name="skrill" title="Skrill Payment Object"></a>
 ## skrill
 
@@ -1117,9 +1140,8 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
+|<br/>[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/20171115_add_rapidtransfer_payment/images/payment_icons/rapidtransfer.png)](#rapidtransfer)||||
         
-**Note:** The provided example is for the iDEAL payment method.
-
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
 
