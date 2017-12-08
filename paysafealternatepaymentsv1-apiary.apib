@@ -153,6 +153,7 @@ Sample Response with List Data
         "txnTime": "2016-05-05T20:34:06Z",
         "status": "INITIATED",
         "gatewayResponse": {
+            "id": "043403-2342115455",
             "code": "000.200.000",
             "description": "transaction pending",
             "paymentType": "DB"
@@ -560,9 +561,9 @@ Notifications are configured by logging into the merchant backoffice and navigat
   "txnTime": "2016-02-24T08:39:39Z",
   "status": "COMPLETED",
   "gatewayResponse": {
+    "id": "9bcaa7f0dba44c64981881401794abby",
     "code": "000.100.110",
     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-    "id": "9bcaa7f0dba44c64981881401794abby",
     "processor": "PAYON",
     "paymentType": "RF"
   }
@@ -638,9 +639,9 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "availableToRefund": 100,
     "status": "COMPLETED",
     "gatewayResponse": {
+        "id": "d3188d9c-f81a-4958-8505-03764bf577f2",
         "code": "0.0.0",
         "description": "The request was processed successfuly.",
-        "id": "d3188d9c-f81a-4958-8505-03764bf577f2",
         "processor": "PAYOLUTION",
         "paymentType": "DB"
     }
@@ -1154,6 +1155,7 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
     + Include neteller
     + Include paysafecard
     + Include payolution
+    + Include rapidTransfer
     + Include skrill
     + Include sofort
     + Include links    
@@ -1318,9 +1320,9 @@ This is how you look up a [Payment](#payment) using the payment ID.
                 "txnTime": "2017-09-30T18:00:37Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "9499d89178e84387bfb002c985425535",
                     "code": "000.000.000",
                     "description": "Transaction succeeded",
-                    "id": "9499d89178e84387bfb002c985425535",
                     "processor": "PAYON",
                     "paymentType": "RC"
                 },
@@ -1403,9 +1405,9 @@ is disabled.
                         "txnTime": "2017-09-30T18:00:37Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
+                            "id": "9499d89178e84387bfb002c985425535",                        
                             "code": "000.000.000",
                             "description": "Transaction succeeded",
-                            "id": "9499d89178e84387bfb002c985425535",
                             "processor": "PAYON",
                             "paymentType": "RC"
                         },
@@ -1474,9 +1476,9 @@ Reverse (cancel) an existing authorization.
                 "txnTime": "2017-10-02T22:01:47Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",                
                     "code": "0.0.0",
                     "description": "The request was processed successfully.",
-                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
                     "processor": "PAYOLUTION"
                 },
                 "links": [
@@ -1522,9 +1524,9 @@ This is how you look up a Void Authorization request using the ID returned in th
                 "txnTime": "2017-10-02T22:01:47Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",                
                     "code": "0.0.0",
                     "description": "The request was processed successfully.",
-                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
                     "processor": "PAYOLUTION"
                 },
                 "links": [
@@ -1576,9 +1578,9 @@ This is how you retrieve a list of any Void Authorizations associated to a payme
                         "txnTime": "2017-10-02T22:01:47Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
+                            "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",                        
                             "code": "0.0.0",
                             "description": "The request was processed successfully.",
-                            "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
                             "processor": "PAYOLUTION"
                         },
                         "links": [
@@ -1883,9 +1885,9 @@ This is how you submit a Refund request against a completed payment.
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "9bcaa7f0dba44c64981881401794abby",                
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                    "id": "9bcaa7f0dba44c64981881401794abby",
                     "processor": "PAYON",
                     "paymentType": "RF"
                   },
@@ -1937,9 +1939,9 @@ This is how you submit a Refund request against a completed settlement.
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "9bcaa7f0dba44c64981881401794abby",                
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                    "id": "9bcaa7f0dba44c64981881401794abby",
                     "processor": "PAYON",
                     "paymentType": "RF"
                   },
@@ -1979,9 +1981,9 @@ This is how you look up a Refund request using the ID returned in the response t
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "9bcaa7f0dba44c64981881401794abby",                
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                    "id": "9bcaa7f0dba44c64981881401794abby",
                     "processor": "PAYON",
                     "paymentType": "RF"
                   },
@@ -2033,9 +2035,9 @@ This is how you look up Refunds using the merchant reference number used in the 
                         "txnTime": "2017-02-10T20:17:51Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
+                          "id": "9bcaa7f0dba44c64981881401794abby",                        
                           "code": "000.100.110",
                           "description": "Request successfully processed",
-                          "id": "9bcaa7f0dba44c64981881401794abby",
                           "processor": "PAYON",
                           "paymentType": "RF"
                         "links": [
@@ -2251,7 +2253,7 @@ This is how you retrieve details for a single return reversal.  You can identify
     + Properties
         + `processor`: `BOKU` (string)
         + `action`: `prepare` (string)
-        + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string)
+        + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string) -  - The unique identifier for the transaction provided by the gateway.
         + `result-code`: `0`
         + `result-msg`: `Operation Successful` (string)
 
@@ -2285,9 +2287,9 @@ This is how you retrieve details for a single return reversal.  You can identify
     _Read Only_
 
     + Properties
+        + `id`: `4867bb8ce543409dbe1187849af28107` - The unique identifier for the transaction provided by the gateway.
         + `code`: `000.200.000`
         + `description`: `Transaction Pending`
-        + `id`: `4867bb8ce543409dbe1187849af28107`
         + `processor`: `IDEAL`
         + `paymentType`: `DB`
 
@@ -2389,6 +2391,7 @@ This is how you retrieve details for a single return reversal.  You can identify
         + `NETELLER`
         + `PAYSAFECARD`
         + `PAYOLUTION`
+        + `RAPIDTRANSFER`
         + `SKRILL`
         + `SOFORT`
 
@@ -2420,9 +2423,9 @@ This is how you retrieve details for a single return reversal.  You can identify
     _Read Only_
 
     + Properties
+        + `id`: `9bcaa7f0dba44c64981881401794abby` - The unique identifier for the transaction provided by the gateway.    
         + `code`: `000.100.110` (string)
         + `description`: `Request successfully processed` (string)
-        + `id`: `9bcaa7f0dba44c64981881401794abby`
         + `processor`: `PAYSAFECARD` (enum)
         + `paymentType`: `DB` (string)
 
@@ -2433,9 +2436,9 @@ This is how you retrieve details for a single return reversal.  You can identify
     _Read Only_
 
     + Properties
+        + `id`: `9bcaa7f0dba44c64981881401794abby` - The unique identifier for the transaction provided by the gateway.
         + `code`: `000.100.110` (string)
         + `description`: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
-        + `id`: `9bcaa7f0dba44c64981881401794abby`
         + `processor`: `PAYON`
         + `paymentType`: `RF` (string)    
 
@@ -2454,6 +2457,12 @@ This is how you retrieve details for a single return reversal.  You can identify
     + `lastName`: `Smith` (string)
     + `email`: `stan.smith@fox.com` (string)
     + `ip`: `127.0.0.1` (string)
+
+## `rapidTransfer`
+
++ `rapidTransfer` (object) - Optional attributes that can be passed when making a RAPIDTRANSFER payment request. 
+    + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
+    + `sepa` (sepa)
 
 ## `refund`
 
@@ -2582,7 +2591,8 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 + `sofort` (object) - Optional attributes that can be passed when making a SOFORT payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
-
+    + `sepa` (sepa)
+    
 ## `sofortGatewayResponse`
 
 + `gatewayResponse` (object) - These are the details returned from the external gateway. 
@@ -2590,9 +2600,9 @@ This is how you retrieve details for a single return reversal.  You can identify
     _Read Only_
 
     + Properties
+        + `id`: `0000-014100-SOFRTSIM-0000` - The unique identifier for the transaction provided by the gateway.
         + `code`: `0` (string)
         + `description`: `Request successfully processed` (string)
-        + `id`: `0000-014100-SOFRTSIM-0000`
         + `processor`: `SOFORT`
         + `paymentType`: `DB` (string)
 
