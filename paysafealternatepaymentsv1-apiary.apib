@@ -740,8 +740,8 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=20` |<b>(required)</b> Descriptor to display on customer's statement.|
-|consumerId              |string<br/>`length=255`|<b>(required)</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
+|descriptor              |string<br/>`length<=20` |<b>(required)</b> Descriptor to display on customer's statement.|
+|consumerId              |string<br/>`length<=255`|<b>(required)</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
 |consumerCountry         |string                 |<b>(required)</b> The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |consumerMobilePhone     |string                 |<b>(required)</b> The customer's mobile phone number.|
 
@@ -761,7 +761,7 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=16` |<b>(required)</b> This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|descriptor              |string<br/>`length<=16` |<b>(required)</b> This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customer's SEPA bank account details.|
 |sepa.accountHolderName  |string                 |The account holder's name.|
 |sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
@@ -878,7 +878,7 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|consumerId                     |string                 |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
+|consumerId                     |string                 |**(required)** The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
 |ageRestriction                 |number                 |Minimum age restriction for the transaction.|
 |kycLevelRestriction            |string                 |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
 |countryRestriction             |string<br>`length=2`   |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
@@ -892,10 +892,9 @@ Payment objects are used to define additional values that can be supplied with y
 }
 ```
 
-<a name="rapidRransfer" title="Rapid Transfer Payment Object"></a>
+<a name="rapidtransfer" title="Rapid Transfer Payment Object"></a>
 ## rapidtransfer 
 
-![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)
 ![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/20171115_add_rapidtransfer_payment/images/payment_icons/rapidtransfer.png)
 
 |Element                        |Type                   |Description |
@@ -903,7 +902,7 @@ Payment objects are used to define additional values that can be supplied with y
 |descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                           |[object](#sepa)        |The customer's SEPA bank account details (if applicable). |
 |sepa.bankName                  |enum                   |The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
-|sepa.country                   |enum                   |The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|sepa.country                   |enum                   |The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
 |sepa.iban                      |string                 |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                       |string                 |The Bank Identifier Code (BIC) of the account.|
 |sepa.accountHolderName         |string                 |The account holder's name.|
@@ -946,7 +945,7 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=43`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|descriptor              |string<br/>`length<=43`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customer's SEPA bank account details.|
 
 ```
@@ -1141,7 +1140,7 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|<br/>[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/20171115_add_rapidtransfer_payment/images/payment_icons/rapidtransfer.png)](#rapidtransfer)||||
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/20171115_add_rapidtransfer_payment/images/payment_icons/rapidtransfer.png)](#rapidtransfer)||||
         
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1153,8 +1152,8 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
     + Include ideal
     + Include giropay
     + Include neteller
+    + Include payolution    
     + Include paysafecard
-    + Include payolution
     + Include rapidTransfer
     + Include skrill
     + Include sofort
@@ -1436,6 +1435,8 @@ is disabled.
 
 This is how you submit a Void Authorization (authorization reversal) request. You can void an Authorization only if it has not yet been settled.
 
+**Note:** This operation is available only for payment methods that [support delayed settlement](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview/#delayed-settlement-payment-flow). If the authorization has already been fully settled, then you will not be able to void it and will need to [issue a refund](#refundpayment) instead.
+
 ## Void a Previously Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
 <a name="voidauth" title="Void a Previously Authorized Payment"></a>
 
@@ -1447,7 +1448,10 @@ Reverse (cancel) an existing authorization.
 
 + Attributes
     + Include voidAuth
-    + Include paymentType
+    + Include paymentType voidauth
+    + Include payolution    
+    + Include paysafecard
+    + Include links    
 
 + Request Void an Authorization (application/json)
 
@@ -1623,15 +1627,9 @@ Payment resource to find out the remaining amount available to settle.
 
 + Attributes
     + Include settlement
-    + Include paymentType
-    + Include boku
-    + Include ideal
-    + Include giropay
-    + Include neteller
-    + Include paysafecard
+    + Include paymentType settlement
     + Include payolution
-    + Include skrill
-    + Include sofort    
+    + Include paysafecard    
     + Include links     
 
 + Request Create Settlement (application/json)
@@ -1853,7 +1851,12 @@ This is how you submit a Refund request against a completed payment.
 
 + Attributes
     + Include refund
-    + Include paymentType
+    + Include paymentType refund
+    + Include ideal
+    + Include neteller
+    + Include payolution
+    + Include skrill
+    + Include sofort    
     + Include links
      
 + Request Refund a Payment (application/json)
@@ -2354,7 +2357,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
     _Read Only_
     
-+ `status`:`PROCESSING` (enum, required) - This is the status of the request.
++ `status`:`PROCESSING` (enum) - This is the status of the request.
 
     _Read Only_
     
@@ -2385,15 +2388,42 @@ This is how you retrieve details for a single return reversal.  You can identify
 + `paymentType` (enum, required) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
     + Members
-        + `IDEAL`
         + `BOKU`
-        + `GIROPAY`
+        + `GIROPAY`        
+        + `IDEAL`
         + `NETELLER`
         + `PAYSAFECARD`
         + `PAYOLUTION`
         + `RAPIDTRANSFER`
         + `SKRILL`
         + `SOFORT`
+
+## `paymentType refund`
+
++ `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
+    + Members
+        + `IDEAL`
+        + `NETELLER`
+        + `PAYOLUTION`
+        + `SKRILL`
+        + `SOFORT`
+
+## `paymentType settlement`
+
++ `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
+    + Members
+        + `PAYOLUTION`
+        + `PAYSAFECARD`
+
+## `paymentType voidauth`
+
++ `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
+    + Members
+        + `PAYOLUTION`
+        + `PAYSAFECARD`
 
 ## `payolution`
 
@@ -2546,7 +2576,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
     + Default: `The account currency`
 
-+ `txnTime`: `2017-03-14T20:07:39Z` (string, required) - This is the date and time the transaction was processed
++ `txnTime`: `2017-03-14T20:07:39Z` (string) - This is the date and time the transaction was processed
 
     _Read Only_
 
@@ -2554,7 +2584,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
     _Read Only_
 
-+ `status`:`COMPLETED` (enum, required) - This is the status of the request.
++ `status`:`COMPLETED` (enum) - This is the status of the request.
 
     _Read Only_
     
@@ -2635,7 +2665,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
     _Read Only_
     
-+ `status`:`COMPLETED` (enum, required) - This is the status of the request.
++ `status`:`COMPLETED` (enum) - This is the status of the request.
 
     _Read Only_
     
