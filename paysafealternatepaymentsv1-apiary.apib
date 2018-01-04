@@ -11,6 +11,7 @@ variety of non-card regional payment methods with a single integration.
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
 |v1             |2017-12-01            |- Added support for Skrill standalone credit|
+|v1             |2017-11-15            |- Added RapidTransfer|
 |v1             |2017-08-28            |- Added Paysafecard, Skrill, Neteller, Payolution|
 |v1             |2017-08-09            |- Added /monitor endpoint|
 |v1             |2017-05-06            |- Replaced error 5283 with 5031|
@@ -153,6 +154,7 @@ Sample Response with List Data
         "txnTime": "2016-05-05T20:34:06Z",
         "status": "INITIATED",
         "gatewayResponse": {
+            "id": "043403-2342115455",
             "code": "000.200.000",
             "description": "transaction pending",
             "paymentType": "DB"
@@ -560,9 +562,9 @@ Notifications are configured by logging into the merchant backoffice and navigat
   "txnTime": "2016-02-24T08:39:39Z",
   "status": "COMPLETED",
   "gatewayResponse": {
+    "id": "9bcaa7f0dba44c64981881401794abby",
     "code": "000.100.110",
     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-    "id": "9bcaa7f0dba44c64981881401794abby",
     "processor": "PAYON",
     "paymentType": "RF"
   }
@@ -638,9 +640,9 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "availableToRefund": 100,
     "status": "COMPLETED",
     "gatewayResponse": {
+        "id": "d3188d9c-f81a-4958-8505-03764bf577f2",
         "code": "0.0.0",
         "description": "The request was processed successfuly.",
-        "id": "d3188d9c-f81a-4958-8505-03764bf577f2",
         "processor": "PAYOLUTION",
         "paymentType": "DB"
     }
@@ -779,8 +781,8 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=20` |<b>(required)</b> Descriptor to display on customer's statement.|
-|consumerId              |string<br/>`length=255`|<b>(required)</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
+|descriptor              |string<br/>`length<=20` |<b>(required)</b> Descriptor to display on customer's statement.|
+|consumerId              |string<br/>`length<=255`|<b>(required)</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
 |consumerCountry         |string                 |<b>(required)</b> The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |consumerMobilePhone     |string                 |<b>(required)</b> The customer's mobile phone number.|
 
@@ -800,7 +802,7 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=16` |<b>(required)</b> This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|descriptor              |string<br/>`length<=16` |<b>(required)</b> This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customer's SEPA bank account details.|
 |sepa.accountHolderName  |string                 |The account holder's name.|
 |sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
@@ -849,11 +851,11 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|consumerId                     |string                 |Email address or NETELLER Account Id of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
-|consumerVerificationId         |string                 |The consumers NETELLER secure Id, or two step authorization token generated on their device.|
-|recipientDescription           |string<br>`length<=30` |A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
+|consumerId                     |string                 |Email address or NETELLER Account ID of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|consumerVerificationId         |string                 |The consumers NETELLER secure ID, or two step authorization token generated on their device.|
+|recipientDescription           |string<br>`length<=30` |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
 |language                       |string<br>`length=2`   |The 2-character preferred language code for the customer (e.g., EN, FR).|
-|logoUrl                        |string                 |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
+|logoUrl                        |string                 |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
 |detail1Description             |string                 |You can show additional details about the product in the More information section in the header of Quick Checkout.|
 |detail1Text                    |string                 |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
@@ -917,7 +919,7 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|consumerId                     |string                 |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
+|consumerId                     |string                 |**(required)** The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
 |ageRestriction                 |number                 |Minimum age restriction for the transaction.|
 |kycLevelRestriction            |string                 |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
 |countryRestriction             |string<br>`length=2`   |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
@@ -928,6 +930,27 @@ Payment objects are used to define additional values that can be supplied with y
     "minAgeRestriction": 18,
     "kycLevelRestriction": "SIMPLE",
     "countryRestriction": "DE"
+}
+```
+
+<a name="rapidtransfer" title="Rapid Transfer Payment Object"></a>
+## rapidtransfer 
+
+![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)
+
+|Element                        |Type                   |Description |
+|---                            |---                    |--- |
+|descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                           |[object](#sepa)        |The customer's SEPA bank account details (if applicable). |
+|sepa.bankName                  |enum                   |The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
+|sepa.country                   |enum                   |The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
+|sepa.iban                      |string                 |The International Bank Account Number (IBAN) of the account.|
+|sepa.bic                       |string                 |The Bank Identifier Code (BIC) of the account.|
+|sepa.accountHolderName         |string                 |The account holder's name.|
+
+```
+"rapidTransfer": {
+    "descriptor": "custom descriptor"
 }
 ```
 
@@ -963,7 +986,7 @@ Payment objects are used to define additional values that can be supplied with y
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length=43`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|descriptor              |string<br/>`length<=43`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |sepa                    |[object](#sepa)        |The customer's SEPA bank account details.|
 
 ```
@@ -1117,7 +1140,7 @@ The payments resource represents a payment authorization.
 A Payment and Settlement work in conjunction and a complete transaction will always have both resources associated to it (Payment + Settlement).  
 
 When requesting a payment, by default it will include automatic settlement (*settleWithAuth* = *true*). This will trigger creation of a corresponding settlement record.  The
-settlement record represents the actual capture of funds to your merchant account. For cases  when *authWithSettle* is *true*, the corresponding settlement will have the same 
+settlement record represents the actual capture of funds to your merchant account. For cases  when *settleWithAuth* is *true*, the corresponding settlement will have the same 
 resource identifier (ID) as the payment because it was created from the same request.
 
 Alternatively, you can choose delayed settlement (*settleWithAuth* = *false*). In this case, the Payment only represents an Authorization for the Payment and you must complete 
@@ -1158,9 +1181,8 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)||||
         
-**Note:** The provided example is for the iDEAL payment method.
-
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
 
@@ -1171,8 +1193,9 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
     + Include ideal
     + Include giropay
     + Include neteller
+    + Include payolution    
     + Include paysafecard
-    + Include payolution
+    + Include rapidTransfer
     + Include skrill
     + Include sofort
     + Include links    
@@ -1337,9 +1360,9 @@ This is how you look up a [Payment](#payment) using the payment ID.
                 "txnTime": "2017-09-30T18:00:37Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "9499d89178e84387bfb002c985425535",
                     "code": "000.000.000",
                     "description": "Transaction succeeded",
-                    "id": "9499d89178e84387bfb002c985425535",
                     "processor": "PAYON",
                     "paymentType": "RC"
                 },
@@ -1422,9 +1445,9 @@ is disabled.
                         "txnTime": "2017-09-30T18:00:37Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
+                            "id": "9499d89178e84387bfb002c985425535",                        
                             "code": "000.000.000",
                             "description": "Transaction succeeded",
-                            "id": "9499d89178e84387bfb002c985425535",
                             "processor": "PAYON",
                             "paymentType": "RC"
                         },
@@ -1453,6 +1476,8 @@ is disabled.
 
 This is how you submit a Void Authorization (authorization reversal) request. You can void an Authorization only if it has not yet been settled.
 
+**Note:** This operation is available only for payment methods that [support delayed settlement](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview/#delayed-settlement-payment-flow). If the authorization has already been fully settled, then you will not be able to void it and will need to [issue a refund](#refundpayment) instead.
+
 ## Void a Previously Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
 <a name="voidauth" title="Void a Previously Authorized Payment"></a>
 
@@ -1464,7 +1489,10 @@ Reverse (cancel) an existing authorization.
 
 + Attributes
     + Include voidAuth
-    + Include paymentType
+    + Include paymentType voidauth
+    + Include payolution    
+    + Include paysafecard
+    + Include links    
 
 + Request Void an Authorization (application/json)
 
@@ -1493,9 +1521,9 @@ Reverse (cancel) an existing authorization.
                 "txnTime": "2017-10-02T22:01:47Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",                
                     "code": "0.0.0",
                     "description": "The request was processed successfully.",
-                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
                     "processor": "PAYOLUTION"
                 },
                 "links": [
@@ -1541,9 +1569,9 @@ This is how you look up a Void Authorization request using the ID returned in th
                 "txnTime": "2017-10-02T22:01:47Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",                
                     "code": "0.0.0",
                     "description": "The request was processed successfully.",
-                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
                     "processor": "PAYOLUTION"
                 },
                 "links": [
@@ -1595,9 +1623,9 @@ This is how you retrieve a list of any Void Authorizations associated to a payme
                         "txnTime": "2017-10-02T22:01:47Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
+                            "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",                        
                             "code": "0.0.0",
                             "description": "The request was processed successfully.",
-                            "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
                             "processor": "PAYOLUTION"
                         },
                         "links": [
@@ -1640,15 +1668,9 @@ Payment resource to find out the remaining amount available to settle.
 
 + Attributes
     + Include settlement
-    + Include paymentType
-    + Include boku
-    + Include ideal
-    + Include giropay
-    + Include neteller
-    + Include paysafecard
+    + Include paymentType settlement
     + Include payolution
-    + Include skrill
-    + Include sofort    
+    + Include paysafecard    
     + Include links     
 
 + Request Create Settlement (application/json)
@@ -1870,7 +1892,12 @@ This is how you submit a Refund request against a completed payment.
 
 + Attributes
     + Include refund
-    + Include paymentType
+    + Include paymentType refund
+    + Include ideal
+    + Include neteller
+    + Include payolution
+    + Include skrill
+    + Include sofort    
     + Include links
      
 + Request Refund a Payment (application/json)
@@ -1902,9 +1929,9 @@ This is how you submit a Refund request against a completed payment.
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "9bcaa7f0dba44c64981881401794abby",                
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                    "id": "9bcaa7f0dba44c64981881401794abby",
                     "processor": "PAYON",
                     "paymentType": "RF"
                   },
@@ -1956,9 +1983,9 @@ This is how you submit a Refund request against a completed settlement.
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "9bcaa7f0dba44c64981881401794abby",                
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                    "id": "9bcaa7f0dba44c64981881401794abby",
                     "processor": "PAYON",
                     "paymentType": "RF"
                   },
@@ -1998,9 +2025,9 @@ This is how you look up a Refund request using the ID returned in the response t
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
+                    "id": "9bcaa7f0dba44c64981881401794abby",                
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                    "id": "9bcaa7f0dba44c64981881401794abby",
                     "processor": "PAYON",
                     "paymentType": "RF"
                   },
@@ -2052,9 +2079,9 @@ This is how you look up Refunds using the merchant reference number used in the 
                         "txnTime": "2017-02-10T20:17:51Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
+                          "id": "9bcaa7f0dba44c64981881401794abby",                        
                           "code": "000.100.110",
                           "description": "Request successfully processed",
-                          "id": "9bcaa7f0dba44c64981881401794abby",
                           "processor": "PAYON",
                           "paymentType": "RF"
                         "links": [
@@ -2306,7 +2333,7 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
     + Properties
         + `processor`: `BOKU` (string)
         + `action`: `prepare` (string)
-        + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string)
+        + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string) -  - The unique identifier for the transaction provided by the gateway.
         + `result-code`: `0`
         + `result-msg`: `Operation Successful` (string)
 
@@ -2340,9 +2367,9 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
     _Read Only_
 
     + Properties
+        + `id`: `4867bb8ce543409dbe1187849af28107` - The unique identifier for the transaction provided by the gateway.
         + `code`: `000.200.000`
         + `description`: `Transaction Pending`
-        + `id`: `4867bb8ce543409dbe1187849af28107`
         + `processor`: `IDEAL`
         + `paymentType`: `DB`
 
@@ -2407,7 +2434,7 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 
     _Read Only_
     
-+ `status`:`PROCESSING` (enum, required) - This is the status of the request.
++ `status`:`PROCESSING` (enum) - This is the status of the request.
 
     _Read Only_
     
@@ -2438,14 +2465,42 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 + `paymentType` (enum, required) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
     + Members
-        + `IDEAL`
         + `BOKU`
-        + `GIROPAY`
+        + `GIROPAY`        
+        + `IDEAL`
         + `NETELLER`
         + `PAYSAFECARD`
         + `PAYOLUTION`
+        + `RAPIDTRANSFER`
         + `SKRILL`
         + `SOFORT`
+
+## `paymentType refund`
+
++ `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
+    + Members
+        + `IDEAL`
+        + `NETELLER`
+        + `PAYOLUTION`
+        + `SKRILL`
+        + `SOFORT`
+
+## `paymentType settlement`
+
++ `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
+    + Members
+        + `PAYOLUTION`
+        + `PAYSAFECARD`
+
+## `paymentType voidauth`
+
++ `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
+    + Members
+        + `PAYOLUTION`
+        + `PAYSAFECARD`
 
 ## `payolution`
 
@@ -2475,9 +2530,9 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
     _Read Only_
 
     + Properties
+        + `id`: `9bcaa7f0dba44c64981881401794abby` - The unique identifier for the transaction provided by the gateway.    
         + `code`: `000.100.110` (string)
         + `description`: `Request successfully processed` (string)
-        + `id`: `9bcaa7f0dba44c64981881401794abby`
         + `processor`: `PAYSAFECARD` (enum)
         + `paymentType`: `DB` (string)
 
@@ -2488,9 +2543,9 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
     _Read Only_
 
     + Properties
+        + `id`: `9bcaa7f0dba44c64981881401794abby` - The unique identifier for the transaction provided by the gateway.
         + `code`: `000.100.110` (string)
         + `description`: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
-        + `id`: `9bcaa7f0dba44c64981881401794abby`
         + `processor`: `PAYON`
         + `paymentType`: `RF` (string)    
 
@@ -2509,6 +2564,12 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
     + `lastName`: `Smith` (string)
     + `email`: `stan.smith@fox.com` (string)
     + `ip`: `127.0.0.1` (string)
+
+## `rapidTransfer`
+
++ `rapidTransfer` (object) - Optional attributes that can be passed when making a RAPIDTRANSFER payment request. 
+    + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
+    + `sepa` (sepa)
 
 ## `refund`
 
@@ -2592,7 +2653,7 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 
     + Default: `The account currency`
 
-+ `txnTime`: `2017-03-14T20:07:39Z` (string, required) - This is the date and time the transaction was processed
++ `txnTime`: `2017-03-14T20:07:39Z` (string) - This is the date and time the transaction was processed
 
     _Read Only_
 
@@ -2600,7 +2661,7 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 
     _Read Only_
 
-+ `status`:`COMPLETED` (enum, required) - This is the status of the request.
++ `status`:`COMPLETED` (enum) - This is the status of the request.
 
     _Read Only_
     
@@ -2637,7 +2698,8 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 
 + `sofort` (object) - Optional attributes that can be passed when making a SOFORT payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
-
+    + `sepa` (sepa)
+    
 ## `sofortGatewayResponse`
 
 + `gatewayResponse` (object) - These are the details returned from the external gateway. 
@@ -2645,9 +2707,9 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
     _Read Only_
 
     + Properties
+        + `id`: `0000-014100-SOFRTSIM-0000` - The unique identifier for the transaction provided by the gateway.
         + `code`: `0` (string)
         + `description`: `Request successfully processed` (string)
-        + `id`: `0000-014100-SOFRTSIM-0000`
         + `processor`: `SOFORT`
         + `paymentType`: `DB` (string)
 
@@ -2680,7 +2742,7 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 
     _Read Only_
     
-+ `status`:`COMPLETED` (enum, required) - This is the status of the request.
++ `status`:`COMPLETED` (enum) - This is the status of the request.
 
     _Read Only_
     
