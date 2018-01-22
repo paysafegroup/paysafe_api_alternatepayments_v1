@@ -10,6 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2018-01-10            |- Added support for Payolution verifications and installments|
 |v1             |2017-11-15            |- Added RapidTransfer|
 |v1             |2017-08-28            |- Added Paysafecard, Skrill, Neteller, Payolution|
 |v1             |2017-08-09            |- Added /monitor endpoint|
@@ -424,6 +425,32 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
+<a name="installments" title="installments Object"></a>
+## installments
+
+|Element        |Type           |Description |
+|---            |---            |--- |
+|amount         |number         |This is the amount of the installment payment.|
+|due            |string         |This is the due date of the installment payment.|
+
+```
+            {
+                "installments": [{
+                        "amount": 16820,
+                        "due": "2013-07-16"
+                    },
+                    {
+                        "amount": 16820,
+                        "due": "2013-08-05"
+                    },
+                    {
+                        "amount": 16820,
+                        "due": "2013-09-05"
+                    }
+                ]
+            }
+```
+
 <a name="link" title="link Object"></a>
 ## link
 
@@ -444,7 +471,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|id                      |string                 |Unique system generated identifier for this payment.<br/><i>read only</i> |
+|id                      |string                 |Unique system-generated identifier for this payment.<br/><i>read only</i> |
 |merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent settlement to capture funds.<br/><b>true</b> - the request is settled (default).<br/>If the merchant wants to find out whether an authorization has been settled, they should check the *availableToSettle* element.<br/>If the amount is 0, the authorization has been fully settled.|
@@ -501,15 +528,84 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
+<a name="paymentDetails" title="paymentDetails Object"></a>
+## paymentDetails
+
+|Element                |Type                       |Description |
+|---                    |---                        |--- |
+|installments           |[object](#installments)    |This is  |
+|originalAmount         |number                     |This is |
+|totalAmount            |number                     |This is |
+|minimumInstallmentFee  |number                     |This is |
+|duration               |number                     |This is the duration, in months, of the plan, to be presented to the consumer. |
+|interestRate           |number                     |This is |
+|effectiveInterestRate  |number                     |This is |
+|standardCreditInformationUrl |string               |This is |
+
+```
+            {
+                "paymentDetails": [{
+                    "installments": [{
+                            "amount": 16820,
+                            "due": "2013-07-16"
+                        },
+                        {
+                            "amount": 16820,
+                            "due": "2013-08-05"
+                        },
+                        {
+                            "amount": 16820,
+                            "due": "2013-09-05"
+                        }
+                    ],
+                    "originalAmount": 49999,
+                    "totalAmount": 50460,
+                    "minimumInstallmentFee": 0,
+                    "duration": 3,
+                    "interestRate": 14.95,
+                    "effectiveInterestRate": 15.60,
+                    "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
+                }]
+            }
+```
+
+<a name="paymentInformation" title="paymentInformation Object"></a>
+## paymentInformation
+
+|Element                 |Type                  |Description |
+|---                     |---                   |--- |
+|paymentReference            |string            |The string to use as a reason for the payment.|
+|iban                        |string            |The IBAN to send the payment to.|
+|bic                         |string            |The BIC of the bank to send the payment to.|
+|bankName                    |string            |This is the name of the bank to send the payment to.|
+|accountHolderName           |string            |This is the name of the beneficiary.|
+
+```
+        {
+        "paymentReference": "YTTR-WMQX-KLGW",
+        "iban": "AT611904300234573201456",
+        "bic": "BFRILI22XXX",
+        "bankName": "Musterbank",
+        "accountHolderName": "Test Merchant"
+        }
+```
+
+<a name="plans" title="plans Object"></a>
+## plans
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|paymentDetails          |[object](#paymentDetails) |This is an array of payment details objects. |
+
 <a name="profile" title="profile Object"></a>
 ## profile
 
 |Element                 |Type                     |Description |
 |---                     |---                      |--- |
 |title                   |string                   |This is the customer's title, e.g. Ms.|
-|firstName               |string<br/>`length<=80`  |<b>(required)</b>This is the customer's first name.|
-|lastName                |string<br/>`length<=80`  |<b>(required)</b>This is the customer's last name.|
-|email                   |string<br/>`length<=255` |<b>(required)</b>This is the customer's email address.|
+|firstName               |string<br/>`length<=80`  |<b>(required)</b> This is the customer's first name.|
+|lastName                |string<br/>`length<=80`  |<b>(required)</b> This is the customer's last name.|
+|email                   |string<br/>`length<=255` |<b>(required)</b> This is the customer's email address.|
 |dateOfBirth             |[object](#date)          |This is the date of birth of the customer associated to this profile.|
 |gender                  |enum                     |Options:<ul><li>M &ndash; Male</li><li>F &ndash; Female</li><li>O &ndash; Other</li><li>N &ndash; Not Specified</li></ul>|
 |phone                   |string                   |This is the customer's primary phone.|
@@ -547,7 +643,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
 |paymentType             |enum                         |Payment type of the original payment.|
 |txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>read only</i>|
-|error                   |[object](#error)             |The associated error details for this refund (if applicable).<br/><i>read only</i>|
+|error                   |[object](#error)             |The associated error details for this refund, if applicable.<br/><i>read only</i>|
 |status                  |enum                         |Options:<br/><ul><li>RECEIVED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
 |gatewayResponse         |[object](#gatewayResponse)   |Details from the raw response returned by the gateway.<br/><i>read only</i>|
 
@@ -698,6 +794,66 @@ Notifications are configured by logging into the merchant backoffice and navigat
 ```
 
 
+<a name="verification" title="verification Object"></a>
+## verification
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|id                      |string                 |Unique system-generated identifier for this request.<br/><i>read only</i> |
+|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
+|dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|amount                  |number                 |<b>(required)</b> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.<br/>**Note:** Although the *amount* field is required for a verification request, no amount is processed.|
+|payolution              |[object](#payolution)  |This is the payolution payment object. |
+|paymentType             |enum                   |<b>(required)</b> Identifies the type of payment instrument. <br/>Options:<br/><ul><li>PAYOLUTION</li></ul>|
+|descriptor              |string<br/>`length<=20` |<b>(required)</b> Descriptor to display on customer's statement.|
+|profile                 |[object](#profile)     |These are some details about the customer.|
+|billingDetails          |[object](#billingDetails) |These are the billing details for the request.|
+|shippingDetails         |[object](#shippingDetails) |These are the shipping details for the request.|
+|currencyCode            |string                 |This is the currency of the request.   Default is the account currency.|
+|returnLinks             |[object](#returnLinks) |The url endpoint to redirect the customer to. You can customize the return url based on the transaction status. 'default' is mandatory.|
+|txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>read only</i>|
+|error                   |[object](#error)       | The associated error details for this request, if applicable. <br/>*read only* |
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>FAILED</li><li>COMPLETED</li><li>ERROR</li></ul><br/><i>read only</i>|
+|statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>read only</i>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>read only</i>|
+
+```
+{
+  "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
+  "dupCheck": true,
+  "amount": 100,
+  "currencyCode": "EUR",
+  "profile": {
+    "firstName": "Stan",
+    "lastName": "Smith",
+    "email": "stan.smith@fox.com",
+    "ip": "127.0.0.1"
+  },
+  "billingDetails": {
+    "street1": "Street line 1",
+    "street2": "Street line 2",
+    "city": "Calgary",
+    "state": "AB",
+    "country": "CA",
+    "zip": "T3H3L3"
+  },
+  "returnLinks": [
+    {
+      "rel": "default",
+      "href": "https://mysite.com/return"
+    }
+  ],
+  "paymentType": "IDEAL",
+  "ideal": {
+    "descriptor": "sampledesc",
+    "sepa": {
+      "bankName": "ing",
+      "country": "NL"
+    }
+  }
+}
+```
+
 <a name="voidauth" title="voidAuth Object"></a>
 ## voidauth
 
@@ -835,41 +991,76 @@ Payment objects are used to define additional values that can be supplied with y
 
 ![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)
 
-|Element                        |Type                   |Description |
-|---                            |---                    |--- |
-|descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|paymentDetails                                  |string                 |Contains installments with amount and due date plus some additional parameters like interest, etc. <i>read only</i>|
-|paymentInformation                              |object                 |<i>read only</i>|
-|paymentInformation.paymentReference             |string                 |The string to use as a reason for the payment.|
-|paymentInformation.iban                         |string                 |The IBAN to send the payment to..|
-|paymentInformation.bic                          |string                 |The BICc of the bank to send the payment to|
-|paymentInformation.accountHolderName            |string                 |This is the name of the beneficiary.|
-|analysis                                        |object                 |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
+|Element                    |Type                   |Description |
+|---                        |---                    |--- |
+|productType                |enum                   |Possible values are:<ul><li>INVOICE &ndash; use for regular authorization request to be followed up with a settlement.</li><li>INSTALLMENTS &ndash; use when consumer has opted for installment payments.</li></ul> |
+|descriptor                 |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                       |[object](#sepa)        |**required** if currency is EUR <br/>These are customer bank details, used for Direct Debit INSTALLMENT payments. |
+|plans                      |[object](#plans)       |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., to be displayed to the consumer for the payment authorization.<br/><i>read only</i>|
+|planDuration               |string<br/>`length=X`  |**required** for payment authorization if *productType*=INSTALLMENTS <br/>This is the duration, in months, of the plan selected by the consumer. |
+|consumerId                 |string                 |This is the merchant's ID for the consumer, in the case of monthly invoices. |
+|paymentInformation         |[object](#paymentInformation) |This is the information that tells the consumer where to send the payment.<br/><i>read only</i>|
+|analysis                   |object                 |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
 
 ```
-"payolution": {
-    "descriptor": "Order with ID 4ab2",
-    "paymentInformation": {
-        "paymentReference": "YTTR-WMQX-KLGW",
-        "iban": "AT611904300234573201456",
-        "bic": "BFRILI22XXX",
-        "bankName": "Musterbank",
-        "accountHolderName": "Test Merchant"
-    },
-    "analysis": [{
-        "key": "PAYOLUTION_CUSTOMER_GROUP",
-        "value": "TOP"
-    }, {
-        "key": "PAYOLUTION_MODULE_NAME",
-        "value": "PaymentModuleName"
-    }, {
-        "key": "PAYOLUTION_INVOICE_ID",
-        "value": "23498739478"
-    }, {
-        "key": "PAYOLUTION_ORDER_ID",
-        "value": "23498739478"
-    }]
-}
+            {
+                "payolution": {
+                    "productType": "INSTALLMENTS",
+                    "descriptor": "Order with ID 4ab2",
+                    "plans": [{
+                            "paymentDetails": [{
+                                "installments": [{
+                                        "amount": 16820,
+                                        "due": "2013-07-16"
+                                    },
+                                    {
+                                        "amount": 16820,
+                                        "due": "2013-08-05"
+                                    },
+                                    {
+                                        "amount": 16820,
+                                        "due": "2013-09-05"
+                                    }
+                                ],
+                                "originalAmount": 49999,
+                                "totalAmount": 50460,
+                                "minimumInstallmentFee": 0,
+                                "duration": 3,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 15.60,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
+                            }],
+                            "planDuration": "3",
+                            "sepa": {
+                                "bankName": "ING",
+                                "country": "NL",
+                                "accountHolderName": "John Doe",
+                                "bic": "ABNANL2APIP",
+                                "iban": "DE89370400440532013000"
+                            },
+                            "paymentInformation": {
+                                "paymentReference": "YTTR-WMQX-KLGW",
+                                "iban": "AT611904300234573201456",
+                                "bic": "BFRILI22XXX",
+                                "accountHolderName": "Test Merchant"
+                            },
+                            "analysis": [{
+                                "key": "PAYOLUTION_CUSTOMER_GROUP",
+                                "value": "TOP"
+                            }, {
+                                "key": "PAYOLUTION_MODULE_NAME",
+                                "value": "PaymentModuleName"
+                            }, {
+                                "key": "PAYOLUTION_INVOICE_ID",
+                                "value": "23498739478"
+                            }, {
+                                "key": "PAYOLUTION_ORDER_ID",
+                                "value": "23498739478"
+                            }]
+                            
+                        }]
+                    }
+                    }
 ```
 <a name="paysafecard" title="Paysafecard Payment Object"></a>
 ## paysafecard 
@@ -1159,7 +1350,7 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
     + Include sofort
     + Include links    
 
-+ Request Create iDeal payment (application/json)
++ Request Create iDeal Payment (application/json)
 
     + Headers
 
@@ -1430,6 +1621,221 @@ is disabled.
                 ]
             }
 
+# Verifications [/verifications]
+<a name="verifications" title="Verifications"></a>
+
+Add explanation text for verifications here, noting that they are currently used for payolution only. 
+
+## Process a Verification Request [POST /accounts/{accountId}/verifications]
+<a name="createverification" title="Process a Verification Request"></a>
+
+Explanatory text here.
+        
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+
++ Attributes
+    + Include verification
+    + Include paymentTypeVerification
+    + Include payolution    
+    + Include links    
+
++ Request Process Verification Request (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+                "amount": 1000,
+                "merchantRefNum": "payolution_1516135234",
+                "paymentType": "PAYOLUTION",
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "johndoe@paysafe.com",
+                    "ip": "127.0.0.1",
+                    "dateOfBirth": {
+                        "day": "01",
+                        "month": "01",
+                        "year": "1970"
+                    }
+                },
+                "payolution": {
+                    "descriptor": "Descriptor",
+                    "analysis": [{
+                        "key": "PAYOLUTION_CUSTOMER_GROUP",
+                        "value": "TOP"
+                    }, {
+                        "key": "PAYOLUTION_MODULE_NAME",
+                        "value": "PaymentModuleName"
+                    }, {
+                        "key": "PAYOLUTION_INVOICE_ID",
+                        "value": "23498739478"
+                    }, {
+                        "key": "PAYOLUTION_ORDER_ID",
+                        "value": "23498739478"
+                    }]
+                },
+                "billingDetails": {
+                    "street1": "Teststreet 19",
+                    "zip": "3512 JS",
+                    "state": "UT",
+                    "city": "Utrecht",
+                    "country": "NL"
+                }
+            }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": "77e98a24-91ec-4cd7-bdfe-8039e189875e",
+                "merchantRefNum": "payolution_1516135234",
+                "amount": 1000,
+                "currencyCode": "EUR",
+                "paymentType": "PAYOLUTION",
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "johndoe@paysafe.com",
+                    "ip": "127.0.0.1",
+                    "dateOfBirth": {
+                        "day": 1,
+                        "month": 1,
+                        "year": 1970
+                    }
+                },
+                "billingDetails": {
+                    "street1": "Teststreet 19",
+                    "zip": "3512 JS",
+                    "city": "Utrecht",
+                    "country": "NL",
+                    "state": "UT"
+                },
+                "payolution": {
+                    "descriptor": "Descriptor",
+                    "analysis": [{
+                            "key": "PAYOLUTION_CUSTOMER_GROUP",
+                            "value": "TOP"
+                        },
+                        {
+                            "key": "PAYOLUTION_MODULE_NAME",
+                            "value": "PaymentModuleName"
+                        },
+                        {
+                            "key": "PAYOLUTION_INVOICE_ID",
+                            "value": "23498739478"
+                        },
+                        {
+                            "key": "PAYOLUTION_ORDER_ID",
+                            "value": "23498739478"
+                        }
+                    ]
+                },
+                "txnTime": "2018-01-17T15:53:25Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "0.0.0",
+                    "description": "The request was processed successfully.",
+                    "id": "e2a5f94a-7539-468f-a9f7-9fe76652c2ba",
+                    "processor": "PAYOLUTION",
+                    "paymentType": "PC"
+                },
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1234567891/verifications/77e98a24-91ec-4cd7-bdfe-8039e189875e"
+                }]
+            }
+
+## Get Verification by ID [GET /accounts/{accountId}/verifications/{verificationId}]
+<a name="getverification" title="Look Up a Verification"></a>
+
+This is how you look up a [Verification](#verification) using the verification ID.
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + verificationId (string, required, `77e98a24-91ec-4cd7-bdfe-8039e189875e`) - This is your unique verification identifier.
+
++ Request Get Verification (application/json)
+
+    + Headers
+    
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "77e98a24-91ec-4cd7-bdfe-8039e189875e",
+                "merchantRefNum": "payolution_1516135234",
+                "amount": 1000,
+                "currencyCode": "EUR",
+                "paymentType": "PAYOLUTION",
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "johndoe@paysafe.com",
+                    "ip": "127.0.0.1",
+                    "dateOfBirth": {
+                        "day": 1,
+                        "month": 1,
+                        "year": 1970
+                    }
+                },
+                "billingDetails": {
+                    "street1": "Teststreet 19",
+                    "zip": "3512 JS",
+                    "city": "Utrecht",
+                    "country": "NL",
+                    "state": "UT"
+                },
+                "payolution": {
+                    "paymentInformation": {
+                        "paymentReference": "8771f3b0-45a0-4c8e-8fc7-7c2538828b0e",
+                        "iban": "AT611904300234573201456",
+                        "bic": "BFRILI22XXX",
+                        "bankName": "Musterbank",
+                        "accountHolderName": "Test Merchant"
+                    },
+                    "descriptor": "Descriptor",
+                    "analysis": [{
+                            "key": "PAYOLUTION_CUSTOMER_GROUP",
+                            "value": "TOP"
+                        },
+                        {
+                            "key": "PAYOLUTION_MODULE_NAME",
+                            "value": "PaymentModuleName"
+                        },
+                        {
+                            "key": "PAYOLUTION_INVOICE_ID",
+                            "value": "23498739478"
+                        },
+                        {
+                            "key": "PAYOLUTION_ORDER_ID",
+                            "value": "23498739478"
+                        }
+                    ]
+                },
+                "txnTime": "2018-01-17T15:53:25Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "0.0.0",
+                    "description": "The request was processed successfully.",
+                    "id": "e2a5f94a-7539-468f-a9f7-9fe76652c2ba",
+                    "processor": "PAYOLUTION",
+                    "paymentType": "PC"
+                },
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001141560/verifications/77e98a24-91ec-4cd7-bdfe-8039e189875e"
+                }]
+            }
+
 # Void Authorizations [/voidauths]
 <a name="voidauths" title="Void Authorizations"></a>
 
@@ -1448,7 +1854,7 @@ Reverse (cancel) an existing authorization.
 
 + Attributes
     + Include voidAuth
-    + Include paymentType voidauth
+    + Include paymentType
     + Include payolution    
     + Include paysafecard
     + Include links    
@@ -1627,7 +2033,7 @@ Payment resource to find out the remaining amount available to settle.
 
 + Attributes
     + Include settlement
-    + Include paymentType settlement
+    + Include paymentTypeSettlement
     + Include payolution
     + Include paysafecard    
     + Include links     
@@ -1851,7 +2257,7 @@ This is how you submit a Refund request against a completed payment.
 
 + Attributes
     + Include refund
-    + Include paymentType refund
+    + Include paymentTypeRefund
     + Include ideal
     + Include neteller
     + Include payolution
@@ -2260,6 +2666,12 @@ This is how you retrieve details for a single return reversal.  You can identify
         + `result-code`: `0`
         + `result-msg`: `Operation Successful` (string)
 
+## `dateOfBirthPayolution` (object, required) - This is the customer's date of birth.
+
++ `day`:24 (string, required)
++ `month`:12 (string, required)
++ `year`:1981 (string, required)
+
 ## `giropay`
 
 + `giropay` (object, optional) - Optional attributes that can be passed when making a GIROPAY payment request. 
@@ -2296,6 +2708,25 @@ This is how you retrieve details for a single return reversal.  You can identify
         + `processor`: `IDEAL`
         + `paymentType`: `DB`
 
+
+## `installment`
+
++ `installments` (object)
+    + `amount`: `1000` (number) - This is the amount of the installment payment.
+    + `due`: `2013-07-16` (string) - This is the due date of the installment payment.
+
+## `payolutionGatewayResponse`
+
++ `gatewayResponse` (object)- These are the details returned from the external gateway. 
+
+    _Read Only_
+
+    + Properties
+        + `id`: `4867bb8ce543409dbe1187849af28107` - The unique identifier for the transaction provided by the gateway.
+        + `code`: `000.200.000`
+        + `description`: `Transaction Pending`
+        + `processor`: `PAYOLUTION`
+        + `paymentType`: `DD`
 
 ## `link`
 + rel: self 
@@ -2383,6 +2814,21 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 + Include idealGatewayResponse
 
+## paymentDetails
+
++ `paymentDetails` (object) - Information about payment installments, including due dates and amounts.
+    _Read Only_
+    + Properties
+        + Include installment
+        + originalAmount
+        + totalAmount
+        + minimumInstallmentFee
+        + number
+        + duration
+        + interestRate
+        + effectiveInterestRate 
+        + number
+
 ## `paymentType`
 
 + `paymentType` (enum, required) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
@@ -2398,7 +2844,7 @@ This is how you retrieve details for a single return reversal.  You can identify
         + `SKRILL`
         + `SOFORT`
 
-## `paymentType refund`
+## `paymentTypeRefund`
 
 + `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
@@ -2409,7 +2855,7 @@ This is how you retrieve details for a single return reversal.  You can identify
         + `SKRILL`
         + `SOFORT`
 
-## `paymentType settlement`
+## `paymentTypeSettlement`
 
 + `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
@@ -2417,7 +2863,14 @@ This is how you retrieve details for a single return reversal.  You can identify
         + `PAYOLUTION`
         + `PAYSAFECARD`
 
-## `paymentType voidauth`
+## `paymentTypeVerification`
+
++ `paymentType` (enum, required) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
+    + Members
+        + `PAYOLUTION`
+
+## `paymentTypeVoidauth`
 
 + `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
@@ -2427,24 +2880,38 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `payolution`
 
-+ `payolution` (object) - Parameters required for a PAYOLUTION payment request.
-    + `customerID`: `maxx_muster1980` (string) 
-    + `sepa` (sepa)
-    + `paymentInformation` (payolutionPaymentInformation)
-    + `analysis` (array[payolutionAnalysis])
++ `payolution` (object) - Parameters used in a PAYOLUTION request. 
+    + `productType`: `INVOICE` (enum) - This is the type of payment request. Use INVOICE for regular authorization request. Use INSTALLMENTS when consumer has opted for installment payments.
+        
+        + Default: INVOICE
+        
+    + `descriptor`: `Order with ID 4ab2` (string) - This is the merchant descriptor that will be displayed on the customer's bank statement.
+    + Include sepa
+    + Include paymentDetails
+    + Include plans
+    + `planDuration`: `3` (number) - This is the duration, in months, of the plan selected by the consumer. **Note:** Required for for payment authorization if *productType*=INSTALLMENTS.
+    + `consumerId`: `maxx_muster1980` (string) 
+    + Include payolutionPaymentInformation
+    + Include payolutionAnalysis
 
 ## `payolutionPaymentInformation`
 
-+ `paymentReference`: `YTTR-WMQX-KLGW` (string)
-+ `iban`: `AT611904300234573201456` (string)
-+ `bic`: `BFRILI22XXX` (string)
-+ `bankName`: `Musterbank` (string)
-+ `accountHolderName`: `Test Merchant` (string)
++ `paymentInformation` (object) - This is the information that tells the consumer where to send the payment.
+
+    _Read Only_
+
+    + Properties
+        + `paymentReference`: `YTTR-WMQX-KLGW` (string)
+        + `iban`: `AT611904300234573201456` (string)
+        + `bic`: `BFRILI22XXX` (string)
+        + `bankName`: `Musterbank` (string)
+        + `accountHolderName`: `Test Merchant` (string)
 
 ## `payolutionAnalysis`
 
-+ `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
-+ `value`: `TOP` (string)
++ `analysis` (object) - This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.
+    + `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
+    + `value`: `TOP` (string)
 
 ## `paysafecardGatewayResponse`
 
@@ -2483,6 +2950,35 @@ This is how you retrieve details for a single return reversal.  You can identify
 ## `profile` 
 
 + `profile` (object, optional) - These are some details about the customer.
+    + `firstName`: `Stan` (string)
+    + `lastName`: `Smith` (string)
+    + `email`: `stan.smith@fox.com` (string)
+    + `ip`: `127.0.0.1` (string)
+
+## `profilePayolution` 
+
++ `profile` (object, optional) - These are some details about the consumer.
+    + `title`: `Mr.` (string)
+    + `firstName`: `Stan` (string, required)
+    + `lastName`: `Smith` (string, required)
+    + `email`: `stan.smith@email.com` (string, required)
+    + Include dateOfBirthPayolution    
+    + `gender`: `M` (enum)
+
+        + Members
+            + M - Male
+            + F - Female
+            + O - Other
+            + N - Not specified
+
+    + `phone`: `509 444-8888` (string)
+    + `ip`: `127.0.0.1` (string, required)
+    + `locale`: `en` (string) - ISO language code representing the preferred language for this profile.
+    + `ssn`: `123456789` (string) - This is the consumer's Social Security Number.
+
+## `plans` 
+
++ `plans` (object, optional) - These are some details about the customer.
     + `firstName`: `Stan` (string)
     + `lastName`: `Smith` (string)
     + `email`: `stan.smith@fox.com` (string)
@@ -2606,6 +3102,17 @@ This is how you retrieve details for a single return reversal.  You can identify
 + `bic`: `BARCGB22XXX` (string)
 + `iban`: `AZ21NABZ00000000137010001944` (string)
 + `accountHolderName`: `Max Mustermann` (string)
++ `bankName`: `ING` (string)
+
+## `shippingDetails`
+
++ `shippingDetails` (object, optional) - This is the shipping address of the customer.
+    + `street1`: `1 Main Street` (string, required)
+    + `street2`: `Apartment 22` (string, optional)
+    + `city`: `Calgary` (string, required)
+    + `state`: `AB` (string, required)
+    + `country`: `CA` (string, required)
+    + `zip`: `T3H3L3` (string, required)
 
 ## `skrill`
 
@@ -2635,6 +3142,61 @@ This is how you retrieve details for a single return reversal.  You can identify
         + `description`: `Request successfully processed` (string)
         + `processor`: `SOFORT`
         + `paymentType`: `DB` (string)
+
+## `verification`
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+
+    _Read Only_
+    
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
+
+    + Default: true
+    
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units. No amount is actually processed when doing a verification request.
+
+    _max=99999999999_
+    
++ `currencyCode`: `EUR` (string) - This is the currency of the payment.
+
+    _Read Only, length=3_
+    
++ Include profilePayolution
++ Include billingDetails
++ Include shippingDetails
+
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+    
++ `status`:`PROCESSING` (enum) - This is the status of the request.
+
+    _Read Only_
+    
+    + Members
+        + `RECEIVED`
+        + `PENDING`
+        + `PROCESSING`
+        + `COMPLETED`
+        + `CANCELLED`
+        + `FAILED`
+        + `ERROR`
+        + `EXPIRED`
+        
++ `statusReason`: `USER_CANCELLED` (enum)
+
+    _Read Only_
+    
+    + Members
+        + `USER_CANCELLED`
+        + `MERCHANT_CANCELLED`
+        + `AUTH_VOIDED`
+        + `AUTH_EXPIRED`
++ Include payolutionGatewayResponse
 
 ## `voidAuth`
 
