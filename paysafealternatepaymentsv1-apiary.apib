@@ -10,7 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
-|v1             |2017-12-01            |- Added support for Skrill standalone credit|
+|v1             |2017-12-01            |- Added Skrill standalone credit|
 |v1             |2017-11-15            |- Added RapidTransfer|
 |v1             |2017-08-28            |- Added Paysafecard, Skrill, Neteller, Payolution|
 |v1             |2017-08-09            |- Added /monitor endpoint|
@@ -20,7 +20,7 @@ variety of non-card regional payment methods with a single integration.
 |v1             |2017-03-08            |- Added support for delayed settlement|
 |               |                      |- Support returns on settlement|
 |               |                      |- Ability to refund a settlement|
-|v1             |2016-12-15            |- Added support for Boku, Giropay|
+|v1             |2016-12-15            |- Added Boku, Giropay|
 |v1             |2016-08-01            |- Initial release with support for iDeal, Sofort|
 
 
@@ -276,15 +276,26 @@ GET https://api.test.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNu
 Some resources in the system can transition through various statuses depending on the current state of the resource.  The diagrams below show the
 valid statuses for these complex resources and how they are linked.
 
+*Verifications*
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/verification_state_transition_diagram.png)
+
 *Payments*
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_state_transition_diagram.png)
 
 *Settlements*
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/settlement_state_transition_diagram.png)
 
+*Standalone Credits*
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/standalonecredit_state_transition_diagram.png)
+
 *Refunds*
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/settlement_state_transition_diagram.png)
 
+*Returns*
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/return_reversal_state_transition_diagram.png)
+
+*Return Reversals*
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/return_state_transition_diagram.png)
 
 # Notifications
 
@@ -767,17 +778,25 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="paymentObjects" title="Payment Objects"></a>
-# Payment Objects
+<a name="paymentObjects" title="PaymentType Objects"></a>
+# PaymentType Objects
 
-Payment objects are used to define additional values that can be supplied with your request depending on the payment type you are requesting.  These objects are nested as part of your Payment request.
+Objects are used to define additional values that can be supplied depending on your request type.  
+
+> These objects are nested as part of your Payment, Settlement, Verification or Standalone Credit request.
+<br/><br/>
+
+__**LEGEND**__
+|Symbol          |Definition    |
+|:---:           |---           |
+|&#10004;        |Optional      |
+|&#10004;&#10013;|Required      |
+|&#10006;        |Not Applicable|    
 
 <a name="boku" title="Boku Payment Object"></a>
 ## boku
 
 ![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)
-
-
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
@@ -959,14 +978,18 @@ Payment objects are used to define additional values that can be supplied with y
 
 ![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)
 
-|Element                 |Type                   |Description |
-|---                     |---                    |--- |
-|consumerId              |string                 |Email address of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
-|recipientDescription    |string<br>`length<=30` |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
-|language                |string<br>`length=2`   |The 2-character preferred language code for the customer (e.g., EN, FR).|
-|logoUrl                 |string                 |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
-|detail1Description      |string                 |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text             |string                 |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|Element                 |Type                   |Request Type     |                       |                       |                  |Description|
+|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                        |                       |_**Payment**_    |_**Settlement**_       |_**Standalone Credit**_|_**Verification**_|   |
+|consumerId              |string                 |&#10004;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|emailSubject            |string                 |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Subject line to use in customer email.|
+|emailMessage            |string                 |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Message to use in customer email.|
+|recipientDescription    |string<br>`length<=30` |&#10004;         |&#10006;               |&#10006;               |&#10006;          |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
+|language                |string<br>`length=2`   |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The 2-character preferred language code for the customer (e.g., EN, FR).|
+|logoUrl                 |string                 |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
+|detail1Description      |string                 |&#10004;         |&#10006;               |&#10006;               |&#10006;          |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text             |string                 |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+
 
 ```
 "skrill":{
@@ -984,10 +1007,11 @@ Payment objects are used to define additional values that can be supplied with y
 
 ![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)
 
-|Element                 |Type                   |Description |
-|---                     |---                    |--- |
-|descriptor              |string<br/>`length<=43`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |The customer's SEPA bank account details.|
+|Element                 |Type                   |Request Type     |                       |                       |                  |Description|
+|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                        |                       |_**Payment**_    |_**Settlement**_       |_**Standalone Credit**_|_**Verification**_|   |
+|descriptor              |string<br/>`length<=43`|&#10004;&#10013; |&#10006;               |&#10006;               |&#10006;          |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                    |[object](#sepa)        |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The customer's SEPA bank account details.|
 
 ```
 "sofort": {
@@ -1174,7 +1198,7 @@ For example, an iDEAL payment requires the following attributes to be included i
     ... other payment attributes here ...
 ```
 
-See [Payment Objects](#paymentObjects) for payment method&ndash;specific details, or select a payment type below.
+See [Payment Objects](#paymentObjects) for payment type specific details, or select a payment type below.
 
 
 | | | | |
@@ -1490,9 +1514,6 @@ Reverse (cancel) an existing authorization.
 + Attributes
     + Include voidAuth
     + Include paymentType voidauth
-    + Include payolution    
-    + Include paysafecard
-    + Include links    
 
 + Request Void an Authorization (application/json)
 
@@ -1893,13 +1914,7 @@ This is how you submit a Refund request against a completed payment.
 + Attributes
     + Include refund
     + Include paymentType refund
-    + Include ideal
-    + Include neteller
-    + Include payolution
-    + Include skrill
-    + Include sofort    
-    + Include links
-     
+
 + Request Refund a Payment (application/json)
 
     + Headers
@@ -2271,11 +2286,14 @@ This is how you retrieve details for a single return reversal.  You can identify
 # Standalone Credits [/standalonecredits]
 <a name="standalonecredits" title="Standalone Credits"></a>
 
-Standalone Credits allow merchants to issue credits to cardholders without requiring a previous Authorization/Settlement.
+Unlike a refund, a Standalone Credit allows you to issue a credit transfers, or remmittance transfer, to your consumers without requiring a previous Payment.
+
+See [Standalone Credit Objects](#standaloneCreditObjects) for payment type specific details, or select the payment type below.
 
 ## Create a Standalone Credit [POST /accounts/{accountId}/standalonecredits]
 <a name="createstandalonecredit" title="Create a Standalone Credit"></a>
 
+Submit a Standalone Credit using a specific payment type.
 
 + Request Create Standalone Credit (application/json)
 
@@ -2289,6 +2307,8 @@ Standalone Credits allow merchants to issue credits to cardholders without requi
 
 ## Get Standalone Credit by ID [GET /accounts/{accountId}/standalonecredits/{standaloneCreditId}]
 <a name="getstandalonecredit" title="Get standalone Credit by ID"></a>
+
+This is how you look up a Standalone Credit using the ID.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
