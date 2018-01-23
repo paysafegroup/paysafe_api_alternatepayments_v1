@@ -2887,7 +2887,6 @@ This is how you retrieve details for a single return reversal.  You can identify
         
     + `descriptor`: `Order with ID 4ab2` (string) - This is the merchant descriptor that will be displayed on the customer's bank statement.
     + Include sepa
-    + Include paymentDetails
     + Include plans
     + `planDuration`: `3` (number) - This is the duration, in months, of the plan selected by the consumer. **Note:** Required for for payment authorization if *productType*=INSTALLMENTS.
     + `consumerId`: `maxx_muster1980` (string) 
@@ -2979,10 +2978,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 ## `plans` 
 
 + `plans` (object, optional) - These are some details about the customer.
-    + `firstName`: `Stan` (string)
-    + `lastName`: `Smith` (string)
-    + `email`: `stan.smith@fox.com` (string)
-    + `ip`: `127.0.0.1` (string)
+    + Include paymentDetails
 
 ## `rapidTransfer`
 
