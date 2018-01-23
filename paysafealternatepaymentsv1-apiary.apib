@@ -477,12 +477,12 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent settlement to capture funds.<br/><b>true</b> - the request is settled (default).<br/>If the merchant wants to find out whether an authorization has been settled, they should check the *availableToSettle* element.<br/>If the amount is 0, the authorization has been fully settled.|
 |amount                  |number                 |<b>(required)</b> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
-|availableToSettle       |number                 |This is the amount of of the Authorization remaining to settle, in minor units.<br/><i>read only</i>|
+|availableToSettle       |number                 |This is the amount of the Authorization remaining to settle, in minor units.<br/><i>read only</i>|
 |availableToRefund       |number                 |This is the amount of the authorization remaining to refund, in minor units.  It is visible only if no refunds are done on any of the corresponding settlements for this payment.<br/><i>read only</i>|
 |profile                 |[object](#profile)     |These are some details about the customer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |shippingDetails         |[object](#shippingDetails) |These are the shipping details for the payment.|
-|returnLinks             |[object](#returnLinks) |The url endpoint to redirect the customer to. You can customize the return url based on the transaction status. ('default' is mandatory)|gr
+|returnLinks             |[object](#returnLinks) |The url endpoint to redirect the customer to. You can customize the return url based on the transaction status. ('default' is mandatory)|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>read only</i>|
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
@@ -533,7 +533,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                |Type                       |Description |
 |---                    |---                        |--- |
-|installments           |[object](#installments)    |This is  |
+|installments           |[object](#installments)    |These are details about the payolution installment plan for the consumer, including amounts and due dates. |
 |originalAmount         |number                     |This is |
 |totalAmount            |number                     |This is |
 |minimumInstallmentFee  |number                     |This is |
@@ -1454,7 +1454,7 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
 ## Get Payment by ID [GET /accounts/{accountId}/payments/{paymentId}]
 <a name="getpayment" title="Look Up a Payment"></a>
 
-This is how you look up a [Payment](#payment) using the payment ID.
+This is how you look up a [Payment](#payment) using the payment ID, which is the *id* returned in the response to the Payment request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1624,12 +1624,17 @@ is disabled.
 # Verifications [/verifications]
 <a name="verifications" title="Verifications"></a>
 
-Add explanation text for verifications here, noting that they are currently used for payolution only. 
+A Verification request allows you to send a query to do a preliminary check to verify the customer's request (e.g., verify that the profile and payment method information are valid). 
+
+**Note:** Verification requests are currently supported for the PAYOLUTION *paymentType* only. When payolution responds to the request, they will indicate 1) whether the consumer information is valid; and 2) whether you can offer the consumer a regular purchase/settlement flow or payments by way of installments.
+See the [payolution payment object](#payolution) for more information.
+
+
 
 ## Process a Verification Request [POST /accounts/{accountId}/verifications]
 <a name="createverification" title="Process a Verification Request"></a>
 
-Explanatory text here.
+This is how you process a Verification request. **Note:** You can currently process this request type only when the *paymentType* is set to PAYOLUTION. 
         
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1754,7 +1759,7 @@ Explanatory text here.
 ## Get Verification by ID [GET /accounts/{accountId}/verifications/{verificationId}]
 <a name="getverification" title="Look Up a Verification"></a>
 
-This is how you look up a [Verification](#verification) using the verification ID.
+This is how you look up a [Verification](#verification) using the verification ID, which is the *id* returned in the response to the Verification request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2666,11 +2671,13 @@ This is how you retrieve details for a single return reversal.  You can identify
         + `result-code`: `0`
         + `result-msg`: `Operation Successful` (string)
 
-## `dateOfBirthPayolution` (object, required) - This is the customer's date of birth.
+## `dateOfBirthPayolution`
 
-+ `day`:24 (string, required)
-+ `month`:12 (string, required)
-+ `year`:1981 (string, required)
++ `dateOfBirth` (object, required) - This is the customer's date of birth.
+    + Properties
+        + `day`:24 (string, required)
+        + `month`:12 (string, required)
+        + `year`:1981 (string, required)
 
 ## `giropay`
 
@@ -2771,6 +2778,14 @@ This is how you retrieve details for a single return reversal.  You can identify
     
     + Default: true
 
++ `availableToSettle`:`2500` (number) - This is the amount remaining to settle, in minor units.
+
+    _Read Only_ 
+
++ `availableToRefund`:`2500` (number) - This is the amount remaining to refund, in minor units.
+
+    _Read Only_
+
 + `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 
     _max=99999999999_
@@ -2783,6 +2798,7 @@ This is how you retrieve details for a single return reversal.  You can identify
     
 + Include profile
 + Include billingDetails
++ Include shippingDetails
 + Include returnLinks
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 
@@ -2880,16 +2896,14 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `payolution`
 
-+ `payolution` (object) - Parameters used in a PAYOLUTION request. 
-    + `productType`: `INVOICE` (enum) - This is the type of payment request. Use INVOICE for regular authorization request. Use INSTALLMENTS when consumer has opted for installment payments.
-        
-        + Default: INVOICE
-        
++ `payolution` (object) - Parameters used in a PAYOLUTION request. **Required** for *verification* request.
+
+    + Include `productType`
     + `descriptor`: `Order with ID 4ab2` (string) - This is the merchant descriptor that will be displayed on the customer's bank statement.
     + Include sepa
     + Include plans
     + `planDuration`: `3` (number) - This is the duration, in months, of the plan selected by the consumer. **Note:** Required for for payment authorization if *productType*=INSTALLMENTS.
-    + `consumerId`: `maxx_muster1980` (string) 
+    + `consumerId`: `maxx_muster1980` (string) - This is the merchant's ID for the consumer, in the case of monthly invoices.
     + Include payolutionPaymentInformation
     + Include payolutionAnalysis
 
@@ -2900,11 +2914,11 @@ This is how you retrieve details for a single return reversal.  You can identify
     _Read Only_
 
     + Properties
-        + `paymentReference`: `YTTR-WMQX-KLGW` (string)
-        + `iban`: `AT611904300234573201456` (string)
-        + `bic`: `BFRILI22XXX` (string)
-        + `bankName`: `Musterbank` (string)
-        + `accountHolderName`: `Test Merchant` (string)
+        + `paymentReference`: `YTTR-WMQX-KLGW` (string) - The string to use as a reason for the payment.
+        + `iban`: `AT611904300234573201456` (string) - The IBAN to send the payment to.
+        + `bic`: `BFRILI22XXX` (string) - The BIC of the bank to send the payment to.
+        + `bankName`: `Musterbank` (string) - This is the name of the bank to send the payment to.
+        + `accountHolderName`: `Test Merchant` (string) - This is the name of the beneficiary.
 
 ## `payolutionAnalysis`
 
@@ -2946,6 +2960,15 @@ This is how you retrieve details for a single return reversal.  You can identify
     + `kycLevelRestriction`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
     + `countryRestriction` : `DE` (string) : The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.
 
+## productType
+
++ `productType` (enum) - This is the type of payment request to use for for a [payment authorization](#createauthorization).
+    + Default:INVOICE
+
+    + Members
+        + `INVOICE` - Use for regular authorization request.
+        + `INSTALLMENTS` - Use when consumer has opted for installment payments.
+
 ## `profile` 
 
 + `profile` (object, optional) - These are some details about the customer.
@@ -2977,7 +3000,7 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `plans` 
 
-+ `plans` (object, optional) - These are some details about the customer.
++ `plans` (object, optional) - These are details about the installment plan, including amount and due date plus some additional parameters like interest, etc.
     + Include paymentDetails
 
 ## `rapidTransfer`
@@ -3094,11 +3117,15 @@ This is how you retrieve details for a single return reversal.  You can identify
 
 ## `sepa`
 
-+ `country`: `NL` (string) - The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).
-+ `bic`: `BARCGB22XXX` (string)
-+ `iban`: `AZ21NABZ00000000137010001944` (string)
-+ `accountHolderName`: `Max Mustermann` (string)
-+ `bankName`: `ING` (string)
++ `sepa` (object)
+
+    _Required if currency is EUR._
+
+    + Properties
+        + `country`: `DE` (string) - The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).
+        + `iban`: `AT611904300234573201456` (string) - The IBAN to send the payment to.
+        + `bic`: `BFRILI22XXX` (string) - The BIC of the bank to send the payment to.
+        + `accountHolderName`: `Test Merchant` (string) - This is the name of the beneficiary.
 
 ## `shippingDetails`
 
@@ -3175,13 +3202,9 @@ This is how you retrieve details for a single return reversal.  You can identify
     
     + Members
         + `RECEIVED`
-        + `PENDING`
-        + `PROCESSING`
         + `COMPLETED`
-        + `CANCELLED`
         + `FAILED`
         + `ERROR`
-        + `EXPIRED`
         
 + `statusReason`: `USER_CANCELLED` (enum)
 
