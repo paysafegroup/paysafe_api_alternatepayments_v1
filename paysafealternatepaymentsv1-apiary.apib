@@ -1336,7 +1336,7 @@ a subsequent Settlement request when you wish to capture the payment.  The abili
 
 This section shows you two examples of a Payment Authorization request:
 * A standard Payment Authorization using the iDEAL payment method, with automatic settlement.
-* A Payment Authorization that uses installments (currently available only for the payolution payment brand). You can offer installments only if you receive a *plans* object in the response to your [Verification request](#createverification).
+* A Payment Authorization that uses installments (currently available only for the payolution payment brand). You can offer installments only if you receive a *plans* object in the response to your [Verification request](#createverification). If you offer the consumer the option to pay by installments, you will receive the full amount for the Payment Authorization request when you [Settle that request](#settlement). 
 
 Submit a payment request using local payment methods that your customers are familiar with.  
 Once you have submited your request, if you are returned a *redirect_payment* HATEOAS link, then you must redirect
@@ -1485,7 +1485,7 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
               ]
             }
  
-+ Request Create payolution Payment by Installments (application/json)
++ Request Create payolution Payment with Installments (application/json)
 
     + Headers
 
@@ -1818,7 +1818,9 @@ is disabled.
 A Verification request allows you to send a query to do a preliminary check to verify the consumer's request (e.g., verify that the profile and payment method information are valid). When you get a successful response, you can then continue and [process an authorized payment ](#createauthorization).
 
 **Note:** Verification requests are currently supported for the PAYOLUTION *paymentType* only. When payolution responds to the request, they will indicate 1) whether the consumer information is valid; and 2) whether you can offer the consumer a regular Authorized Payment/Settlement flow or payments by way of installments.
-See the [payolution payment object](#payolution) for more information.
+See the [payolution payment object](#payolution) for more information. 
+
+Payolution recommends that you process a Verification request before following up with a Payment Authorization request, even if you do not plan to offer your consumer payment by installments. 
 
 
 
@@ -3117,14 +3119,15 @@ This is how you retrieve details for a single Return Reversal.  You can identify
 
 + `payolution` (object) - Parameters used in a PAYOLUTION request. **Note:** The *payolution* object is required for *verification* requests.
 
-    + Include `productType`
-    + `descriptor`: `Order with ID 4ab2` (string) - This is the merchant descriptor that will be displayed on the consumer's bank statement.
-    + Include sepa
-    + Include plans
-    + `planDuration`: `3` (number) - This is the duration, in months, of the plan selected by the consumer. **Required** for [Payment Authorization](#createauthorization) request when *productType*=INSTALLMENTS.
-    + `consumerId`: `maxx_muster1980` (string) - This is the merchant's ID for the consumer, in the case of monthly invoices.
-    + Include payolutionPaymentInformation
-    + Include payolutionAnalysis
+    + Properties
+        + `descriptor`: `Order with ID 4ab2` (string) - This is the merchant descriptor that will be displayed on the consumer's bank statement.
+        + Include productType
+        + Include sepa
+        + Include plans
+        + `planDuration`: `3` (number) - This is the duration, in months, of the plan selected by the consumer. **Required** for [Payment Authorization](#createauthorization) request when *productType*=INSTALLMENTS.
+        + `consumerId`: `maxx_muster1980` (string) - This is the merchant's ID for the consumer, in the case of monthly invoices.
+        + Include payolutionPaymentInformation
+        + Include payolutionAnalysis
 
 ## `payolutionPaymentInformation`
 
