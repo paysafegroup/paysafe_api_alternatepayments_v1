@@ -541,8 +541,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |interestRate           |number                     |This is interest rate of the payment plan.|
 |effectiveInterestRate  |number                     |This is effective interest rate of the payment plan.|
 |standardCreditInformationUrl |string               |This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.|
-|tacUrl                 |string                     |This is a URL pointing to the Terms and Conditions for the payment plan.|
-|dataPrivacyConsentUrl  |string                     |This is a URL pointing to the data privacy declaration for the payment plan.|
 
 ```
             {
@@ -1039,59 +1037,61 @@ Payment objects are used to define additional values that can be supplied with y
                     "productType": "INSTALLMENTS",
                     "descriptor": "Order with ID 4ab2",
                     "plans": [{
-                            "paymentDetails": [{
-                                "installments": [{
-                                        "amount": 16820,
-                                        "due": "2013-07-16"
-                                    },
-                                    {
-                                        "amount": 16820,
-                                        "due": "2013-08-05"
-                                    },
-                                    {
-                                        "amount": 16820,
-                                        "due": "2013-09-05"
-                                    }
-                                ],
-                                "originalAmount": 49999,
-                                "totalAmount": 50460,
-                                "minimumInstallmentFee": 0,
-                                "duration": 3,
-                                "interestRate": 14.95,
-                                "effectiveInterestRate": 15.60,
-                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
-                            }],
-                            "planDuration": "3",
-                            "sepa": {
-                                "bankName": "ING",
-                                "country": "NL",
-                                "accountHolderName": "John Doe",
-                                "bic": "ABNANL2APIP",
-                                "iban": "DE89370400440532013000"
-                            },
-                            "paymentInformation": {
-                                "paymentReference": "YTTR-WMQX-KLGW",
-                                "iban": "AT611904300234573201456",
-                                "bic": "BFRILI22XXX",
-                                "accountHolderName": "Test Merchant"
-                            },
-                            "analysis": [{
-                                "key": "PAYOLUTION_CUSTOMER_GROUP",
-                                "value": "TOP"
-                            }, {
-                                "key": "PAYOLUTION_MODULE_NAME",
-                                "value": "PaymentModuleName"
-                            }, {
-                                "key": "PAYOLUTION_INVOICE_ID",
-                                "value": "23498739478"
-                            }, {
-                                "key": "PAYOLUTION_ORDER_ID",
-                                "value": "23498739478"
-                            }]
-                            
+                        "paymentDetails": [{
+                            "installments": [{
+                                    "amount": 16820,
+                                    "due": "2013-07-16"
+                                },
+                                {
+                                    "amount": 16820,
+                                    "due": "2013-08-05"
+                                },
+                                {
+                                    "amount": 16820,
+                                    "due": "2013-09-05"
+                                }
+                            ],
+                            "originalAmount": 49999,
+                            "totalAmount": 50460,
+                            "minimumInstallmentFee": 0,
+                            "duration": 3,
+                            "interestRate": 14.95,
+                            "effectiveInterestRate": 15.60,
+                            "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
+                        }],
+                        "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
+                        "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment",
+                        "planDuration": "3",
+                        "sepa": {
+                            "bankName": "ING",
+                            "country": "NL",
+                            "accountHolderName": "John Doe",
+                            "bic": "ABNANL2APIP",
+                            "iban": "DE89370400440532013000"
+                        },
+                        "paymentInformation": {
+                            "paymentReference": "YTTR-WMQX-KLGW",
+                            "iban": "AT611904300234573201456",
+                            "bic": "BFRILI22XXX",
+                            "accountHolderName": "Test Merchant"
+                        },
+                        "analysis": [{
+                            "key": "PAYOLUTION_CUSTOMER_GROUP",
+                            "value": "TOP"
+                        }, {
+                            "key": "PAYOLUTION_MODULE_NAME",
+                            "value": "PaymentModuleName"
+                        }, {
+                            "key": "PAYOLUTION_INVOICE_ID",
+                            "value": "23498739478"
+                        }, {
+                            "key": "PAYOLUTION_ORDER_ID",
+                            "value": "23498739478"
                         }]
-                    }
-                    }
+            
+                    }]
+                }
+            }
 ```
 <a name="paysafecard" title="Paysafecard Payment Object"></a>
 ## paysafecard 
@@ -1817,7 +1817,9 @@ is disabled.
 
 A Verification request allows you to send a query to do a preliminary check to verify the consumer's request (e.g., verify that the profile and payment method information are valid). When you get a successful response, you can then continue and [process an authorized payment ](#createauthorization).
 
-**Note:** Verification requests are currently supported for the PAYOLUTION *paymentType* only. When payolution responds to the request, they will indicate 1) whether the consumer information is valid; and 2) whether you can offer the consumer a regular Authorized Payment/Settlement flow or payments by way of installments.
+**Note:** Verification requests are currently supported for the PAYOLUTION *paymentType* only. When payolution responds to the request, they will indicate 1) whether the consumer information is valid; and 2) whether the consumer is eligible for credit. 
+In the case where *installments* is provided in the *plans* object in the Verification response, payolution will also return the available payment plans with all the payment details, which should be presented to the consumer so they can select a payment plan duration. The selected duration is then passed with the *planDuration* parameter in the [Authorized Payment request](#createauthorization).
+
 See the [payolution payment object](#payolution) for more information. 
 
 Payolution recommends that you process a Verification request before following up with a Payment Authorization request, even if you do not plan to offer your consumer payment by installments. 
