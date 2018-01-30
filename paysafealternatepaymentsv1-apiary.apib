@@ -1330,14 +1330,6 @@ a subsequent Settlement request when you wish to capture the payment.  The abili
 > **Note:** Each payment type and currency is associated with a distinct merchant account ID.  You will need to know which account ID is associated to your payment type and currency
 > in order to complete your request. Please contact [Paysafe Merchant Support](https://developer.paysafe.com/en/resources-and-support/contact-us/) to enable additional payment types and or currencies.
 
-
-## Create an Authorized Payment [POST /accounts/{accountId}/payments]
-<a name="createauthorization" title="Create an Authorized Payment"></a>
-
-This section shows you two examples of a Payment Authorization request:
-* A standard Payment Authorization using the iDEAL payment method, with automatic settlement.
-* A Payment Authorization that uses installments (currently available only for the payolution payment brand). You can offer installments only if you receive a *plans* object in the response to your [Verification request](#createverification). If you offer the consumer the option to pay by installments, you will receive the full amount for the Payment Authorization request when you [Settle that request](#settlement). 
-
 Submit a payment request using local payment methods that your customers are familiar with.  
 Once you have submited your request, if you are returned a *redirect_payment* HATEOAS link, then you must redirect
 your consumer to the link to complete the payment.
@@ -1367,6 +1359,14 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
 |[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)||||
+
+
+## Create an Authorized Payment [POST /accounts/{accountId}/payments]
+<a name="createauthorization" title="Create an Authorized Payment"></a>
+
+Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
+* A standard Payment Authorization using the iDEAL payment method, with automatic settlement.
+* A Payment Authorization using the payolution payment method, offering payment by installments. You must first process a [Verification request](#createverification) for the consumer before they can pay by installments.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1645,7 +1645,7 @@ See [Payment Objects](#paymentObjects) for payment method&ndash;specific details
 ## Get Payment by ID [GET /accounts/{accountId}/payments/{paymentId}]
 <a name="getpayment" title="Look Up a Payment"></a>
 
-This is how you look up a [Payment](#payment) using the payment ID, which is the *id* returned in the response to the Payment request.
+Click on **Get Payment by ID** above to see how to look up a [Payment](#payment) using the payment ID, which is the *id* returned in the response to the Payment request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1722,7 +1722,8 @@ This is how you look up a [Payment](#payment) using the payment ID, which is the
 ## List Payments by Merchant Reference Number [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 <a name="listpayment" title="List Payments by Merchant Reference Number"></a>
 
-This is how you look up Payments using the merchant reference number used in the original request. This returns a collection of payment details, as *merchantRefNum* could be used for multiple requests when *dupCheck*
+
+Click on **List Payments by Merchant Reference Number** above to see how to look up Payments using the merchant reference number used in the original request. This returns a collection of payment details, as *merchantRefNum* could be used for multiple requests when *dupCheck*
 is disabled.
 
 + Parameters
@@ -1815,21 +1816,20 @@ is disabled.
 # Verifications [/verifications]
 <a name="verifications" title="Verifications"></a>
 
-A Verification request allows you to send a query to do a preliminary check to verify the consumer's request (e.g., verify that the profile and payment method information are valid). When you get a successful response, you can then continue and [process an authorized payment ](#createauthorization).
+A Verification request allows you to send a query to do a preliminary check to verify the consumer's request (e.g., verify that the profile and payment method information are valid). When you get a successful response, you can then continue and [process a Payment Authorization](#createauthorization).
 
-**Note:** Verification requests are currently supported for the PAYOLUTION *paymentType* only. When payolution responds to the request, they will indicate 1) whether the consumer information is valid; and 2) whether the consumer is eligible for credit. 
-In the case where *installments* is provided in the *plans* object in the Verification response, payolution will also return the available payment plans with all the payment details, which should be presented to the consumer so they can select a payment plan duration. The selected duration is then passed with the *planDuration* parameter in the [Authorized Payment request](#createauthorization).
+**Note:** Verification requests are currently supported for the PAYOLUTION *paymentType* only. It is required if your *productType* for your Authorized Payment is *INSTALLMENTS*. However, payolution recommends that you also process a Verification request when your *productType* is *INVOICE*.
 
-See the [payolution payment object](#payolution) for more information. 
+When payolution responds to the Verification request, they will indicate 1) whether the consumer information is valid; and 2) whether the consumer is eligible for credit. 
+In the case where the *productType* in the Verification response is *INSTALLMENTS*, payolution will also return the available payment plans with all the payment details, which should be presented to the consumer so they can select a payment plan duration. The selected duration is then passed with the *planDuration* parameter in the [Authorized Payment request](#createauthorization).
 
-Payolution recommends that you process a Verification request before following up with a Payment Authorization request, even if you do not plan to offer your consumer payment by installments. 
-
+See the [payolution payment object](#payolution) for more information.
 
 
 ## Process a Verification Request [POST /accounts/{accountId}/verifications]
 <a name="createverification" title="Process a Verification Request"></a>
 
-This is how you process a Verification request. **Note:** You can currently process this request type only when the *paymentType* is set to PAYOLUTION. 
+Click on **Process a Verification Request** above to see how to process a Verification request. **Note:** You can currently process this request type only when the *paymentType* is set to PAYOLUTION. 
         
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1980,7 +1980,7 @@ This is how you process a Verification request. **Note:** You can currently proc
 ## Get Verification by ID [GET /accounts/{accountId}/verifications/{verificationId}]
 <a name="getverification" title="Look Up a Verification"></a>
 
-This is how you look up a [Verification](#verification) using the Verification ID, which is the *id* returned in the response to the Verification request.
+Click on **Get Verification by ID** above to see how to look up a [Verification](#verification) using the Verification ID, which is the *id* returned in the response to the Verification request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2072,7 +2072,7 @@ This is how you submit a Void Authorization (authorization reversal) request. Yo
 ## Void a Previously Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
 <a name="voidauth" title="Void a Previously Authorized Payment"></a>
 
-Reverse (cancel) an existing authorization. 
+Click on **Void a Previously Authorized Payment** above to see how to reverse (cancel) an existing authorization. 
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2132,7 +2132,7 @@ Reverse (cancel) an existing authorization.
 ## Get Void Authorization by ID [GET /accounts/{accountId}/payment/{paymentId}/voidauths/{voidauthId}]
 <a name="getvoidauth" title="Look Up a Void Authorization"></a>
 
-This is how you look up a Void Authorization request using the ID returned in the response to the original request.
+Click on **Get Void Authorization by ID** above to see how to look up a Void Authorization request using the ID returned in the response to the original request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2180,7 +2180,7 @@ This is how you look up a Void Authorization request using the ID returned in th
 ## List Void Authorizations [GET /accounts/{accountId}/payment/{paymentId}/voidauths]
 <a name="listvoidauth" title="List Void Authorizations"></a>
 
-This is how you retrieve a list of any Void Authorizations associated to a payment. 
+Click on **List Void Authorizations** above to see how to retrieve a list of any Void Authorizations associated to a payment. 
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2242,18 +2242,16 @@ This is how you retrieve a list of any Void Authorizations associated to a payme
 # Settlements [/settlements]
 <a name="settlements" title="Settlements"></a>
 
-If you specified delayed (manual) Settlement on your payment request, then you must manually POST the Settlement against 
-the Payment Authorization.  Settlement is the process of capturing funds from a previous authorization request to your merchant account.
+If you specified delayed (manual) Settlement on your payment request (i.e., with *settleWithAuth* = *false*), then you must manually POST the Settlement against 
+the Payment Authorization.  Settlement is the process of capturing funds from a previous authorization request to your merchant account. You can query the 
+Payment resource to find out the remaining amount available to settle.
 
 You can settle all or part of an existing Payment Authorization.
 
 ## Settle an Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/settlements]
 <a name="settlement" title="Settle a Previously Authorized Payment"></a>
 
-You must manually settle a previously authorized payment if it was requested with *settleWithAuth* = *false*.  You can query the 
-Payment resource to find out the remaining amount available to settle.
-
-This is an example of a settlement for a previous PAYSAFECARD Payment Authorization.
+Click on **Settle an Authorized Payment** above to see an example of a settlement for a previous PAYSAFECARD Payment Authorization.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2314,7 +2312,7 @@ This is an example of a settlement for a previous PAYSAFECARD Payment Authorizat
 ## Get Settlement by ID [GET /accounts/{accountId}/settlements/{settlementId}]
 <a name="getsettlement" title="Look Up a Settlement"></a>
 
-This is how you look up a Settlement request using the ID returned in the response to the original request.
+Click on **Get Settlement by ID** above to look up a Settlement request using the ID returned in the response to the original request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2362,7 +2360,7 @@ This is how you look up a Settlement request using the ID returned in the respon
 ## List Settlements by Merchant Reference Number [GET /accounts/{accountId}/settlements/?merchantRefNum={merchantRefNum}]
 <a name="listsettlement" title="List Settlements by Merchant Reference Number"></a>
 
-This is how you look up Settlements using the merchant reference number used in the original request. This returns a collection of Settlement details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
+Click on **List Settlements by Merchant Reference Number ID** above to look up Settlements using the merchant reference number used in the original request. This returns a collection of Settlement details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2414,7 +2412,7 @@ This is how you look up Settlements using the merchant reference number used in 
 ## List Settlements for a Payment [GET /accounts/{accountId}/payment/{paymentId}/settlements]
 <a name="listsettlementsid" title="List Settlements for a Payment"></a>
 
-This is how you retrieve a list of any Settlements associated to a payment.
+Click on **List Settlements for a Payment** above to retrieve a list of any Settlements associated to a payment.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2475,7 +2473,7 @@ You can create a Refund against either an Authorized Payment or a Settlement. **
 ## Refund a Payment [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 <a name="refundpayment" title="Refund a Payment"></a>
 
-This is how you submit a Refund request against a completed payment.
+Click on **Refund a Payment** above to see how to submit a Refund request against a completed payment.
 
 > NOTE: You can also issue a Refund against the Settlement.  Choose the right method depending upon your integration needs.
 
@@ -2539,7 +2537,7 @@ This is how you submit a Refund request against a completed payment.
 ## Refund a Settlement [POST /accounts/{accountId}/settlements/{settlementId}/refunds]
 <a name="refundsettlement" title="Refund a Settlement"></a>
 
-This is how you submit a Refund request against a completed Settlement.
+Click on **Refund a Settlement** above to see how to submit a Refund request against a completed settlement.
 
 > NOTE: You can also issue a Refund against the Authorized Payment.  Choose the right method depending upon your integration needs.
 
@@ -2593,7 +2591,7 @@ This is how you submit a Refund request against a completed Settlement.
 ## Get Refund by ID [GET /accounts/{accountId}/refunds/{refundId}]
 <a name="getrefund" title="Look Up a Refund"></a>
 
-This is how you look up a Refund request using the ID returned in the response to the original request.
+Click on **Get Refund by ID** above to see how to look up a Refund request using the ID returned in the response to the original request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2639,7 +2637,7 @@ This is how you look up a Refund request using the ID returned in the response t
 ## List Refunds by Merchant Reference Number [GET /accounts/{accountId}/payments/{paymentId}/refunds/?merchantRefNum={merchantRefNum}]
 <a name="listrefund" title="List Refunds by Merchant Reference Number"></a>
 
-This is how you look up Refunds using the merchant reference number used in the original request. This returns a collection of refund details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
+Click on **List Refunds by Merchant Reference Number** above to see how to look up Refunds using the merchant reference number used in the original request. This returns a collection of refund details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2709,7 +2707,7 @@ As a merchant, you cannot create a Return directly.
 ## Get Return by ID [GET /accounts/{accountId}/returns/{returnId}]
 <a name="getreturn" title="Look Up a Return"></a>
 
-This is how you look up a Return using an ID.
+Click on **Get Return by ID** above to see how to look up a Return using an ID.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2765,7 +2763,7 @@ This is how you look up a Return using an ID.
 ## List Returns for a Settlement [GET /accounts/{accountId}/settlements/{settlementId}/returns]
 <a name="listreturns" title="List Returns for a Settlement"></a>
 
-This is how you retrieve a list of any Returns associated to a Settlement.
+Click on **List Returns for a Settlement** above to see how to retrieve a list of any Returns associated to a Settlement.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2826,7 +2824,7 @@ Return Reversal transactions will be automatically created by Paysafe if we rece
 ## List Return Reversals for a Return [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
 <a name="listreturnreversals" title="List Return Reversals for a Return"></a>
 
-This is how you retrieve a collection of Return Reversal details.
+Click on **List Return Reversals for a Return** above to see how to retrieve a collection of Return Reversal details.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2845,7 +2843,7 @@ This is how you retrieve a collection of Return Reversal details.
 ## Get Return Reversal by ID [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
 <a name="getreturnreversal" title="Look Up a Return Reversal"></a>
 
-This is how you retrieve details for a single Return Reversal.  You can identify Return Reversals through the [List Return Reversals endpoint](#listreturnreversals).
+Click on **Get Return Reversal by ID** above to see how to retrieve details for a single Return Reversal.  You can identify Return Reversals through the [List Return Reversals endpoint](#listreturnreversals).
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
