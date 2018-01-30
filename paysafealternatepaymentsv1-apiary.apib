@@ -1850,7 +1850,7 @@ Click on **Process a Verification Request** above to see how to process a Verifi
 
             {
                 "amount": 1000,
-                "merchantRefNum": "payolution_verification_1",
+                "merchantRefNum": "payolution_verification_{{$timestamp}}",
                 "paymentType": "PAYOLUTION",
                 "profile": {
                     "firstName": "John",
@@ -1865,6 +1865,7 @@ Click on **Process a Verification Request** above to see how to process a Verifi
                 },
                 "payolution": {
                     "descriptor": "Descriptor",
+                    "productType": "INSTALLMENTS",
                     "analysis": [{
                         "key": "PAYOLUTION_CUSTOMER_GROUP",
                         "value": "TOP"
@@ -1893,8 +1894,8 @@ Click on **Process a Verification Request** above to see how to process a Verifi
     + Body
 
             {
-                "id": "2f6f0150-2f08-43be-ad42-aa89fafde792",
-                "merchantRefNum": "payolution_verification_1516804226",
+                "id": "62f501a2-8a14-47bd-a8a9-f19ed59953fd",
+                "merchantRefNum": "payolution_verification_1517338241",
                 "amount": 1000,
                 "currencyCode": "EUR",
                 "paymentType": "PAYOLUTION",
@@ -1918,6 +1919,7 @@ Click on **Process a Verification Request** above to see how to process a Verifi
                 },
                 "payolution": {
                     "descriptor": "Descriptor",
+                    "productType": "INSTALLMENTS",
                     "analysis": [{
                             "key": "PAYOLUTION_CUSTOMER_GROUP",
                             "value": "TOP"
@@ -1937,43 +1939,208 @@ Click on **Process a Verification Request** above to see how to process a Verifi
                     ],
                     "plans": {
                         "paymentDetails": [{
-                            "originalAmount": 1000,
-                            "totalAmount": 1026,
-                            "minimumInstallmentFee": 0,
-                            "duration": 3,
-                            "interestRate": 14.95,
-                            "effectiveInterestRate": 16.02,
-                            "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=b08a1d6a-5249-4271-944f-9695357b9fd6;duration=3",
-                            "installments": [{
-                                    "amount": 342,
-                                    "due": "2018-02-05"
-                                },
-                                {
-                                    "amount": 342,
-                                    "due": "2018-03-05"
-                                },
-                                {
-                                    "amount": 342,
-                                    "due": "2018-04-05"
-                                }
-                            ]
-                        }],
+                                "originalAmount": 1000,
+                                "totalAmount": 1026,
+                                "minimumInstallmentFee": 0,
+                                "duration": 3,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=3",
+                                "installments": [{
+                                        "amount": 342,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 342,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 342,
+                                        "due": "2018-04-03"
+                                    }
+                                ]
+                            },
+                            {
+                                "originalAmount": 1000,
+                                "totalAmount": 1032,
+                                "minimumInstallmentFee": 0,
+                                "duration": 4,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=4",
+                                "installments": [{
+                                        "amount": 258,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 258,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 258,
+                                        "due": "2018-04-03"
+                                    },
+                                    {
+                                        "amount": 258,
+                                        "due": "2018-05-03"
+                                    }
+                                ]
+                            },
+                            {
+                                "originalAmount": 1000,
+                                "totalAmount": 1044,
+                                "minimumInstallmentFee": 0,
+                                "duration": 6,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=6",
+                                "installments": [{
+                                        "amount": 174,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-04-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-05-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-06-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-07-03"
+                                    }
+                                ]
+                            },
+                            {
+                                "originalAmount": 1000,
+                                "totalAmount": 1062,
+                                "minimumInstallmentFee": 0,
+                                "duration": 9,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=9",
+                                "installments": [{
+                                        "amount": 118,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-04-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-05-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-06-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-07-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-08-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-09-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-10-03"
+                                    }
+                                ]
+                            },
+                            {
+                                "originalAmount": 1000,
+                                "totalAmount": 1080,
+                                "minimumInstallmentFee": 0,
+                                "duration": 12,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=12",
+                                "installments": [{
+                                        "amount": 90,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-04-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-05-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-06-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-07-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-08-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-09-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-10-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-11-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-12-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2019-01-03"
+                                    }
+                                ]
+                            }
+                        ],
                         "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
                         "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment"
                     }
                 },
-                "txnTime": "2018-01-24T14:30:26Z",
+                "txnTime": "2018-01-30T18:50:41Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
                     "code": "0.0.0",
                     "description": "The request was processed successfully.",
-                    "id": "b08a1d6a-5249-4271-944f-9695357b9fd6",
+                    "id": "053c5369-c37a-431b-96f0-1981384ac993",
                     "processor": "PAYOLUTION",
                     "paymentType": "CL"
                 },
                 "links": [{
                     "rel": "self",
-                    "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001186650/verifications/2f6f0150-2f08-43be-ad42-aa89fafde792"
+                    "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001186650/verifications/62f501a2-8a14-47bd-a8a9-f19ed59953fd"
                 }]
             }
 
