@@ -17,7 +17,7 @@ variety of non-card regional payment methods with a single integration.
 |v1             |2017-05-06            |- Replaced error 5283 with 5031|
 |               |                      |- Added void authorization|
 |               |                      |- Add support for NO to Boku|
-|v1             |2017-03-08            |- Added support for delayed settlement|
+|v1             |2017-03-08            |- Added support for manual settlement|
 |               |                      |- Support returns on settlement|
 |               |                      |- Ability to refund a settlement|
 |v1             |2016-12-15            |- Added support for Boku, Giropay|
@@ -308,7 +308,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |AP\_PAYMENT\_PROCESSING|The Alternate Payments authorization was requested but is still to be accessed by the downstream PSP.|
 |AP\_PAYMENT\_COMPLETED|The Alternate Payments authorization was successful.|
 |AP\_PAYMENT\_FAILED|The Alternate Payments authorization was declined or rejected.|
-|AP\_PAYMENT\_CANCELLED|The Alternate Payments authorization was cancelled.  This is usually the result of a voidauth in a delayed settlement transaction.|
+|AP\_PAYMENT\_CANCELLED|The Alternate Payments authorization was cancelled.  This is usually the result of a voidauth in a manual settlement transaction.|
 |AP\_PAYMENT\_ERRORED|The Alternate Payments authorization has failed due to an error.|
 |AP\_PAYMENT\_EXPIRED|The Alternate Payments authorization has expired.|
 |AP\_REFUND\_COMPLETED|The Alternate Payments refund was successful.|
@@ -1027,7 +1027,6 @@ Payment objects are used to define additional values that can be supplied with y
 |sepa                       |[object](#sepa)        |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
 |plans                      |[object](#plans)       |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
 |planDuration               |string<br/>`length=X`  |This is the duration, in months, of the plan selected by the consumer. |
-|consumerId                 |string                 |This is the merchant's ID for the consumer, in the case of monthly invoices. |
 |paymentInformation         |[object](#paymentInformation) |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
 |analysis                   |object                 |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
 
@@ -1324,8 +1323,9 @@ When requesting a payment, by default it will include automatic Settlement (*set
 Settlement record represents the actual capture of funds to your merchant account. For cases  when *settleWithAuth* is *true*, the corresponding Settlement will have the same 
 resource identifier (ID) as the payment because it was created from the same request.
 
-Alternatively, you can choose delayed Settlement (*settleWithAuth* = *false*). In this case, the Payment only represents an Authorization for the Payment and you must complete 
-a subsequent Settlement request when you wish to capture the payment.  The ability to perform delayed Settlement will depend on the payment option you are attempting.  
+Alternatively, you can choose manual Settlement (*settleWithAuth* = *false*). In this case, the Payment only represents an Authorization for the Payment and you must complete 
+a subsequent Settlement request when you wish to capture the payment.  The ability to perform manual Settlement will depend on the payment option you are attempting. 
+[Click here](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview/) to see which payment types support manual settlement.
 
 > **Note:** Each payment type and currency is associated with a distinct merchant account ID.  You will need to know which account ID is associated to your payment type and currency
 > in order to complete your request. Please contact [Paysafe Merchant Support](https://developer.paysafe.com/en/resources-and-support/contact-us/) to enable additional payment types and or currencies.
@@ -2234,7 +2234,7 @@ Click on **Get Verification by ID** above to see how to look up a [Verification]
 
 This is how you submit a Void Authorization (authorization reversal) request. You can void an Authorization only if it has not yet been settled.
 
-**Note:** This operation is available only for payment methods that [support delayed Settlement](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview/#delayed-settlement-payment-flow). If the authorization has already been fully settled, then you will not be able to void it and will need to [issue a Refund](#refundpayment) instead.
+**Note:** This operation is available only for payment methods that [support manual Settlement](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview). If the authorization has already been fully settled, then you will not be able to void it and will need to [issue a Refund](#refundpayment) instead.
 
 ## Void a Previously Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
 <a name="voidauth" title="Void a Previously Authorized Payment"></a>
@@ -2409,11 +2409,11 @@ Click on **List Void Authorizations** above to see how to retrieve a list of any
 # Settlements [/settlements]
 <a name="settlements" title="Settlements"></a>
 
-If you specified delayed (manual) Settlement on your payment request (i.e., with *settleWithAuth* = *false*), then you must manually POST the Settlement against 
+If you specified manual Settlement on your payment request (i.e., with *settleWithAuth* = *false*), then you must manually POST the Settlement against 
 the Payment Authorization.  Settlement is the process of capturing funds from a previous authorization request to your merchant account. You can query the 
 Payment resource to find out the remaining amount available to settle.
 
-You can settle all or part of an existing Payment Authorization.
+You can settle all or part of an existing Payment Authorization. [Click here](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview/) to see which payment types support manual settlement.
 
 ## Settle an Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/settlements]
 <a name="settlement" title="Settle a Previously Authorized Payment"></a>
@@ -3294,7 +3294,6 @@ Click on **Get Return Reversal by ID** above to see how to retrieve details for 
         + Include sepa
         + Include plans
         + `planDuration`: `3` (number) - This is the duration, in months, of the plan selected by the consumer. **Required** for [Payment Authorization](#createauthorization) request when *productType*=INSTALLMENTS.
-        + `consumerId`: `maxx_muster1980` (string) - This is the merchant's ID for the consumer, in the case of monthly invoices.
         + Include payolutionPaymentInformation
         + Include payolutionAnalysis
 
