@@ -425,32 +425,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
 }
 ```
 
-<a name="installments" title="installments Object"></a>
-## installments
-
-|Element        |Type           |Description |
-|---            |---            |--- |
-|amount         |number         |This is the amount of the installment payment.|
-|due            |string         |This is the due date of the installment payment.|
-
-```
-            {
-                "installments": [{
-                        "amount": 16820,
-                        "due": "2013-07-16"
-                    },
-                    {
-                        "amount": 16820,
-                        "due": "2013-08-05"
-                    },
-                    {
-                        "amount": 16820,
-                        "due": "2013-09-05"
-                    }
-                ]
-            }
-```
-
 <a name="link" title="link Object"></a>
 ## link
 
@@ -489,7 +463,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
-|paymentType             |enum                   |Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -526,106 +500,6 @@ Notifications are configured by logging into the merchant backoffice and navigat
     }
   }
 }
-```
-
-<a name="paymentDetails" title="paymentDetails Object"></a>
-## paymentDetails
-
-|Element                |Type                       |Description |
-|---                    |---                        |--- |
-|installments           |[object](#installments)    |These are details about the payolution installment plan for the consumer. |
-|originalAmount         |number                     |This is the original amount of the Verification, in minor units.|
-|totalAmount            |number                     |This is the total amount to be paid by the consumer (i.e., the sum of all installments).|
-|minimumInstallmentFee  |number                     |This is the minimum installment fee.|
-|duration               |number                     |This is the duration, in months, of the payment plan. |
-|interestRate           |number                     |This is interest rate of the payment plan.|
-|effectiveInterestRate  |number                     |This is effective interest rate of the payment plan.|
-|standardCreditInformationUrl |string               |This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.|
-
-```
-            {
-                "paymentDetails": [{
-                    "installments": [{
-                            "amount": 16820,
-                            "due": "2013-07-16"
-                        },
-                        {
-                            "amount": 16820,
-                            "due": "2013-08-05"
-                        },
-                        {
-                            "amount": 16820,
-                            "due": "2013-09-05"
-                        }
-                    ],
-                    "originalAmount": 49999,
-                    "totalAmount": 50460,
-                    "minimumInstallmentFee": 0,
-                    "duration": 3,
-                    "interestRate": 14.95,
-                    "effectiveInterestRate": 15.60,
-                    "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
-                }]
-            }
-```
-
-<a name="paymentInformation" title="paymentInformation Object"></a>
-## paymentInformation
-
-|Element                 |Type                  |Description |
-|---                     |---                   |--- |
-|paymentReference            |string            |The string to use as a reason for the payment.|
-|iban                        |string            |The IBAN to send the payment to.|
-|bic                         |string            |The BIC of the bank to send the payment to.|
-|bankName                    |string            |This is the name of the bank to send the payment to.|
-|accountHolderName           |string            |This is the name of the beneficiary.|
-
-```
-        {
-        "paymentReference": "YTTR-WMQX-KLGW",
-        "iban": "AT611904300234573201456",
-        "bic": "BFRILI22XXX",
-        "bankName": "Musterbank",
-        "accountHolderName": "Test Merchant"
-        }
-```
-
-<a name="plans" title="plans Object"></a>
-## plans
-
-|Element                 |Type                     |Description |
-|---                     |---                      |--- |
-|paymentDetails          |[object](#paymentDetails) |This is an array of payment details objects. |
-|tacUrl                  |string                    |This is a URL pointing to the Terms and Conditions for the payment plan.|
-|dataPrivacyConsentUrl   |string                    |This is a URL pointing to the data privacy declaration for the payment plan.|
-
-```
-            {
-                "paymentDetails": [{
-                    "originalAmount": 1000,
-                    "totalAmount": 1026,
-                    "minimumInstallmentFee": 0,
-                    "duration": 3,
-                    "interestRate": 14.95,
-                    "effectiveInterestRate": 16.02,
-                    "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=b08a1d6a-5249-4271-944f-9695357b9fd6;duration=3",
-                    "installments": [{
-                            "amount": 342,
-                            "due": "2018-02-05"
-                        },
-                        {
-                            "amount": 342,
-                            "due": "2018-03-05"
-                        },
-                        {
-                            "amount": 342,
-                            "due": "2018-04-05"
-                        }
-                    ]
-                }],
-                "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
-                "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment"
-            }
 ```
 
 <a name="profile" title="profile Object"></a>
@@ -1025,73 +899,196 @@ Payment objects are used to define additional values that can be supplied with y
 |productType                |enum                   |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
 |descriptor                 |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
 |sepa                       |[object](#sepa)        |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
-|plans                      |[object](#plans)       |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
+|plans                      |[object](#payolution.plans) |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
 |planDuration               |string<br/>`length=X`  |This is the duration, in months, of the plan selected by the consumer. |
-|paymentInformation         |[object](#paymentInformation) |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
+|paymentInformation         |[object](#payolution.paymentInformation) |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
 |analysis                   |object                 |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
 
 ```
-            {
-                "payolution": {
-                    "productType": "INSTALLMENTS",
-                    "descriptor": "Order with ID 4ab2",
-                    "plans": [{
-                        "paymentDetails": [{
-                            "installments": [{
-                                    "amount": 16820,
-                                    "due": "2013-07-16"
-                                },
-                                {
-                                    "amount": 16820,
-                                    "due": "2013-08-05"
-                                },
-                                {
-                                    "amount": 16820,
-                                    "due": "2013-09-05"
-                                }
-                            ],
-                            "originalAmount": 49999,
-                            "totalAmount": 50460,
-                            "minimumInstallmentFee": 0,
-                            "duration": 3,
-                            "interestRate": 14.95,
-                            "effectiveInterestRate": 15.60,
-                            "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
-                        }],
-                        "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
-                        "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment",
-                        "planDuration": "3",
-                        "sepa": {
-                            "bankName": "ING",
-                            "country": "NL",
-                            "accountHolderName": "John Doe",
-                            "bic": "ABNANL2APIP",
-                            "iban": "DE89370400440532013000"
-                        },
-                        "paymentInformation": {
-                            "paymentReference": "YTTR-WMQX-KLGW",
-                            "iban": "AT611904300234573201456",
-                            "bic": "BFRILI22XXX",
-                            "accountHolderName": "Test Merchant"
-                        },
-                        "analysis": [{
-                            "key": "PAYOLUTION_CUSTOMER_GROUP",
-                            "value": "TOP"
-                        }, {
-                            "key": "PAYOLUTION_MODULE_NAME",
-                            "value": "PaymentModuleName"
-                        }, {
-                            "key": "PAYOLUTION_INVOICE_ID",
-                            "value": "23498739478"
-                        }, {
-                            "key": "PAYOLUTION_ORDER_ID",
-                            "value": "23498739478"
-                        }]
-            
-                    }]
+"payolution": {
+    "productType": "INSTALLMENTS",
+    "descriptor": "Order with ID 4ab2",
+    "plans": [{
+        "paymentDetails": [{
+            "installments": [{
+                    "amount": 16820,
+                    "due": "2013-07-16"
+                },
+                {
+                    "amount": 16820,
+                    "due": "2013-08-05"
+                },
+                {
+                    "amount": 16820,
+                    "due": "2013-09-05"
                 }
+            ],
+            "originalAmount": 49999,
+            "totalAmount": 50460,
+            "minimumInstallmentFee": 0,
+            "duration": 3,
+            "interestRate": 14.95,
+            "effectiveInterestRate": 15.60,
+            "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
+        }],
+        "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
+        "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment",
+        "planDuration": "3",
+        "sepa": {
+            "bankName": "ING",
+            "country": "NL",
+            "accountHolderName": "John Doe",
+            "bic": "ABNANL2APIP",
+            "iban": "DE89370400440532013000"
+        },
+        "paymentInformation": {
+            "paymentReference": "YTTR-WMQX-KLGW",
+            "iban": "AT611904300234573201456",
+            "bic": "BFRILI22XXX",
+            "accountHolderName": "Test Merchant"
+        },
+        "analysis": [{
+            "key": "PAYOLUTION_CUSTOMER_GROUP",
+            "value": "TOP"
+        }, {
+            "key": "PAYOLUTION_MODULE_NAME",
+            "value": "PaymentModuleName"
+        }, {
+            "key": "PAYOLUTION_INVOICE_ID",
+            "value": "23498739478"
+        }, {
+            "key": "PAYOLUTION_ORDER_ID",
+            "value": "23498739478"
+        }]
+
+    }]
+}
+```
+
+<a name="payolution.installments" title="payolution.installments Object"></a>
+##  &nbsp;&nbsp; .installments
+
+|Element        |Type           |Description |
+|---            |---            |--- |
+|amount         |number         |This is the amount of the installment payment.<br/><i>Read Only</i>|
+|due            |string         |This is the due date of the installment payment.<br/><i>Read Only</i>|
+
+```
+            {
+                "installments": [{
+                        "amount": 16820,
+                        "due": "2013-07-16"
+                    },
+                    {
+                        "amount": 16820,
+                        "due": "2013-08-05"
+                    },
+                    {
+                        "amount": 16820,
+                        "due": "2013-09-05"
+                    }
+                ]
             }
 ```
+
+<a name="payolution.paymentDetails" title="payolution.paymentDetails Object"></a>
+## &nbsp;&nbsp; .paymentDetails
+
+|Element                |Type                       |Description |
+|---                    |---                        |--- |
+|installments           |[object](#payolution.installments)    |These are details about the payolution installment plan for the consumer. <br/><i>Read Only</i>|
+|originalAmount         |number                     |This is the original amount of the Verification, in minor units. <br/><i>Read Only</i>|
+|totalAmount            |number                     |This is the total amount to be paid by the consumer (i.e., the sum of all installments).<br/><i>Read Only</i>|
+|minimumInstallmentFee  |number                     |This is the minimum installment fee.<br/><i>Read Only</i>|
+|duration               |number                     |This is the duration, in months, of the payment plan.<br/><i>Read Only</i>|
+|interestRate           |number                     |This is interest rate of the payment plan.<br/><i>Read Only</i>|
+|effectiveInterestRate  |number                     |This is effective interest rate of the payment plan.<br/><i>Read Only</i>|
+|standardCreditInformationUrl |string               |This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.<br/><i>Read Only</i>|
+
+```
+"paymentDetails": [{
+    "installments": [{
+            "amount": 16820,
+            "due": "2013-07-16"
+        },
+        {
+            "amount": 16820,
+            "due": "2013-08-05"
+        },
+        {
+            "amount": 16820,
+            "due": "2013-09-05"
+        }
+    ],
+    "originalAmount": 49999,
+    "totalAmount": 50460,
+    "minimumInstallmentFee": 0,
+    "duration": 3,
+    "interestRate": 14.95,
+    "effectiveInterestRate": 15.60,
+    "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
+}]
+```
+
+<a name="payolution.paymentInformation" title="payolution.paymentInformation Object"></a>
+## &nbsp;&nbsp; .paymentInformation
+
+|Element                 |Type                  |Description |
+|---                     |---                   |--- |
+|paymentReference            |string            |The string to use as a reason for the payment.<br/><i>Read Only</i>|
+|iban                        |string            |The IBAN to send the payment to.<br/><i>Read Only</i>|
+|bic                         |string            |The BIC of the bank to send the payment to.<br/><i>Read Only</i>|
+|bankName                    |string            |This is the name of the bank to send the payment to.<br/><i>Read Only</i>|
+|accountHolderName           |string            |This is the name of the beneficiary.<br/><i>Read Only</i>|
+
+```
+{
+    "paymentReference": "YTTR-WMQX-KLGW",
+    "iban": "AT611904300234573201456",
+    "bic": "BFRILI22XXX",
+    "bankName": "Musterbank",
+    "accountHolderName": "Test Merchant"
+}
+```
+
+<a name="payolution.plans" title="payolution.plans Object"></a>
+## &nbsp;&nbsp; .plans
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|paymentDetails          |[object](#payolution.paymentDetails) |This is an array of payment details objects. <br/><i>Read Only</i>|
+|tacUrl                  |string                    |This is a URL pointing to the Terms and Conditions for the payment plan.<br/><i>Read Only</i>|
+|dataPrivacyConsentUrl   |string                    |This is a URL pointing to the data privacy declaration for the payment plan.<br/><i>Read Only</i>|
+
+```
+{
+    "paymentDetails": [{
+        "originalAmount": 1000,
+        "totalAmount": 1026,
+        "minimumInstallmentFee": 0,
+        "duration": 3,
+        "interestRate": 14.95,
+        "effectiveInterestRate": 16.02,
+        "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=b08a1d6a-5249-4271-944f-9695357b9fd6;duration=3",
+        "installments": [{
+                "amount": 342,
+                "due": "2018-02-05"
+            },
+            {
+                "amount": 342,
+                "due": "2018-03-05"
+            },
+            {
+                "amount": 342,
+                "due": "2018-04-05"
+            }
+        ]
+    }],
+    "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
+    "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment"
+}
+```
+
 <a name="paysafecard" title="Paysafecard Payment Object"></a>
 ## paysafecard 
 
@@ -1122,7 +1119,7 @@ Payment objects are used to define additional values that can be supplied with y
 |---                            |---                    |--- |
 |descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
 |sepa                           |[object](#sepa)        |The consumer's SEPA bank account details (if applicable). |
-|sepa.bankName                  |enum                   |The consumer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
+|sepa.bankName                  |enum                   |The consumer's bank.|
 |sepa.country                   |enum                   |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
 |sepa.iban                      |string                 |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                       |string                 |The Bank Identifier Code (BIC) of the account.|
