@@ -10,6 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2018-01-10            |- Added support for Payolution verifications and payment installments|
 |v1             |2017-12-01            |- Added Skrill standalone credit|
 |v1             |2017-11-15            |- Added RapidTransfer|
 |v1             |2017-08-28            |- Added Paysafecard, Skrill, Neteller, Payolution|
@@ -17,7 +18,7 @@ variety of non-card regional payment methods with a single integration.
 |v1             |2017-05-06            |- Replaced error 5283 with 5031|
 |               |                      |- Added void authorization|
 |               |                      |- Add support for NO to Boku|
-|v1             |2017-03-08            |- Added support for delayed settlement|
+|v1             |2017-03-08            |- Added support for manual settlement|
 |               |                      |- Support returns on settlement|
 |               |                      |- Ability to refund a settlement|
 |v1             |2016-12-15            |- Added Boku, Giropay|
@@ -319,7 +320,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |AP\_PAYMENT\_PROCESSING|The Alternate Payments authorization was requested but is still to be accessed by the downstream PSP.|
 |AP\_PAYMENT\_COMPLETED|The Alternate Payments authorization was successful.|
 |AP\_PAYMENT\_FAILED|The Alternate Payments authorization was declined or rejected.|
-|AP\_PAYMENT\_CANCELLED|The Alternate Payments authorization was cancelled.  This is usually the result of a voidauth in a delayed settlement transaction.|
+|AP\_PAYMENT\_CANCELLED|The Alternate Payments authorization was cancelled.  This is usually the result of a voidauth in a manual settlement transaction.|
 |AP\_PAYMENT\_ERRORED|The Alternate Payments authorization has failed due to an error.|
 |AP\_PAYMENT\_EXPIRED|The Alternate Payments authorization has expired.|
 |AP\_REFUND\_COMPLETED|The Alternate Payments refund was successful.|
@@ -353,7 +354,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |street2                 |string<br/>`length<=50`  |This is the second line of the street address in the billing address, if required (e.g., apartment number).|
 |city                    |string<br/>`length<=40`  |This is the city in the billing address.|
 |state                   |string<br/>`length<=40`  |See Province Codes or State Codes for Canada or the United States.|
-|country                 |string<br/>`length=2`    |<b>(required)</b> The ISO 3166-1 alpha-2 code for the customer's billing address (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|country                 |string<br/>`length=2`    |The ISO 3166-1 alpha-2 code for the consumer's billing address (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |zip                     |string<br/>`length<=10`  |This is the postal/zip code in the billing address.|
 
 ```
@@ -372,9 +373,9 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|day                     |string<br/>`length=4`  |<b>(required)</b> 4-digit year, YYYY|
-|month                   |string<br/>`length=2`  |<b>(required)</b> 2-digit month, MM|
-|year                    |string<br/>`length=2`  |<b>(required)</b> 2-digit day, DD|
+|day                     |string<br/>`length=4`  |<b>(Required)</b> 4-digit year, YYYY|
+|month                   |string<br/>`length=2`  |<b>(Required)</b> 2-digit month, MM|
+|year                    |string<br/>`length=2`  |<b>(Required)</b> 2-digit day, DD|
 
 
 ```
@@ -390,15 +391,15 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element            |Type                           |Description|
 |---                |---                            |---|
-|error.code         |string                         |This is the error code.<br/><i>read only</i>|
-|error.message      |string                         |This is a description of the error.<br/><i>read only</i>|
-|error.details      |array of string                |This is a collection of detailed descriptions.<br/><i>read only</i>|
-|error.fieldErrors  |array of [object](#fieldError) |This is a list of fields that have problems.<br/><i>read only</i>|
-|error.links        |array of [object](#link)       |Links to the error documentation.<br/><i>read only</i>|
-|id                 |string                         |This is the is the unique identifier for the related resource.<br/><i>read only</i>|
-|merchantRefNum     |string                         |This is the identifier provided by the merchant for a transaction.<br/><i>read only</i>|
-|riskReasonCode     |string                         |This is the associated risk reason.<br/><i>read only</i>|
-|links              |array of [object](#link)       |The link to the related resource.<br/><i>read only</i>|
+|error.code         |string                         |This is the error code.<br/><i>Read Only</i>|
+|error.message      |string                         |This is a description of the error.<br/><i>Read Only</i>|
+|error.details      |array of string                |This is a collection of detailed descriptions.<br/><i>Read Only</i>|
+|error.fieldErrors  |array of [object](#fieldError) |This is a list of fields that have problems.<br/><i>Read Only</i>|
+|error.links        |array of [object](#link)       |Links to the error documentation.<br/><i>Read Only</i>|
+|id                 |string                         |This is the is the unique identifier for the related resource.<br/><i>Read Only</i>|
+|merchantRefNum     |string                         |This is the identifier provided by the merchant for a transaction.<br/><i>Read Only</i>|
+|riskReasonCode     |string                         |This is the associated risk reason.<br/><i>Read Only</i>|
+|links              |array of [object](#link)       |The link to the related resource.<br/><i>Read Only</i>|
 
 ```
 {
@@ -426,8 +427,8 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|field                   |string                 |Identifies the JSON request field.<br/><i>read only</i>|
-|error                   |                       |The problem associated with field.<br/><i>read only</i>|
+|field                   |string                 |Identifies the JSON request field.<br/><i>Read Only</i>|
+|error                   |                       |The problem associated with field.<br/><i>Read Only</i>|
 
 ```
 {
@@ -441,8 +442,8 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|rel                     |string                 |This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call. *self* will get details of the current call.<br/><i>read only</i>|
-|href                    |                       |This is the URL to which to send the link. If this is an HTTPS address, please ensure that your certificate is valid – otherwise, the link will cause the browser to display a certificate warning.<br/><i>read only</i>|
+|rel                     |string                 |This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call. *self* will get details of the current call.<br/><i>Read Only</i>|
+|href                    |                       |This is the URL to which to send the link. If this is an HTTPS address, please ensure that your certificate is valid – otherwise, the link will cause the browser to display a certificate warning.<br/><i>Read Only</i>|
 
 ```
 {
@@ -456,24 +457,25 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|id                      |string                 |Unique system generated identifier for this payment.<br/><i>read only</i> |
-|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
+|id                      |string                 |Unique system-generated identifier for this payment.<br/><i>Read Only</i> |
+|merchantRefNum          |string                 |<b>(Required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
-|settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent settlement to capture funds.<br/><b>true</b> - the request is settled (default).<br/>If the merchant wants to find out whether an authorization has been settled, they should check the *availableToSettle* element.<br/>If the amount is 0, the authorization has been fully settled.|
-|amount                  |number                 |<b>(required)</b> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
-|currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
-|availableToSettle       |number                 |This is the amount of of the Authorization remaining to settle, in minor units.<br/><i>read only</i>|
-|availableToRefund       |number                 |This is the amount of the authorization remaining to refund, in minor units.  It is visible only if no refunds are done on any of the corresponding settlements for this payment.<br/><i>read only</i>|
-|profile                 |[object](#profile)     |These are some details about the customer.|
+|settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent Settlement to capture funds.<br/><b>true</b> - the request is settled (default).<br/>If the merchant wants to find out whether an authorization has been settled, they should check the *availableToSettle* element.<br/>If the amount is 0, the authorization has been fully settled.|
+|amount                  |number                 |<b>(Required)</b> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
+|verificationId          |string                 |This is the ID returned in the response to a [Verification request](#createverification). |
+|currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.<br/><i>Read Only</i>|
+|availableToSettle       |number                 |This is the amount of the Authorization remaining to settle, in minor units.<br/><i>Read Only</i>|
+|availableToRefund       |number                 |This is the amount of the authorization remaining to refund, in minor units.  It is visible only if no refunds are done on any of the corresponding Settlements for this payment.<br/><i>Read Only</i>|
+|profile                 |[object](#profile)     |These are some details about the consumer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |shippingDetails         |[object](#shippingDetails) |These are the shipping details for the payment.|
-|returnLinks             |[object](#returnLinks) |The url endpoint to redirect the customer to. You can customize the return url based on the transaction status. ('default' is mandatory)|gr
-|txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>read only</i>|
-|error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
-|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
-|statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>read only</i>|
-|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>read only</i>|
-|paymentType             |enum                   |<b>(required)</b> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|returnLinks             |[object](#returnLinks) |The URL endpoint to redirect the consumer to. You can customize the return URL based on the transaction status. 'default' is mandatory|
+|txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|error                   |[object](#error)       |The associated error details for this payment, if applicable.<br/><i>Read Only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
+|statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
+|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -518,15 +520,15 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                     |Description |
 |---                     |---                      |--- |
-|title                   |string                   |This is the customer's title, e.g. Ms.|
-|firstName               |string<br/>`length<=80`  |<b>(required)</b>This is the customer's first name.|
-|lastName                |string<br/>`length<=80`  |<b>(required)</b>This is the customer's last name.|
-|email                   |string<br/>`length<=255` |<b>(required)</b>This is the customer's email address.|
-|dateOfBirth             |[object](#date)          |This is the date of birth of the customer associated to this profile.|
+|title                   |string                   |This is the consumer's title, e.g. Ms.|
+|firstName               |string<br/>`length<=80`  |<b>(Required)</b>This is the consumer's first name.|
+|lastName                |string<br/>`length<=80`  |<b>(Required)</b>This is the consumer's last name.|
+|email                   |string<br/>`length<=255` |<b>(Required)</b>This is the consumer's email address.|
+|dateOfBirth             |[object](#date)          |This is the date of birth of the consumer associated to this profile.|
 |gender                  |enum                     |Options:<ul><li>M &ndash; Male</li><li>F &ndash; Female</li><li>O &ndash; Other</li><li>N &ndash; Not Specified</li></ul>|
-|phone                   |string                   |This is the customer's primary phone.|
-|cellphone               |string                   |This is the customer's cell phone.|
-|ip                      |string<br/>`length<=50`  |This is the IP address the customer's device.|
+|phone                   |string                   |This is the consumer's primary phone.|
+|cellphone               |string                   |This is the consumer's cell phone.|
+|ip                      |string<br/>`length<=50`  |This is the IP address the cconsumer's device.|
 |locale                  |enum                     |This is the ISO language code representing the preferred language for this profile.|
 
 ```
@@ -542,7 +544,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
     },
     "gender": "M",
     "phone": "14032221234",
-    "cellphone": "14033332345",
+    "cellPhone": "14033332345",
     "ip": "23.51.55.523",
     "locale": "en"
 }
@@ -553,15 +555,15 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                         |Description |
 |---                     |---                          |--- |
-|id                      |string<br/>`length<=36`      |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>read only</i>|
+|id                      |string<br/>`length<=36`      |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>Read Only</i>|
 |merchantRefNum          |string<br/>`length<=255`     |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.|
 |amount                  |number<br/>`max=99999999999` |This is the amount of the request, in minor units. For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.|
 |currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
 |paymentType             |enum                         |Payment type of the original payment.|
-|txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>read only</i>|
-|error                   |[object](#error)             |The associated error details for this refund (if applicable).<br/><i>read only</i>|
-|status                  |enum                         |Options:<br/><ul><li>RECEIVED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
-|gatewayResponse         |[object](#gatewayResponse)   |Details from the raw response returned by the gateway.<br/><i>read only</i>|
+|txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|error                   |[object](#error)             |The associated error details for this Refund, if applicable.<br/><i>Read Only</i>|
+|status                  |enum                         |Options:<br/><ul><li>RECEIVED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
+|gatewayResponse         |[object](#gatewayResponse)   |Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
 
 ```
 {
@@ -587,12 +589,12 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                         |Description |
 |---                     |---                          |--- |
-|id                      |string                       |This is the ID returned in the response.<br/><i>read only</i>|
+|id                      |string                       |This is the ID returned in the response.<br/><i>Read Only</i>|
 |amount                  |number<br/>`max=99999999999` |This is the amount of the request, in minor units.For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.|
 |currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
 |paymentType             |enum                         |Payment type of the original payment.|
-|txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>read only</i>|
-|status                  |enum                         |Options:<br/><ul><li>COMPLETED</li></ul><br/><i>read only</i>|
+|txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|status                  |enum                         |Options:<br/><ul><li>COMPLETED</li></ul><br/><i>Read Only</i>|
 
 ```
 {
@@ -611,7 +613,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |rel                     |string<br/>`length=X`  |Options:<ul><li><b>default</b> - The default return URL, which will be used if specific status return URL is not defined.</li><li><b>on\_pending</b></li><li><b>on\_completed</b></li><li><b>on\_failed</b></li><li><b>on\_cancelled</b></li><li><b>on\_error</b></li>|
-|href                    |string<br/>`length=X`  |The TLS secured endpoint to return the customer to.|
+|href                    |string<br/>`length=X`  |The TLS secured endpoint to return the consumer to.|
 
 ```
 {
@@ -625,18 +627,18 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>read only</i>|
-|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
+|id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>Read Only</i>|
+|merchantRefNum          |string                 |<b>(Required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
-|amount                  |number                 |<b>(required)</b> This is the amount of the request, in minor units.|
+|amount                  |number                 |<b>(Required)</b> This is the amount of the request, in minor units.|
 |currencyCode            |string                 |This is the currency of the payment.|
 |paymentType             |enum                   |Payment type of the original payment.|
 |[Payment Object](#paymentObjects)|object        |Optional payment object depending upon the paymentType.|
-|txnTime                 |datetime               |This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>read only</i>|
-|availableToRefund       |number                 |This is the amount of this settlement that is available to refund, in minor units.<br/><i>read only</i>|
-|error                   |[object](#error)       |The associated error details for this settlement (if applicable).<br/><i>read only</i>|
-|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>read only</i>|
-|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>read only</i>|
+|txnTime                 |datetime               |This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|availableToRefund       |number                 |This is the amount of this Settlement that is available to Refund, in minor units.<br/><i>Read Only</i>|
+|error                   |[object](#error)       |The associated error details for this Settlement (if applicable).<br/><i>Read Only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
 
 
 ```
@@ -666,10 +668,10 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |Element                 |Type                     |Description |
 |---                     |---                      |--- |
 |bankName                |string                   |The name of the bank.|
-|country                 |string<br/>`length=2`    |The ISO 3166-1 alpha-2 code for the customer's country of residence (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|accountHolderName       |string<br/>`length<=50`  |This is the name of the customer or company.|
-|bic                     |string<br/>`length=8-11` |This is the Bank Identifier Code for the customer's bank account.|
-|iban                    |string<br/>`length=1-34` |This is the International Bank Account Number for the customer's bank account.|
+|country                 |string<br/>`length=2`    |The ISO 3166-1 alpha-2 code for the consumer's country of residence (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|accountHolderName       |string<br/>`length<=50`  |This is the name of the consumer or company.|
+|bic                     |string<br/>`length=8-11` |This is the Bank Identifier Code for the consumer's bank account.|
+|iban                    |string<br/>`length=1-34` |This is the International Bank Account Number for the consumer's bank account.|
 
 ```
 "sepa": {
@@ -693,7 +695,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |street2                 |string<br/>`length<=50` |This is the second line of the street address in the shipping address, if required (e.g., apartment number).|
 |city                    |string<br/>`length<=40` |This is the city in which the recipient resides.|
 |state                   |string                  |See Province Codes or State Codes for Canada or the United States.|
-|country                 |enum                    |The ISO 3166-1 alpha-2 code for the customer's shipping address (e.g. Germany = DE, JP=Japan. CA=Canada)|
+|country                 |enum                    |The ISO 3166-1 alpha-2 code for the consumer's shipping address (e.g. Germany = DE, JP=Japan. CA=Canada)|
 |zip                     |string                  |This is the recipient's post code.|
 
 ```
@@ -746,7 +748,65 @@ Notifications are configured by logging into the merchant backoffice and navigat
     "zip": "T3H3L3"
   },
   "status":"COMPLETED",
-  "txnTime":"2014-03-14T15:12:18Z"  
+  "txnTime":"2014-03-14T15:12:18Z"
+}
+```
+
+<a name="verification" title="verification Object"></a>
+## verification
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|id                      |string                 |Unique system-generated identifier for this request.<br/><i>Read Only</i> |
+|merchantRefNum          |string                 |This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
+|dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|amount                  |number                 |This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.<br/>**Note:** Although the *amount* field is required for a Verification request, no amount is processed.|
+|payolution              |[object](#payolution)  |This is the payolution payment object. |
+|paymentType             |enum                   |Identifies the type of payment instrument. <br/>Options:<br/><ul><li>PAYOLUTION</li></ul>|
+|profile                 |[object](#profile)     |These are some details about the consumer.|
+|billingDetails          |[object](#billingDetails) |These are the billing details for the request.|
+|shippingDetails         |[object](#shippingDetails) |These are the shipping details for the request.|
+|currencyCode            |string                 |This is the currency of the request.   Default is the account currency.|
+|returnLinks             |[object](#returnLinks) |The url endpoint to redirect the consumer to. You can customize the return url based on the transaction status. 'default' is mandatory.|
+|txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|error                   |[object](#error)       |The associated error details for this request, if applicable. <br/>*Read Only* |
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>FAILED</li><li>COMPLETED</li><li>ERROR</li></ul><br/><i>Read Only</i>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
+
+```
+{
+  "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
+  "dupCheck": true,
+  "amount": 100,
+  "currencyCode": "EUR",
+  "profile": {
+    "firstName": "Stan",
+    "lastName": "Smith",
+    "email": "stan.smith@fox.com",
+    "ip": "127.0.0.1"
+  },
+  "billingDetails": {
+    "street1": "Street line 1",
+    "street2": "Street line 2",
+    "city": "Calgary",
+    "state": "AB",
+    "country": "CA",
+    "zip": "T3H3L3"
+  },
+  "returnLinks": [
+    {
+      "rel": "default",
+      "href": "https://mysite.com/return"
+    }
+  ],
+  "paymentType": "IDEAL",
+  "ideal": {
+    "descriptor": "sampledesc",
+    "sepa": {
+      "bankName": "ing",
+      "country": "NL"
+    }
+  }
 }
 ```
 
@@ -755,16 +815,16 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>read only</i> |
-|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
+|id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>Read Only</i> |
+|merchantRefNum          |string                 |<b>(Required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |amount                  |number                 |This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japanese yen, which has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
 |paymentType             |enum                   |This identifies the type of payment. If not included, it is inferred from the authorization that is being voided (reversed).<br/>Options:<br/><ul><li>PAYOLUTION</li></ul>|
-|txnTime                 |datetime               |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>read only</i>|
-|error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>read only</i>|
-|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>COMPLETED</li><li>FAILED</li><li>ERROR</li><br/><i>read only</i>|
-|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>read only</i>|
+|txnTime                 |datetime               |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>Read Only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>COMPLETED</li><li>FAILED</li><li>ERROR</li><br/><i>Read Only</i>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
 
 
 ```
@@ -781,7 +841,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 <a name="paymentObjects" title="PaymentType Objects"></a>
 # PaymentType Objects
 
-Objects are used to define additional values that can be supplied depending on your request type.  
+PaymentType objects are used to define additional values that can be supplied depending on your request type.
 
 > These objects are nested as part of your Payment, Settlement, Verification or Standalone Credit request.
 <br/><br/>
@@ -791,19 +851,21 @@ __**LEGEND**__
 |:---:           |---           |
 |&#10004;        |Optional      |
 |&#10004;&#10013;|Required      |
-|&#10006;        |Not Applicable|    
+|&#10006;        |Not Applicable|
 
 <a name="boku" title="Boku Payment Object"></a>
 ## boku
 
 ![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)
 
+
+
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length<=20` |<b>(required)</b> Descriptor to display on customer's statement.|
-|consumerId              |string<br/>`length<=255`|<b>(required)</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
-|consumerCountry         |string                 |<b>(required)</b> The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|consumerMobilePhone     |string                 |<b>(required)</b> The customer's mobile phone number.|
+|descriptor              |string<br/>`length<=20` |<b>(Required)</b> Descriptor to display on customer's statement.|
+|consumerId              |string<br/>`length<=255`|<b>(Required)</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
+|consumerCountry         |string                 |<b>(Required)</b> The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|consumerMobilePhone     |string                 |<b>(Required)</b> The customer's mobile phone number.|
 
 ```
 "boku": {
@@ -821,8 +883,8 @@ __**LEGEND**__
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|descriptor              |string<br/>`length<=16` |<b>(required)</b> This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |The customer's SEPA bank account details.|
+|descriptor              |string<br/>`length<=16` |<b>(Required)</b> This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                    |[object](#sepa)        |The consumer's SEPA bank account details.|
 |sepa.accountHolderName  |string                 |The account holder's name.|
 |sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
@@ -846,9 +908,9 @@ __**LEGEND**__
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |The customer's SEPA bank account details (if applicable). |
-|sepa.bankName           |enum                   |<b>(required)</b> The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
-|sepa.country            |enum                   |<b>(required)</b> The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|sepa                    |[object](#sepa)        |The consumer's SEPA bank account details (if applicable). |
+|sepa.bankName           |enum                   |<b>(Required)</b> The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
+|sepa.country            |enum                   |<b>(Required)</b> The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
 |sepa.accountHolderName  |string                 |The account holder's name.|
@@ -870,10 +932,10 @@ __**LEGEND**__
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|consumerId                     |string                 |Email address or NETELLER Account ID of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|consumerId                     |string                 |Email address or NETELLER Account ID of the consumer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
 |consumerVerificationId         |string                 |The consumers NETELLER secure ID, or two step authorization token generated on their device.|
 |recipientDescription           |string<br>`length<=30` |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
-|language                       |string<br>`length=2`   |The 2-character preferred language code for the customer (e.g., EN, FR).|
+|language                       |string<br>`length=2`   |The 2-character preferred language code for the consumer (e.g., EN, FR).|
 |logoUrl                        |string                 |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
 |detail1Description             |string                 |You can show additional details about the product in the More information section in the header of Quick Checkout.|
 |detail1Text                    |string                 |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
@@ -895,42 +957,201 @@ __**LEGEND**__
 
 ![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)
 
-|Element                        |Type                   |Description |
-|---                            |---                    |--- |
-|descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|paymentDetails                                  |string                 |Contains installments with amount and due date plus some additional parameters like interest, etc. <i>read only</i>|
-|paymentInformation                              |object                 |<i>read only</i>|
-|paymentInformation.paymentReference             |string                 |The string to use as a reason for the payment.|
-|paymentInformation.iban                         |string                 |The IBAN to send the payment to..|
-|paymentInformation.bic                          |string                 |The BICc of the bank to send the payment to|
-|paymentInformation.accountHolderName            |string                 |This is the name of the beneficiary.|
-|analysis                                        |object                 |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
+|Element                    |Type                   |Description |
+|---                        |---                    |--- |
+|productType                |enum                   |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
+|descriptor                 |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                       |[object](#sepa)        |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
+|plans                      |[object](#payolution.plans) |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
+|planDuration               |string<br/>`length=X`  |This is the duration, in months, of the plan selected by the consumer. |
+|paymentInformation         |[object](#payolution.paymentInformation) |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
+|analysis                   |object                 |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
 
 ```
 "payolution": {
+    "productType": "INSTALLMENTS",
     "descriptor": "Order with ID 4ab2",
-    "paymentInformation": {
-        "paymentReference": "YTTR-WMQX-KLGW",
-        "iban": "AT611904300234573201456",
-        "bic": "BFRILI22XXX",
-        "bankName": "Musterbank",
-        "accountHolderName": "Test Merchant"
-    },
-    "analysis": [{
-        "key": "PAYOLUTION_CUSTOMER_GROUP",
-        "value": "TOP"
-    }, {
-        "key": "PAYOLUTION_MODULE_NAME",
-        "value": "PaymentModuleName"
-    }, {
-        "key": "PAYOLUTION_INVOICE_ID",
-        "value": "23498739478"
-    }, {
-        "key": "PAYOLUTION_ORDER_ID",
-        "value": "23498739478"
+    "plans": [{
+        "paymentDetails": [{
+            "installments": [{
+                    "amount": 16820,
+                    "due": "2013-07-16"
+                },
+                {
+                    "amount": 16820,
+                    "due": "2013-08-05"
+                },
+                {
+                    "amount": 16820,
+                    "due": "2013-09-05"
+                }
+            ],
+            "originalAmount": 49999,
+            "totalAmount": 50460,
+            "minimumInstallmentFee": 0,
+            "duration": 3,
+            "interestRate": 14.95,
+            "effectiveInterestRate": 15.60,
+            "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
+        }],
+        "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
+        "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment",
+        "planDuration": "3",
+        "sepa": {
+            "bankName": "ING",
+            "country": "NL",
+            "accountHolderName": "John Doe",
+            "bic": "ABNANL2APIP",
+            "iban": "DE89370400440532013000"
+        },
+        "paymentInformation": {
+            "paymentReference": "YTTR-WMQX-KLGW",
+            "iban": "AT611904300234573201456",
+            "bic": "BFRILI22XXX",
+            "accountHolderName": "Test Merchant"
+        },
+        "analysis": [{
+            "key": "PAYOLUTION_CUSTOMER_GROUP",
+            "value": "TOP"
+        }, {
+            "key": "PAYOLUTION_MODULE_NAME",
+            "value": "PaymentModuleName"
+        }, {
+            "key": "PAYOLUTION_INVOICE_ID",
+            "value": "23498739478"
+        }, {
+            "key": "PAYOLUTION_ORDER_ID",
+            "value": "23498739478"
+        }]
+
     }]
 }
 ```
+
+<a name="payolution.installments" title="payolution.installments Object"></a>
+##  &nbsp;&nbsp; .installments
+
+|Element        |Type           |Description |
+|---            |---            |--- |
+|amount         |number         |This is the amount of the installment payment.<br/><i>Read Only</i>|
+|due            |string         |This is the due date of the installment payment.<br/><i>Read Only</i>|
+
+```
+            {
+                "installments": [{
+                        "amount": 16820,
+                        "due": "2013-07-16"
+                    },
+                    {
+                        "amount": 16820,
+                        "due": "2013-08-05"
+                    },
+                    {
+                        "amount": 16820,
+                        "due": "2013-09-05"
+                    }
+                ]
+            }
+```
+
+<a name="payolution.paymentDetails" title="payolution.paymentDetails Object"></a>
+## &nbsp;&nbsp; .paymentDetails
+
+|Element                |Type                       |Description |
+|---                    |---                        |--- |
+|installments           |[object](#payolution.installments)    |These are details about the payolution installment plan for the consumer. <br/><i>Read Only</i>|
+|originalAmount         |number                     |This is the original amount of the Verification, in minor units. <br/><i>Read Only</i>|
+|totalAmount            |number                     |This is the total amount to be paid by the consumer (i.e., the sum of all installments).<br/><i>Read Only</i>|
+|minimumInstallmentFee  |number                     |This is the minimum installment fee.<br/><i>Read Only</i>|
+|duration               |number                     |This is the duration, in months, of the payment plan.<br/><i>Read Only</i>|
+|interestRate           |number                     |This is interest rate of the payment plan.<br/><i>Read Only</i>|
+|effectiveInterestRate  |number                     |This is effective interest rate of the payment plan.<br/><i>Read Only</i>|
+|standardCreditInformationUrl |string               |This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.<br/><i>Read Only</i>|
+
+```
+"paymentDetails": [{
+    "installments": [{
+            "amount": 16820,
+            "due": "2013-07-16"
+        },
+        {
+            "amount": 16820,
+            "due": "2013-08-05"
+        },
+        {
+            "amount": 16820,
+            "due": "2013-09-05"
+        }
+    ],
+    "originalAmount": 49999,
+    "totalAmount": 50460,
+    "minimumInstallmentFee": 0,
+    "duration": 3,
+    "interestRate": 14.95,
+    "effectiveInterestRate": 15.60,
+    "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
+}]
+```
+
+<a name="payolution.paymentInformation" title="payolution.paymentInformation Object"></a>
+## &nbsp;&nbsp; .paymentInformation
+
+|Element                 |Type                  |Description |
+|---                     |---                   |--- |
+|paymentReference            |string            |The string to use as a reason for the payment.<br/><i>Read Only</i>|
+|iban                        |string            |The IBAN to send the payment to.<br/><i>Read Only</i>|
+|bic                         |string            |The BIC of the bank to send the payment to.<br/><i>Read Only</i>|
+|bankName                    |string            |This is the name of the bank to send the payment to.<br/><i>Read Only</i>|
+|accountHolderName           |string            |This is the name of the beneficiary.<br/><i>Read Only</i>|
+
+```
+{
+    "paymentReference": "YTTR-WMQX-KLGW",
+    "iban": "AT611904300234573201456",
+    "bic": "BFRILI22XXX",
+    "bankName": "Musterbank",
+    "accountHolderName": "Test Merchant"
+}
+```
+
+<a name="payolution.plans" title="payolution.plans Object"></a>
+## &nbsp;&nbsp; .plans
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|paymentDetails          |[object](#payolution.paymentDetails) |This is an array of payment details objects. <br/><i>Read Only</i>|
+|tacUrl                  |string                    |This is a URL pointing to the Terms and Conditions for the payment plan.<br/><i>Read Only</i>|
+|dataPrivacyConsentUrl   |string                    |This is a URL pointing to the data privacy declaration for the payment plan.<br/><i>Read Only</i>|
+
+```
+{
+    "paymentDetails": [{
+        "originalAmount": 1000,
+        "totalAmount": 1026,
+        "minimumInstallmentFee": 0,
+        "duration": 3,
+        "interestRate": 14.95,
+        "effectiveInterestRate": 16.02,
+        "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=b08a1d6a-5249-4271-944f-9695357b9fd6;duration=3",
+        "installments": [{
+                "amount": 342,
+                "due": "2018-02-05"
+            },
+            {
+                "amount": 342,
+                "due": "2018-03-05"
+            },
+            {
+                "amount": 342,
+                "due": "2018-04-05"
+            }
+        ]
+    }],
+    "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
+    "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment"
+}
+```
+
 <a name="paysafecard" title="Paysafecard Payment Object"></a>
 ## paysafecard 
 
@@ -938,7 +1159,7 @@ __**LEGEND**__
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|consumerId                     |string                 |**(required)** The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
+|consumerId                     |string                 |**(Required)** The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
 |ageRestriction                 |number                 |Minimum age restriction for the transaction.|
 |kycLevelRestriction            |string                 |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
 |countryRestriction             |string<br>`length=2`   |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
@@ -959,10 +1180,10 @@ __**LEGEND**__
 
 |Element                        |Type                   |Description |
 |---                            |---                    |--- |
-|descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                           |[object](#sepa)        |The customer's SEPA bank account details (if applicable). |
-|sepa.bankName                  |enum                   |The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
-|sepa.country                   |enum                   |The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
+|descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                           |[object](#sepa)        |The consumer's SEPA bank account details (if applicable). |
+|sepa.bankName                  |enum                   |The consumer's bank.|
+|sepa.country                   |enum                   |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
 |sepa.iban                      |string                 |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                       |string                 |The Bank Identifier Code (BIC) of the account.|
 |sepa.accountHolderName         |string                 |The account holder's name.|
@@ -985,7 +1206,7 @@ __**LEGEND**__
 |emailSubject            |string                 |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Subject line to use in customer email.|
 |emailMessage            |string                 |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Message to use in customer email.|
 |recipientDescription    |string<br>`length<=30` |&#10004;         |&#10006;               |&#10006;               |&#10006;          |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
-|language                |string<br>`length=2`   |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The 2-character preferred language code for the customer (e.g., EN, FR).|
+|language                |string<br>`length=2`   |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The 2-character preferred language code for the consumer (e.g., EN, FR).|
 |logoUrl                 |string                 |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
 |detail1Description      |string                 |&#10004;         |&#10006;               |&#10006;               |&#10006;          |You can show additional details about the product in the More information section in the header of Quick Checkout.|
 |detail1Text             |string                 |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
@@ -1010,7 +1231,7 @@ __**LEGEND**__
 |Element                 |Type                   |Request Type     |                       |                       |                  |Description|
 |---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
 |                        |                       |_**Payment**_    |_**Settlement**_       |_**Standalone Credit**_|_**Verification**_|   |
-|descriptor              |string<br/>`length<=43`|&#10004;&#10013; |&#10006;               |&#10006;               |&#10006;          |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|descriptor              |string<br/>`length<=43`|&#10004;&#10013; |&#10006;               |&#10006;               |&#10006;          |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
 |sepa                    |[object](#sepa)        |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The customer's SEPA bank account details.|
 
 ```
@@ -1126,13 +1347,13 @@ These errors are specific to the Alternate Payments API.
 |402           |ALTERNATE-PAYMENTS-GATEWAY-5  |Incomplete transaction                  |The requested operation can only be executed on a completed transaction.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-6  |Over refund                             |The total refund amount cannot exceed the original payment amount.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-7  |Payment expired                         |The payment has expired.|
-|402           |ALTERNATE-PAYMENTS-GATEWAY-8  |Over settlement                         |The total settlement amount cannot exceed the authorized (payment) amount.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-8  |Over settlement                         |The total Settlement amount cannot exceed the authorized (payment) amount.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-9  |Risk gateway error                      |A risk issue was reported by the gateway.|
 |502           |ALTERNATE-PAYMENTS-GATEWAY-10 |Payment type temporarily unavailable    |The gateway is temporarily unavailable due to system maintenance activities.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-11 |Over voidauth                           |The void authorization cannot exceed the amount remaining to settle for the corresponding payment.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-12 |Payment already settled                 |The payment is already partially/fully settled.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-13 |Transaction not refundable yet          |The transaction is not refundable yet.|
-|402           |ALTERNATE-PAYMENTS-GATEWAY-14 |Partial settlements not possible        |Partial settlements are not possible with the selected payment method.|
+|402           |ALTERNATE-PAYMENTS-GATEWAY-14 |Partial settlements not possible        |Partial Settlements are not possible with the selected payment method.|
 
 # Legal and Community
 <ul>
@@ -1159,16 +1380,17 @@ This call returns a status of READY if the API is available.
 # Payments [/payments]
 <a name="payments" title="Payments"></a>
 
-The payments resource represents a payment authorization.  
+The payments resource represents a Payment Authorization.
 
 A Payment and Settlement work in conjunction and a complete transaction will always have both resources associated to it (Payment + Settlement).  
 
-When requesting a payment, by default it will include automatic settlement (*settleWithAuth* = *true*). This will trigger creation of a corresponding settlement record.  The
-settlement record represents the actual capture of funds to your merchant account. For cases  when *settleWithAuth* is *true*, the corresponding settlement will have the same 
+When requesting a payment, by default it will include automatic Settlement (*settleWithAuth* = *true*). This will trigger creation of a corresponding Settlement record.  The
+Settlement record represents the actual capture of funds to your merchant account. For cases  when *settleWithAuth* is *true*, the corresponding Settlement will have the same
 resource identifier (ID) as the payment because it was created from the same request.
 
-Alternatively, you can choose delayed settlement (*settleWithAuth* = *false*). In this case, the Payment only represents an Authorization for the Payment and you must complete 
-a subsequent settlement request when you wish to capture the payment.  The ability to perform delayed settlement will depend on the payment option you are attempting.  
+Alternatively, you can choose manual Settlement (*settleWithAuth* = *false*). In this case, the Payment only represents an Authorization for the Payment and you must complete
+a subsequent Settlement request when you wish to capture the payment.  The ability to perform manual Settlement will depend on the payment option you are attempting.
+[Click here](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview/) to see which payment types support manual settlement.
 
 > **Note:** Each payment type and currency is associated with a distinct merchant account ID.  You will need to know which account ID is associated to your payment type and currency
 > in order to complete your request. Please contact [Paysafe Merchant Support](https://developer.paysafe.com/en/resources-and-support/contact-us/) to enable additional payment types and or currencies.
@@ -1206,7 +1428,12 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
 |[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)||||
-        
+
+
+Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
+* A standard Payment Authorization using the iDEAL payment method, with automatic settlement.
+* A Payment Authorization using the payolution payment method, offering payment by installments. You must first process a [Verification request](#createverification) for the consumer before they can pay by installments.
+
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
 
@@ -1224,7 +1451,7 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
     + Include sofort
     + Include links    
 
-+ Request Create iDeal payment (application/json)
++ Request Create iDeal Payment (application/json)
 
     + Headers
 
@@ -1324,11 +1551,167 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
               ]
             }
  
++ Request Create payolution Payment with Installments (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+                "amount": 1000,
+                "merchantRefNum": "payolution_Installment345",
+                "paymentType": "PAYOLUTION",
+                "verificationId": "2f6f0150-2f08-43be-ad42-aa89fafde792",
+                "payolution": {
+                    "productType": "INSTALLMENTS",
+                    "planDuration": "3",
+                    "descriptor": "Descriptor",
+                    "analysis": [{
+                        "key": "PAYOLUTION_CUSTOMER_GROUP",
+                        "value": "TOP"
+                    }, {
+                        "key": "PAYOLUTION_MODULE_NAME",
+                        "value": "PaymentModuleName"
+                    }, {
+                        "key": "PAYOLUTION_INVOICE_ID",
+                        "value": "23498739478"
+                    }, {
+                        "key": "PAYOLUTION_ORDER_ID",
+                        "value": "23498739478"
+                    }]
+                },
+
+                "settleWithAuth": false,
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "johndoe@paysafe.com",
+                    "ip": "127.0.0.1",
+                    "dateOfBirth": {
+                        "day": "01",
+                        "month": "01",
+                        "year": "1970"
+                    }
+                },
+                "billingDetails": {
+                    "street1": "Teststreet 19",
+                    "zip": "3512 JS",
+                    "state": "UT",
+                    "city": "Utrecht",
+                    "country": "NL"
+                }
+            }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": "5063daee-0e9e-4d0d-838f-b7bac2b04b8d",
+                "merchantRefNum": "payolution_Installment345",
+                "amount": 1000,
+                "currencyCode": "EUR",
+                "paymentType": "PAYOLUTION",
+                "settleWithAuth": false,
+                "verificationId": "2f6f0150-2f08-43be-ad42-aa89fafde792",
+                "availableToSettle": 1000,
+                "availableToRefund": 0,
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "johndoe@paysafe.com",
+                    "ip": "127.0.0.1",
+                    "dateOfBirth": {
+                        "day": 1,
+                        "month": 1,
+                        "year": 1970
+                    }
+                },
+                "billingDetails": {
+                    "street1": "Teststreet 19",
+                    "zip": "3512 JS",
+                    "city": "Utrecht",
+                    "country": "NL",
+                    "state": "UT"
+                },
+                "payolution": {
+                    "paymentInformation": {
+                        "paymentReference": "3990bdf5-fd9e-4185-b204-026368198f67",
+                        "iban": "AT611904300234573201456",
+                        "bic": "BFRILI22XXX",
+                        "bankName": "Musterbank",
+                        "accountHolderName": "Test Merchant"
+                    },
+                    "descriptor": "Descriptor",
+                    "analysis": [{
+                            "key": "PAYOLUTION_CUSTOMER_GROUP",
+                            "value": "TOP"
+                        },
+                        {
+                            "key": "PAYOLUTION_MODULE_NAME",
+                            "value": "PaymentModuleName"
+                        },
+                        {
+                            "key": "PAYOLUTION_INVOICE_ID",
+                            "value": "23498739478"
+                        },
+                        {
+                            "key": "PAYOLUTION_ORDER_ID",
+                            "value": "23498739478"
+                        },
+                        {
+                            "key": "PAYOLUTION_PRE_CHECK_ID",
+                            "value": "7373c12f-ea2e-4e65-b7f7-4ee8fa8c7f47"
+                        }
+                    ],
+                    "paymentDetails": {
+                        "originalAmount": 10,
+                        "totalAmount": 10.26,
+                        "minimumInstallmentFee": 0,
+                        "duration": 3,
+                        "interestRate": 14.95,
+                        "effectiveInterestRate": 16.02,
+                        "installments": [{
+                                "amount": 3.42,
+                                "due": "2018-02-05"
+                            },
+                            {
+                                "amount": 3.42,
+                                "due": "2018-03-05"
+                            },
+                            {
+                                "amount": 3.42,
+                                "due": "2018-04-05"
+                            }
+                        ]
+                    }
+                },
+                "txnTime": "2018-01-24T19:21:04Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "0.0.0",
+                    "description": "The request was processed successfully.",
+                    "id": "05f1c3e1-73af-43f6-a672-758bed33ce5e",
+                    "processor": "PAYOLUTION",
+                    "paymentType": "PA"
+                },
+                "links": [{
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001186650/payments/5063daee-0e9e-4d0d-838f-b7bac2b04b8d"
+                    },
+                    {
+                        "rel": "verification",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001186650/verifications/2f6f0150-2f08-43be-ad42-aa89fafde792"
+                    }
+                ]
+            }
 
 ## Get Payment by ID [GET /accounts/{accountId}/payments/{paymentId}]
 <a name="getpayment" title="Look Up a Payment"></a>
 
-This is how you look up a [Payment](#payment) using the payment ID.
+Click on **Get Payment by ID** above to see how to look up a [Payment](#payment) using the payment ID, which is the *id* returned in the response to the Payment request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1405,7 +1788,8 @@ This is how you look up a [Payment](#payment) using the payment ID.
 ## List Payments by Merchant Reference Number [GET /accounts/{accountId}/payments/?merchantRefNum={merchantRefNum}]
 <a name="listpayment" title="List Payments by Merchant Reference Number"></a>
 
-This is how you look up Payments using the merchant reference number used in the original request. This returns a collection of payment details, as *merchantRefNum* could be used for multiple requests when *dupCheck*
+
+Click on **List Payments by Merchant Reference Number** above to see how to look up Payments using the merchant reference number used in the original request. This returns a collection of payment details, as *merchantRefNum* could be used for multiple requests when *dupCheck*
 is disabled.
 
 + Parameters
@@ -1495,17 +1879,433 @@ is disabled.
                 ]
             }
 
+# Verifications [/verifications]
+<a name="verifications" title="Verifications"></a>
+
+A Verification request allows you to send a query to do a preliminary check to verify the consumer's request (e.g., verify that the profile and payment method information are valid). When you get a successful response, you can then continue and [process a Payment Authorization](#createauthorization).
+
+**Note:** Verification requests are currently supported for the PAYOLUTION *paymentType* only. It is required if your *productType* for your Authorized Payment is *INSTALLMENTS*. However, payolution recommends that you also process a Verification request when your *productType* is *INVOICE*.
+
+When payolution responds to the Verification request, they will indicate 1) whether the consumer information is valid; and 2) whether the consumer is eligible for credit.
+In the case where the *productType* in the Verification response is *INSTALLMENTS*, payolution will also return the available payment plans with all the payment details, which should be presented to the consumer so they can select a payment plan duration. The selected duration is then passed with the *planDuration* parameter in the [Authorized Payment request](#createauthorization).
+
+See the [payolution payment object](#payolution) for more information.
+
+
+## Process a Verification Request [POST /accounts/{accountId}/verifications]
+<a name="createverification" title="Process a Verification Request"></a>
+
+Click on **Process a Verification Request** above to see how to process a Verification request. **Note:** You can currently process this request type only when the *paymentType* is set to PAYOLUTION.
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+
++ Attributes
+    + Include verification
+    + Include paymentTypeVerification
+    + Include payolution
+    + Include links
+
++ Request Process Verification Request (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
+    + Body
+
+            {
+                "amount": 1000,
+                "merchantRefNum": "payolution_verification_{{$timestamp}}",
+                "paymentType": "PAYOLUTION",
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "johndoe@paysafe.com",
+                    "ip": "127.0.0.1",
+                    "dateOfBirth": {
+                        "day": "01",
+                        "month": "01",
+                        "year": "1970"
+                    }
+                },
+                "payolution": {
+                    "descriptor": "Descriptor",
+                    "productType": "INSTALLMENTS",
+                    "analysis": [{
+                        "key": "PAYOLUTION_CUSTOMER_GROUP",
+                        "value": "TOP"
+                    }, {
+                        "key": "PAYOLUTION_MODULE_NAME",
+                        "value": "PaymentModuleName"
+                    }, {
+                        "key": "PAYOLUTION_INVOICE_ID",
+                        "value": "23498739478"
+                    }, {
+                        "key": "PAYOLUTION_ORDER_ID",
+                        "value": "23498739478"
+                    }]
+                },
+                "billingDetails": {
+                    "street1": "Teststreet 19",
+                    "zip": "3512 JS",
+                    "state": "UT",
+                    "city": "Utrecht",
+                    "country": "NL"
+                }
+            }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": "62f501a2-8a14-47bd-a8a9-f19ed59953fd",
+                "merchantRefNum": "payolution_verification_1517338241",
+                "amount": 1000,
+                "currencyCode": "EUR",
+                "paymentType": "PAYOLUTION",
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "johndoe@paysafe.com",
+                    "ip": "127.0.0.1",
+                    "dateOfBirth": {
+                        "day": 1,
+                        "month": 1,
+                        "year": 1970
+                    }
+                },
+                "billingDetails": {
+                    "street1": "Teststreet 19",
+                    "zip": "3512 JS",
+                    "city": "Utrecht",
+                    "country": "NL",
+                    "state": "UT"
+                },
+                "payolution": {
+                    "descriptor": "Descriptor",
+                    "productType": "INSTALLMENTS",
+                    "analysis": [{
+                            "key": "PAYOLUTION_CUSTOMER_GROUP",
+                            "value": "TOP"
+                        },
+                        {
+                            "key": "PAYOLUTION_MODULE_NAME",
+                            "value": "PaymentModuleName"
+                        },
+                        {
+                            "key": "PAYOLUTION_INVOICE_ID",
+                            "value": "23498739478"
+                        },
+                        {
+                            "key": "PAYOLUTION_ORDER_ID",
+                            "value": "23498739478"
+                        }
+                    ],
+                    "plans": {
+                        "paymentDetails": [{
+                                "originalAmount": 1000,
+                                "totalAmount": 1026,
+                                "minimumInstallmentFee": 0,
+                                "duration": 3,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=3",
+                                "installments": [{
+                                        "amount": 342,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 342,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 342,
+                                        "due": "2018-04-03"
+                                    }
+                                ]
+                            },
+                            {
+                                "originalAmount": 1000,
+                                "totalAmount": 1032,
+                                "minimumInstallmentFee": 0,
+                                "duration": 4,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=4",
+                                "installments": [{
+                                        "amount": 258,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 258,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 258,
+                                        "due": "2018-04-03"
+                                    },
+                                    {
+                                        "amount": 258,
+                                        "due": "2018-05-03"
+                                    }
+                                ]
+                            },
+                            {
+                                "originalAmount": 1000,
+                                "totalAmount": 1044,
+                                "minimumInstallmentFee": 0,
+                                "duration": 6,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=6",
+                                "installments": [{
+                                        "amount": 174,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-04-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-05-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-06-03"
+                                    },
+                                    {
+                                        "amount": 174,
+                                        "due": "2018-07-03"
+                                    }
+                                ]
+                            },
+                            {
+                                "originalAmount": 1000,
+                                "totalAmount": 1062,
+                                "minimumInstallmentFee": 0,
+                                "duration": 9,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=9",
+                                "installments": [{
+                                        "amount": 118,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-04-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-05-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-06-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-07-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-08-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-09-03"
+                                    },
+                                    {
+                                        "amount": 118,
+                                        "due": "2018-10-03"
+                                    }
+                                ]
+                            },
+                            {
+                                "originalAmount": 1000,
+                                "totalAmount": 1080,
+                                "minimumInstallmentFee": 0,
+                                "duration": 12,
+                                "interestRate": 14.95,
+                                "effectiveInterestRate": 16.02,
+                                "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=053c5369-c37a-431b-96f0-1981384ac993;duration=12",
+                                "installments": [{
+                                        "amount": 90,
+                                        "due": "2018-02-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-03-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-04-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-05-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-06-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-07-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-08-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-09-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-10-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-11-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2018-12-03"
+                                    },
+                                    {
+                                        "amount": 90,
+                                        "due": "2019-01-03"
+                                    }
+                                ]
+                            }
+                        ],
+                        "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
+                        "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment"
+                    }
+                },
+                "txnTime": "2018-01-30T18:50:41Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "0.0.0",
+                    "description": "The request was processed successfully.",
+                    "id": "053c5369-c37a-431b-96f0-1981384ac993",
+                    "processor": "PAYOLUTION",
+                    "paymentType": "CL"
+                },
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001186650/verifications/62f501a2-8a14-47bd-a8a9-f19ed59953fd"
+                }]
+            }
+
+## Get Verification by ID [GET /accounts/{accountId}/verifications/{verificationId}]
+<a name="getverification" title="Look Up a Verification"></a>
+
+Click on **Get Verification by ID** above to see how to look up a [Verification](#verification) using the Verification ID, which is the *id* returned in the response to the Verification request.
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + verificationId (string, required, `77e98a24-91ec-4cd7-bdfe-8039e189875e`) - This is your unique Verification identifier.
+
++ Request Get Verification (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": "77e98a24-91ec-4cd7-bdfe-8039e189875e",
+                "merchantRefNum": "payolution_1516135234",
+                "amount": 1000,
+                "currencyCode": "EUR",
+                "paymentType": "PAYOLUTION",
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "johndoe@paysafe.com",
+                    "ip": "127.0.0.1",
+                    "dateOfBirth": {
+                        "day": 1,
+                        "month": 1,
+                        "year": 1970
+                    }
+                },
+                "billingDetails": {
+                    "street1": "Teststreet 19",
+                    "zip": "3512 JS",
+                    "city": "Utrecht",
+                    "country": "NL",
+                    "state": "UT"
+                },
+                "payolution": {
+                    "paymentInformation": {
+                        "paymentReference": "8771f3b0-45a0-4c8e-8fc7-7c2538828b0e",
+                        "iban": "AT611904300234573201456",
+                        "bic": "BFRILI22XXX",
+                        "bankName": "Musterbank",
+                        "accountHolderName": "Test Merchant"
+                    },
+                    "descriptor": "Descriptor",
+                    "analysis": [{
+                            "key": "PAYOLUTION_CUSTOMER_GROUP",
+                            "value": "TOP"
+                        },
+                        {
+                            "key": "PAYOLUTION_MODULE_NAME",
+                            "value": "PaymentModuleName"
+                        },
+                        {
+                            "key": "PAYOLUTION_INVOICE_ID",
+                            "value": "23498739478"
+                        },
+                        {
+                            "key": "PAYOLUTION_ORDER_ID",
+                            "value": "23498739478"
+                        }
+                    ]
+                },
+                "txnTime": "2018-01-17T15:53:25Z",
+                "status": "COMPLETED",
+                "gatewayResponse": {
+                    "code": "0.0.0",
+                    "description": "The request was processed successfully.",
+                    "id": "e2a5f94a-7539-468f-a9f7-9fe76652c2ba",
+                    "processor": "PAYOLUTION",
+                    "paymentType": "PC"
+                },
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001141560/verifications/77e98a24-91ec-4cd7-bdfe-8039e189875e"
+                }]
+            }
+
 # Void Authorizations [/voidauths]
 <a name="voidauths" title="Void Authorizations"></a>
 
 This is how you submit a Void Authorization (authorization reversal) request. You can void an Authorization only if it has not yet been settled.
 
-**Note:** This operation is available only for payment methods that [support delayed settlement](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview/#delayed-settlement-payment-flow). If the authorization has already been fully settled, then you will not be able to void it and will need to [issue a refund](#refundpayment) instead.
+**Note:** This operation is available only for payment methods that [support manual Settlement](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview). If the authorization has already been fully settled, then you will not be able to void it and will need to [issue a Refund](#refundpayment) instead.
 
 ## Void a Previously Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/voidauths]
 <a name="voidauth" title="Void a Previously Authorized Payment"></a>
 
-Reverse (cancel) an existing authorization. 
+Click on **Void a Previously Authorized Payment** above to see how to reverse (cancel) an existing authorization.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1514,6 +2314,7 @@ Reverse (cancel) an existing authorization.
 + Attributes
     + Include voidAuth
     + Include paymentType voidauth
+    + Include links
 
 + Request Void an Authorization (application/json)
 
@@ -1562,7 +2363,7 @@ Reverse (cancel) an existing authorization.
 ## Get Void Authorization by ID [GET /accounts/{accountId}/payment/{paymentId}/voidauths/{voidauthId}]
 <a name="getvoidauth" title="Look Up a Void Authorization"></a>
 
-This is how you look up a Void Authorization request using the ID returned in the response to the original request.
+Click on **Get Void Authorization by ID** above to see how to look up a Void Authorization request using the ID returned in the response to the original request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1610,7 +2411,7 @@ This is how you look up a Void Authorization request using the ID returned in th
 ## List Void Authorizations [GET /accounts/{accountId}/payment/{paymentId}/voidauths]
 <a name="listvoidauth" title="List Void Authorizations"></a>
 
-This is how you retrieve a list of any Void Authorizations associated to a payment. 
+Click on **List Void Authorizations** above to see how to retrieve a list of any Void Authorizations associated to a payment.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1672,16 +2473,16 @@ This is how you retrieve a list of any Void Authorizations associated to a payme
 # Settlements [/settlements]
 <a name="settlements" title="Settlements"></a>
 
-If you specified delayed (manual) settlement on your payment request, then you must manually POST the settlement against 
-the payment authorization.  Settlement is the process of capturing funds from a previous authorization request to your merchant account.
+If you specified manual Settlement on your payment request (i.e., with *settleWithAuth* = *false*), then you must manually POST the Settlement against
+the Payment Authorization.  Settlement is the process of capturing funds from a previous authorization request to your merchant account. You can query the
+Payment resource to find out the remaining amount available to settle.
 
-You can settle all or part of an existing payment authorization.
+You can settle all or part of an existing Payment Authorization. [Click here](https://developer.paysafe.com/en/rest-api/alternate-payments/getting-started/overview/) to see which payment types support manual settlement.
 
 ## Settle an Authorized Payment [POST /accounts/{accountId}/payments/{paymentId}/settlements]
 <a name="settlement" title="Settle a Previously Authorized Payment"></a>
 
-You must manually settle a previously authorized payment if it was requested with *settleWithAuth* = *false*.  You can query the 
-Payment resource to find out the remaining amount available to settle.
+Click on **Settle an Authorized Payment** above to see an example of a settlement for a previous PAYSAFECARD Payment Authorization.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1689,7 +2490,7 @@ Payment resource to find out the remaining amount available to settle.
 
 + Attributes
     + Include settlement
-    + Include paymentType settlement
+    + Include paymentTypeSettlement
     + Include payolution
     + Include paysafecard    
     + Include links     
@@ -1742,11 +2543,11 @@ Payment resource to find out the remaining amount available to settle.
 ## Get Settlement by ID [GET /accounts/{accountId}/settlements/{settlementId}]
 <a name="getsettlement" title="Look Up a Settlement"></a>
 
-This is how you look up a Settlement request using the ID returned in the response to the original request.
+Click on **Get Settlement by ID** above to look up a Settlement request using the ID returned in the response to the original request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + settlementId (string, required, `a99f93a7-a35c-4f9e-9b48-a7d588a53c32`) - This is your unique settlement identifier.
+    + settlementId (string, required, `a99f93a7-a35c-4f9e-9b48-a7d588a53c32`) - This is your unique Settlement identifier.
 
 + Request Get Settlement (application/json)
 
@@ -1790,7 +2591,7 @@ This is how you look up a Settlement request using the ID returned in the respon
 ## List Settlements by Merchant Reference Number [GET /accounts/{accountId}/settlements/?merchantRefNum={merchantRefNum}]
 <a name="listsettlement" title="List Settlements by Merchant Reference Number"></a>
 
-This is how you look up Settlements using the merchant reference number used in the original request. This returns a collection of settlement details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
+Click on **List Settlements by Merchant Reference Number ID** above to look up Settlements using the merchant reference number used in the original request. This returns a collection of Settlement details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1842,7 +2643,7 @@ This is how you look up Settlements using the merchant reference number used in 
 ## List Settlements for a Payment [GET /accounts/{accountId}/payment/{paymentId}/settlements]
 <a name="listsettlementsid" title="List Settlements for a Payment"></a>
 
-This is how you retrieve a list of any Settlements associated to a payment.
+Click on **List Settlements for a Payment** above to retrieve a list of any Settlements associated to a payment.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1894,18 +2695,18 @@ This is how you retrieve a list of any Settlements associated to a payment.
 # Refunds [/refunds]
 <a name="refunds" title="Refunds"></a>
 
-A Refund allows you to refund back to a customer an amount that has previously been settled. You can issue either a full or a 
-partial refund (or series of refunds) against the intial settlement, provided the combined refund amount does not
-exceed the original settlement amount.
+A Refund allows you to refund back to a consumer an amount that has previously been settled. You can issue either a full or a
+partial Refund (or series of Refunds) against the initial Settlement, provided the combined Refund amount does not
+exceed the original Settlement amount.
 
-You can create a refund against either a payment or a settlement. **Note:** If you process a partial refund against a settlement using the *settlements/settlementId/refunds* endpoint, if you want to refund any of the remaining amount you must use the same endpoint. Similarly, if you process a partial refund against a payment authorization using the *payments/paymentId/refunds* endpoint, if you want to refund any of the remaining amount you must use the same endpoint.
+You can create a Refund against either an Authorized Payment or a Settlement. **Note:** If you process a partial Refund against a Settlement using the *settlements/settlementId/refunds* endpoint, if you want to Refund any of the remaining amount you must use the same endpoint. Similarly, if you process a partial Refund against a Payment Authorization using the *payments/paymentId/refunds* endpoint, if you want to Refund any of the remaining amount you must use the same endpoint.
 
 ## Refund a Payment [POST /accounts/{accountId}/payments/{paymentId}/refunds]
 <a name="refundpayment" title="Refund a Payment"></a>
 
-This is how you submit a Refund request against a completed payment.
+Click on **Refund a Payment** above to see how to submit a Refund request against a completed payment.
 
-> NOTE: You can also issue a refund against the settlement.  Choose the right method depending upon your integration needs.
+> NOTE: You can also issue a Refund against the Settlement.  Choose the right method depending upon your integration needs.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -1913,8 +2714,14 @@ This is how you submit a Refund request against a completed payment.
 
 + Attributes
     + Include refund
-    + Include paymentType refund
-
+    + Include paymentTypeRefund
+    + Include ideal
+    + Include neteller
+    + Include payolution
+    + Include skrill
+    + Include sofort    
+    + Include links
+     
 + Request Refund a Payment (application/json)
 
     + Headers
@@ -1961,9 +2768,9 @@ This is how you submit a Refund request against a completed payment.
 ## Refund a Settlement [POST /accounts/{accountId}/settlements/{settlementId}/refunds]
 <a name="refundsettlement" title="Refund a Settlement"></a>
 
-This is how you submit a Refund request against a completed settlement.
+Click on **Refund a Settlement** above to see how to submit a Refund request against a completed settlement.
 
-> NOTE: You can also issue a refund against the payment.  Choose the right method depending upon your integration needs.
+> NOTE: You can also issue a Refund against the Authorized Payment.  Choose the right method depending upon your integration needs.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
@@ -2015,11 +2822,11 @@ This is how you submit a Refund request against a completed settlement.
 ## Get Refund by ID [GET /accounts/{accountId}/refunds/{refundId}]
 <a name="getrefund" title="Look Up a Refund"></a>
 
-This is how you look up a Refund request using the ID returned in the response to the original request.
+Click on **Get Refund by ID** above to see how to look up a Refund request using the ID returned in the response to the original request.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + refundId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique refund identifier.
+    + refundId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique Refund identifier.
 
 + Request Get Refund (application/json)
 
@@ -2061,12 +2868,12 @@ This is how you look up a Refund request using the ID returned in the response t
 ## List Refunds by Merchant Reference Number [GET /accounts/{accountId}/payments/{paymentId}/refunds/?merchantRefNum={merchantRefNum}]
 <a name="listrefund" title="List Refunds by Merchant Reference Number"></a>
 
-This is how you look up Refunds using the merchant reference number used in the original request. This returns a collection of refund details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
+Click on **List Refunds by Merchant Reference Number** above to see how to look up Refunds using the merchant reference number used in the original request. This returns a collection of refund details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
     + paymentId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba` - This is your unique payment identifier.
-    + merchantRefNum (string, required, `Ref-1506977370`) - This is your unique refund identifier.
+    + merchantRefNum (string, required, `Ref-1506977370`) - This is your unique Refund identifier.
 
 + Request List Refunds (application/json)
 
@@ -2124,18 +2931,18 @@ This is how you look up Refunds using the merchant reference number used in the 
 
 Returns transactions will be created by Paysafe if we receive a chargeback or return notification from the service provider, indicating that the Alternate Payments request never settled.  
 
-As a merchant, you cannot create a return directly.  
+As a merchant, you cannot create a Return directly.
 
-> **Note:** Currently only Sofort supports returns.
+> **Note:** Currently only Sofort supports Returns.
 
 ## Get Return by ID [GET /accounts/{accountId}/returns/{returnId}]
 <a name="getreturn" title="Look Up a Return"></a>
 
-This is how you look up a Return using an ID.
+Click on **Get Return by ID** above to see how to look up a Return using an ID.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + returnId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique return identifier.
+    + returnId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique Return identifier.
 
 + Request Get Return (application/json)
 
@@ -2187,11 +2994,11 @@ This is how you look up a Return using an ID.
 ## List Returns for a Settlement [GET /accounts/{accountId}/settlements/{settlementId}/returns]
 <a name="listreturns" title="List Returns for a Settlement"></a>
 
-This is how you retrieve a list of any returns associated to a settlement.
+Click on **List Returns for a Settlement** above to see how to retrieve a list of any Returns associated to a Settlement.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + settlementId (string, required, `2f6a9ba3-d1df-438a-b8f5-59106c8f830c`) - This is your unique settlement identifier.
+    + settlementId (string, required, `2f6a9ba3-d1df-438a-b8f5-59106c8f830c`) - This is your unique Settlement identifier.
 
 + Request List Returns for a Settlement (application/json)
 
@@ -2241,18 +3048,18 @@ This is how you retrieve a list of any returns associated to a settlement.
 # Return Reversals [/returnreversals]
 <a name="returnreversals" title="Return Reversals"></a>
 
-Return reversal transactions will be automatically created by Paysafe if we receive a **late credit** notification after we have already issued a return.
+Return Reversal transactions will be automatically created by Paysafe if we receive a **late credit** notification after we have already issued a Return.
 
-> **Note:** Currently only Sofort supports return reversals.
+> **Note:** Currently only Sofort supports Return Reversals.
 
 ## List Return Reversals for a Return [GET /accounts/{accountId}/returns/{returnId}/returnreversals]
 <a name="listreturnreversals" title="List Return Reversals for a Return"></a>
 
-This is how you retrieve a collection of return reversal details.
+Click on **List Return Reversals for a Return** above to see how to retrieve a collection of Return Reversal details.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + returnId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return identifier.
+    + returnId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique Return identifier.
 
 + Request List Return Reversals (application/json)
 
@@ -2267,12 +3074,12 @@ This is how you retrieve a collection of return reversal details.
 ## Get Return Reversal by ID [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
 <a name="getreturnreversal" title="Look Up a Return Reversal"></a>
 
-This is how you retrieve details for a single return reversal.  You can identify return reversals through the List Return Reversals endpoint.
+Click on **Get Return Reversal by ID** above to see how to retrieve details for a single Return Reversal.  You can identify Return Reversals through the [List Return Reversals endpoint](#listreturnreversals).
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + returnId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique return identifier.
-    + returnReversalId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique return reversal identifier.
+    + returnId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique Return identifier.
+    + returnReversalId (string, required, `25f6dadf-176a-415f-95c9-6ff39ff697ba`) - This is your unique Return Reversal identifier.
 
 + Request Get Return Reversal (application/json)
 
@@ -2298,12 +3105,12 @@ Submit a Standalone Credit using a specific payment type.
 + Request Create Standalone Credit (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
 + Response 200 (application/json)
-                                                
+
 
 ## Get Standalone Credit by ID [GET /accounts/{accountId}/standalonecredits/{standaloneCreditId}]
 <a name="getstandalonecredit" title="Get standalone Credit by ID"></a>
@@ -2317,7 +3124,7 @@ This is how you look up a Standalone Credit using the ID.
 + Request Get Standalone Credit (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
@@ -2328,21 +3135,24 @@ This is how you look up a Standalone Credit using the ID.
 
 ## `billingDetails`
 
-+ `billingDetails` (object, optional) - This is the billing address of the customer.
-    + `street1`: `Street line 1` (string, required)
-    + `street2`: `Street line 2` (string, optional)
-    + `city`: `Calgary` (string, required)
-    + `state`: `AB` (string, required)
-    + `country`: `CA` (string, required)
-    + `zip`: `T3H3L3` (string, required)
++ `billingDetails` (object, optional) - This is the billing address of the consumer.
+    + `street1`: `Street line 1` (string, required) - This is the first line of the street address in the billing address.
+        _Length<=50_
+    + `street2`: `Street line 2` (string, optional) - This is the second line of the street address in the billing address, if required (e.g., apartment number).
+        _Length<=50_
+    + `city`: `Calgary` (string, required) - This is the city in the billing address.
+        _Length<=40_
+    + `state`: `AB` (string, required) - See Province Codes or State Codes for Canada or the United States.
+    + `country`: `CA` (string, required) - The ISO 3166-1 alpha-2 code for the consumer's billing address (e.g., Germany = DE, JP=Japan. CA=Canada).
+    + `zip`: `T3H3L3` (string, required) - This is the postal/zip code in the billing address.
 
 ## `boku`
 
 + `boku` (object, optional) - Optional attributes that can be passed when making a BOKU payment request. 
-    + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the customer's statement.
+    + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the consumer's statement.
     + `consumerId`: `CUS_12345677` (string, required) - Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.
-    + `consumerCountry` : `US` (string, required) - The ISO 3166-1 alpha-2 code for the customer's mobile country of registration (e.g., Germany = DE, JP=Japan. CA=Canada).
-    + `consumerMobilePhone`: `17802323333` (string, required) - The customer's mobile phone number.  Full number including international dialing code (country code).
+    + `consumerCountry` : `US` (string, required) - The ISO 3166-1 alpha-2 code for the consumer's mobile country of registration (e.g., Germany = DE, JP=Japan. CA=Canada).
+    + `consumerMobilePhone`: `17802323333` (string, required) - The consumer's mobile phone number.  Full number including international dialing code (country code).
 
 ## `bokuGatewayResponse`
 
@@ -2357,11 +3167,19 @@ This is how you look up a Standalone Credit using the ID.
         + `result-code`: `0`
         + `result-msg`: `Operation Successful` (string)
 
+## `dateOfBirthPayolution`
+
++ `dateOfBirth` (object, required) - This is the consumer's date of birth.
+    + Properties
+        + `day`:24 (string, required)
+        + `month`:12 (string, required)
+        + `year`:1981 (string, required)
+
 ## `giropay`
 
 + `giropay` (object, optional) - Optional attributes that can be passed when making a GIROPAY payment request. 
     + Properties
-        + descriptor: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
+        + descriptor: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
 
 ## `giropayGatewayResponse`
 
@@ -2377,7 +3195,7 @@ This is how you look up a Standalone Credit using the ID.
 ## `ideal`
 
 + `ideal` (object, optional) - Optional attributes that can be passed when making an IDEAL payment request. 
-    + `descriptor`: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
+    + `descriptor`: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
     + `sepa` (sepa)
 
 ## `idealGatewayResponse`
@@ -2394,6 +3212,25 @@ This is how you look up a Standalone Credit using the ID.
         + `paymentType`: `DB`
 
 
+## `installment`
+
++ `installments` (object)
+    + `amount`: `1000` (number) - This is the amount of the installment payment.
+    + `due`: `2013-07-16` (string) - This is the due date of the installment payment.
+
+## `payolutionGatewayResponse`
+
++ `gatewayResponse` (object)- These are the details returned from the external gateway.
+
+    _Read Only_
+
+    + Properties
+        + `id`: `4867bb8ce543409dbe1187849af28107` - The unique identifier for the transaction provided by the gateway.
+        + `code`: `000.200.000`
+        + `description`: `Transaction Pending`
+        + `processor`: `PAYOLUTION`
+        + `paymentType`: `DD`
+
 ## `link`
 + rel: self 
 + href: `https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
@@ -2409,12 +3246,12 @@ This is how you look up a Standalone Credit using the ID.
 ## `neteller`
 
 + `neteller` (object)  - Optional attributes that can be passed when making a NETELLER payment request. 
-    + `consumerId`: `john.doe@email.com` (string) : Email address or NETELLER account ID of the customer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
+    + `consumerId`: `john.doe@email.com` (string) : Email address or NETELLER account ID of the consumer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the consumer has to enter their email address.
     + `consumerVerificationId`: `123123` (string) : The consumer's NETELLER secure ID, or two-step authorization token generated on their device. 
-    + `language`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
+    + `language`: `EN` (string) : The 2 character preferred language code for the consumer (e.g., EN, FR).
     + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
     + `detail1Description` : `description` (string) : You can show additional details about the product in the More Information section in the header of Quick Checkout.
-    + `detail1Text` : `detail text` (string) : The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a customer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
+    + `detail1Text` : `detail text` (string) : The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a consumer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
 
 ## `payment`
 
@@ -2437,18 +3274,27 @@ This is how you look up a Standalone Credit using the ID.
     
     + Default: true
 
++ `availableToSettle`:`2500` (number) - This is the amount remaining to settle, in minor units.
+
+    _Read Only_
+
++ `availableToRefund`:`2500` (number) - This is the amount remaining to refund, in minor units.
+
+    _Read Only_
+
 + `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 
     _max=99999999999_
     
-+ `currencyCode`: `EUR` (string) - This is the currency of the payment.
++ `verificationId`:`2f6f0150-2f08-43be-ad42-aa89fafde792` (string) - This is the ID returned in the response to a [Verification request](#createverification). **Note:** This parameter is **required** if the *productType* is set to *INSTALLMENTS* for the *payolution* object.
 
-    _length=3_
++ `currencyCode`: `EUR` (string) - This is the currency of the payment. Defaults to the account currency.
 
-    + Default: `The account currency`
-    
+    _Read Only_
+
 + Include profile
 + Include billingDetails
++ Include shippingDetails
 + Include returnLinks
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 
@@ -2480,6 +3326,20 @@ This is how you look up a Standalone Credit using the ID.
 
 + Include idealGatewayResponse
 
+## paymentDetails
+
++ `paymentDetails` (object) - Information about payment installments, including due dates and amounts.
+    _Read Only_
+    + Properties
+        + Include installment
+        + `originalAmount`:`2500` (number) -  This is the original amount of the Verification, in minor units.
+        + `totalAmount`:`2575` (number) - This is the total amount to be paid by the consumer (i.e., the sum of all installments).
+        + `minimumInstallmentFee`:`0` (number) - This is the minimum installment fee.
+        + `duration`:`3` (number) - This is the duration, in months, of the payment plan.
+        + `interestRate`:`8.75` (number) - This is the interest rate of the payment plan.
+        + `effectiveInterestRate`:`9.00` (number) - This is the effective interest rate of the payment plan.
+        + `standardCreditInformationUrl`:`https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-pekwnp638te&duration=3` (string) - This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.
+
 ## `paymentType`
 
 + `paymentType` (enum, required) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
@@ -2495,7 +3355,7 @@ This is how you look up a Standalone Credit using the ID.
         + `SKRILL`
         + `SOFORT`
 
-## `paymentType refund`
+## `paymentTypeRefund`
 
 + `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
@@ -2506,7 +3366,7 @@ This is how you look up a Standalone Credit using the ID.
         + `SKRILL`
         + `SOFORT`
 
-## `paymentType settlement`
+## `paymentTypeSettlement`
 
 + `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
@@ -2514,7 +3374,14 @@ This is how you look up a Standalone Credit using the ID.
         + `PAYOLUTION`
         + `PAYSAFECARD`
 
-## `paymentType voidauth`
+## `paymentTypeVerification`
+
++ `paymentType` (enum, required) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
+    + Members
+        + `PAYOLUTION`
+
+## `paymentTypeVoidauth`
 
 + `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
@@ -2524,24 +3391,35 @@ This is how you look up a Standalone Credit using the ID.
 
 ## `payolution`
 
-+ `payolution` (object) - Parameters required for a PAYOLUTION payment request.
-    + `customerID`: `maxx_muster1980` (string) 
-    + `sepa` (sepa)
-    + `paymentInformation` (payolutionPaymentInformation)
-    + `analysis` (array[payolutionAnalysis])
++ `payolution` (object) - Parameters used in a PAYOLUTION request. **Note:** The *payolution* object is required for *verification* requests.
+
+    + Properties
+        + `descriptor`: `Order with ID 4ab2` (string) - This is the merchant descriptor that will be displayed on the consumer's bank statement.
+        + Include productType
+        + Include sepa
+        + Include plans
+        + `planDuration`: `3` (number) - This is the duration, in months, of the plan selected by the consumer. **Required** for [Payment Authorization](#createauthorization) request when *productType*=INSTALLMENTS.
+        + Include payolutionPaymentInformation
+        + Include payolutionAnalysis
 
 ## `payolutionPaymentInformation`
 
-+ `paymentReference`: `YTTR-WMQX-KLGW` (string)
-+ `iban`: `AT611904300234573201456` (string)
-+ `bic`: `BFRILI22XXX` (string)
-+ `bankName`: `Musterbank` (string)
-+ `accountHolderName`: `Test Merchant` (string)
++ `paymentInformation` (object) - This is the information that tells the consumer where to send the payment.
+
+    _Read Only_
+
+    + Properties
+        + `paymentReference`: `YTTR-WMQX-KLGW` (string) - The string to use as a reason for the payment.
+        + `iban`: `AT611904300234573201456` (string) - The IBAN to send the payment to.
+        + `bic`: `BFRILI22XXX` (string) - The BIC of the bank to send the payment to.
+        + `bankName`: `Musterbank` (string) - This is the name of the bank to send the payment to.
+        + `accountHolderName`: `Test Merchant` (string) - This is the name of the beneficiary.
 
 ## `payolutionAnalysis`
 
-+ `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
-+ `value`: `TOP` (string)
++ `analysis` (object) - This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.
+    + `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
+    + `value`: `TOP` (string)
 
 ## `paysafecardGatewayResponse`
 
@@ -2572,23 +3450,71 @@ This is how you look up a Standalone Credit using the ID.
 ## `paysafecard`
 
 + `paysafecard` (object)  - Optional attributes that can be passed  when making a PAYSAFECARD payment request. 
-    + `consumerId`: `john.doe@email.com` (string) : Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
+    + `consumerId`: `john.doe@email.com` (string) : Email address of the consumer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the consumer has to enter their email address.
     + `ageRestriction`: `item xyz` (string) : A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. 
-    + `kycLevelRestriction`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
+    + `kycLevelRestriction`: `EN` (string) : The 2 character preferred language code for the consumer (e.g., EN, FR).
     + `countryRestriction` : `DE` (string) : The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.
 
-## `profile` 
+## `productType`
 
-+ `profile` (object, optional) - These are some details about the customer.
-    + `firstName`: `Stan` (string)
-    + `lastName`: `Smith` (string)
-    + `email`: `stan.smith@fox.com` (string)
-    + `ip`: `127.0.0.1` (string)
++ `productType` (enum) - This is the type of payment request to use for for a [Payment Authorization](#createauthorization). **Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS.
+
+    + Default:INVOICE
+
+    + Members
+        + `INVOICE` - Use for regular Payment Authorization request.
+        + `INSTALLMENTS` - Use when consumer has opted for installment payments.
+
+## `profile`
+
++ `profile` (object, optional) - These are some details about the consumer.
+    + `firstName`: `Stan` (string) - This is the consumer's first name.
+        _Length<=80_
+    + `lastName`: `Smith` (string) - This is the consumer's last name.
+        _Length<=80_
+    + `email`: `stan.smith@email.com` (string, required) - This is the consumer's email address.
+        _Length<=255_
+    + `ip`: `127.0.0.1` (string) - This is the consumer's IP address.
+        _Length<=50_
+
+## `profilePayolution`
+
++ `profile` (object, required) - These are some details about the consumer.
+    + `title`: `Mr.` (string) - This is the consumer's title, e.g., Ms.
+    + `firstName`: `Stan` (string, required) - This is the consumer's first name.
+        _Length<=80_
+    + `lastName`: `Smith` (string, required) - This is the consumer's last name.
+        _Length<=80_
+    + `email`: `stan.smith@email.com` (string, required) - This is the consumer's email address.
+        _Length<=255_
+    + Include dateOfBirthPayolution
+    + `gender`: `M` (enum) - This is the consumer's gender.
+
+        + Members
+            + M - Male
+            + F - Female
+            + O - Other
+            + N - Not specified
+
+    + `phone`: `509 444-8888` (string) - This is the consumer's primary phone.
+    + `cellPhone`: `This is the consumer's cell phone.
+    + `ip`: `127.0.0.1` (string, required) - This is the consumer's IP address.
+        _Length<=50_
+    + `locale`: `en` (string) - ISO language code representing the preferred language for this profile.
+
+## `plans`
+
++ `plans` (object, optional) - These are details about the installment plan, including amount and due date plus some additional parameters like interest, etc.
+    + Include paymentDetails
+    + `tacUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment` (string) - This is a URL pointing to the Terms and Conditions for the payment plan.
+        _Read Only_
+    + `dataPrivacyConsentUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment` (string) - This is a URL pointing to the data privacy declaration for the payment plan.
+        _Read Only_
 
 ## `rapidTransfer`
 
 + `rapidTransfer` (object) - Optional attributes that can be passed when making a RAPIDTRANSFER payment request. 
-    + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
+    + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
     + `sepa` (sepa)
 
 ## `refund`
@@ -2639,7 +3565,7 @@ This is how you look up a Standalone Credit using the ID.
 
 + `returnLinks` (array) - This is an array of return links.
     + (object)
-        + `rel`: `default` (enum, required) - The final transaction status that determines where to return the customer to. ('default' is mandatory)
+        + `rel`: `default` (enum, required) - The final transaction status that determines where to return the consumer to. ('default' is mandatory)
             + Members
                 + `default` - The default return url, will be used if specific status return url is not defined.
                 + `on_pending`
@@ -2647,7 +3573,7 @@ This is how you look up a Standalone Credit using the ID.
                 + `on_failed`
                 + `on_cancelled`
                 + `on_error`
-        + `href`: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the customer to.
+        + `href`: `https://mysite.com/return` (string, required) - The TLS secured endpoint to return the consumer to.
 
 ## `settlement`
 
@@ -2677,7 +3603,7 @@ This is how you look up a Standalone Credit using the ID.
 
     _Read Only_
 
-+ `availableToRefund`: `100` (number, optional) - This is the amount of the authorization remaining to refund, in minor units.  It is visible only if no refunds are done on any of the corresponding settlements for this payment.
++ `availableToRefund`: `100` (number, optional) - This is the amount of the authorization remaining to refund, in minor units.  It is visible only if no Refunds are done on any of the corresponding Settlements for this payment.
 
     _Read Only_
 
@@ -2699,25 +3625,82 @@ This is how you look up a Standalone Credit using the ID.
 
 ## `sepa`
 
-+ `country`: `NL` (string) - The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).
-+ `bic`: `BARCGB22XXX` (string)
-+ `iban`: `AZ21NABZ00000000137010001944` (string)
-+ `accountHolderName`: `Max Mustermann` (string)
++ `sepa` (object)
+
+    _Required only for Verification requests, and only if currency is EUR._
+
+    + Properties
+        + `country`: `DE` (string) - The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).
+        + `iban`: `AT611904300234573201456` (string) - The IBAN to send the payment to.
+        + `bic`: `BFRILI22XXX` (string) - The BIC of the bank to send the payment to.
+        + `accountHolderName`: `Test Merchant` (string) - This is the name of the beneficiary.
+
+## `shippingDetails`
+
++ `shippingDetails` (object, optional) - This is the shipping address of the consumer.
+    + `carrier`:`FEX` (enum, optional) - This is the shipment carrier.
+
+        + Members
+            + APC – APC Overnight
+            + APS – Anpost
+            + CAD – Canada Postal Service
+            + DHL – DHL
+            + FEX – Fedex
+            + RML – Royal Mail
+            + UPS – United Parcel Service
+            + USPS – United States Postal Service
+            + CLK – CityLink
+            + EMS – EMS
+            + NEX – Nexworldwide
+            + OTHER
+    + `shipMethod`:`N` (enum, optional) - This is the method of shipment.
+
+         + Members
+            + N – Next Day/Overnight
+            + T – Two-Day Service
+            + C – Lowest Cost
+            + O – Other
+    + `recipientName`:`Jane Jones` (string, optional) - This is the name of the person receiving the goods.
+        _Length<=255_
+    + `company`:`Acme Ltd` (string, optional) - This is the name of the company receiving the goods.
+        _Length<=255_
+    + `street1`: `Street line 1` (string, required) - This is the first line of the street address in the shipping address.
+        _Length<=50_
+    + `street2`: `Street line 2` (string, optional) - This is the second line of the street address in the shipping address, if required (e.g., apartment number).
+        _Length<=50_
+    + `city`: `Calgary` (string, required) - This is the city in the shipping address.
+        _Length<=40_
+    + `state`: `AB` (string, required) - See Province Codes or State Codes for Canada or the United States.
+    + `country`: `CA` (string, required) - The ISO 3166-1 alpha-2 code for the consumer's shipping address (e.g., Germany = DE, JP=Japan. CA=Canada).
+    + `zip`: `T3H3L3` (string, required) - This is the postal/zip code in the shipping address.
+        _Length=1-10_
+
++ `status`:`PROCESSING` (enum) - This is the status of the request.
+
+    _Read Only_
+
+    + Members
+        + `RECEIVED`
+        + `COMPLETED`
+        + `FAILED`
+        + `ERROR`
+
+
 
 ## `skrill`
 
 + `skrill` (object)  - Optional attributes that can be passed when making a SKRILL payment request. 
-    + `consumerId`: `john.doe@email.com` (string) : Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.
+    + `consumerId`: `john.doe@email.com` (string) : Email address of the consumer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the consumer has to enter their email address.
     + `recipientDescription`: `item xyz` (string) : A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. 
-    + `language`: `EN` (string) : The 2 character preferred language code for the customer. (ie: EN, FR)
+    + `language`: `EN` (string) : The 2 character preferred language code for the consumer (e.g., EN, FR).
     + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
     + `detail1Description` : `description` (string) : You can show additional details about the product in the More information section in the header of Quick Checkout.
-    + `detail1Text` : `detail text` (string) : The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a customer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
+    + `detail1Text` : `detail text` (string) : The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a consumer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
 
 ## `sofort`
 
 + `sofort` (object) - Optional attributes that can be passed when making a SOFORT payment request. 
-    + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the customer's statement.
+    + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
     + `sepa` (sepa)
     
 ## `sofortGatewayResponse`
@@ -2732,6 +3715,48 @@ This is how you look up a Standalone Credit using the ID.
         + `description`: `Request successfully processed` (string)
         + `processor`: `SOFORT`
         + `paymentType`: `DB` (string)
+
+## `verification`
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
+
+    _Read Only_
+
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
+
+    + Default: true
+
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units. No amount is actually processed when doing a Verification request.
+
+    _max=99999999999_
+
++ `currencyCode`: `EUR` (string) - This is the currency of the payment.
+
+    _Read Only, length=3_
+
++ Include profilePayolution
++ Include billingDetails
++ Include shippingDetails
+
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `status`:`PROCESSING` (enum) - This is the status of the request.
+
+    _Read Only_
+
+    + Members
+        + `RECEIVED`
+        + `COMPLETED`
+        + `FAILED`
+        + `ERROR`
+
++ Include payolutionGatewayResponse
 
 ## `voidAuth`
 
