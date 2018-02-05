@@ -10,8 +10,8 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2017-02-21            |- Added Skrill standalone credit|
 |v1             |2018-01-10            |- Added support for Payolution verifications and payment installments|
-|v1             |2017-12-01            |- Added Skrill standalone credit|
 |v1             |2017-11-15            |- Added RapidTransfer|
 |v1             |2017-08-28            |- Added Paysafecard, Skrill, Neteller, Payolution|
 |v1             |2017-08-09            |- Added /monitor endpoint|
@@ -842,30 +842,35 @@ Notifications are configured by logging into the merchant backoffice and navigat
 # PaymentType Objects
 
 PaymentType objects are used to define additional values that can be supplied depending on your request type.
-
-> These objects are nested as part of your Payment, Settlement, Verification or Standalone Credit request.
+These objects are nested as part of your Payment, Settlement, Verification or Standalone Credit request.
 <br/><br/>
 
 __**LEGEND**__
-|Symbol          |Definition    |
+|                |    |
 |:---:           |---           |
+|**Symbol**      |**Definition**|
 |&#10004;        |Optional      |
 |&#10004;&#10013;|Required      |
 |&#10006;        |Not Applicable|
+|                |              |
+|**Abbreviation**|**Resource Type**|
+|V               |Verification  |
+|P               |Payment       |
+|S               |Settlement    |
+|SC              |Standalone Credit|
 
 <a name="boku" title="Boku Payment Object"></a>
 ## boku
 
 ![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)
 
-
-
-|Element                 |Type                   |Description |
-|---                     |---                    |--- |
-|descriptor              |string<br/>`length<=20` |<b>(Required)</b> Descriptor to display on customer's statement.|
-|consumerId              |string<br/>`length<=255`|<b>(Required)</b> Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
-|consumerCountry         |string                 |<b>(Required)</b> The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|consumerMobilePhone     |string                 |<b>(Required)</b> The customer's mobile phone number.|
+|Element                 |Type                    |                 |                       |                       |                  |Description|
+|---                     |---                     |:---:            |:---:                  |:---:                  |:---:             |---|
+|                        |**supported resources** |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|descriptor              |string<br/>`length<=20` |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Descriptor to display on customer's statement.|
+|consumerId              |string<br/>`length<=255`|&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
+|consumerCountry         |string                  |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|consumerMobilePhone     |string                  |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |The customer's mobile phone number.|
 
 ```
 "boku": {
@@ -881,13 +886,14 @@ __**LEGEND**__
 
 ![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png) 
 
-|Element                 |Type                   |Description |
-|---                     |---                    |--- |
-|descriptor              |string<br/>`length<=16` |<b>(Required)</b> This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |The consumer's SEPA bank account details.|
-|sepa.accountHolderName  |string                 |The account holder's name.|
-|sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
-|sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
+|Element                 |Type                   |                 |                       |                       |                  |Description|
+|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|descriptor              |string<br/>`length<=16`|&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                    |[object](#sepa)        |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The consumer's SEPA bank account details.|
+|sepa.accountHolderName  |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The account holder's name.|
+|sepa.bic                |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The Bank Identifier Code (BIC) of the account.|
+|sepa.iban               |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The International Bank Account Number (IBAN) of the account.|
 
 ```
 "giropay": {
@@ -905,15 +911,16 @@ __**LEGEND**__
 
 ![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)
 
-|Element                 |Type                   |Description |
-|---                     |---                    |--- |
-|descriptor              |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |The consumer's SEPA bank account details (if applicable). |
-|sepa.bankName           |enum                   |<b>(Required)</b> The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
-|sepa.country            |enum                   |<b>(Required)</b> The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|sepa.iban               |string                 |The International Bank Account Number (IBAN) of the account.|
-|sepa.bic                |string                 |The Bank Identifier Code (BIC) of the account.|
-|sepa.accountHolderName  |string                 |The account holder's name.|
+|Element                 |Type                   |                 |                       |                       |                  |Description|
+|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|descriptor              |string<br/>`length=X`  |&#10006;         |&#10004;               |&#10006;               |&#10006;          |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                    |[object](#sepa)        |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The consumer's SEPA bank account details (if applicable). |
+|sepa.bankName           |enum                   |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
+|sepa.country            |enum                   |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|sepa.iban               |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The International Bank Account Number (IBAN) of the account.|
+|sepa.bic                |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The Bank Identifier Code (BIC) of the account.|
+|sepa.accountHolderName  |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The account holder's name.|
 
 ```
 "ideal": {
@@ -930,15 +937,16 @@ __**LEGEND**__
 
 ![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)
 
-|Element                        |Type                   |Description |
-|---                            |---                    |--- |
-|consumerId                     |string                 |Email address or NETELLER Account ID of the consumer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
-|consumerVerificationId         |string                 |The consumers NETELLER secure ID, or two step authorization token generated on their device.|
-|recipientDescription           |string<br>`length<=30` |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
-|language                       |string<br>`length=2`   |The 2-character preferred language code for the consumer (e.g., EN, FR).|
-|logoUrl                        |string                 |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
-|detail1Description             |string                 |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text                    |string                 |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|Element                        |Type                   |                 |                       |                       |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|consumerId                     |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |Email address or NETELLER Account ID of the consumer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|consumerVerificationId         |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The consumers NETELLER secure ID, or two step authorization token generated on their device.|
+|recipientDescription           |string<br>`length<=30` |&#10006;         |&#10004;               |&#10006;               |&#10006;          |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
+|language                       |string<br>`length=2`   |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The 2-character preferred language code for the consumer (e.g., EN, FR).|
+|logoUrl                        |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
+|detail1Description             |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text                    |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 ```
 "neteller": {
@@ -957,15 +965,16 @@ __**LEGEND**__
 
 ![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)
 
-|Element                    |Type                   |Description |
-|---                        |---                    |--- |
-|productType                |enum                   |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
-|descriptor                 |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|sepa                       |[object](#sepa)        |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
-|plans                      |[object](#payolution.plans) |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
-|planDuration               |string<br/>`length=X`  |This is the duration, in months, of the plan selected by the consumer. |
-|paymentInformation         |[object](#payolution.paymentInformation) |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
-|analysis                   |object                 |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
+|Element                    |Type                                     |                 |                       |                       |                  |Description|
+|---                        |---                                      |:---:            |:---:                  |:---:                  |:---:             |---|
+|                           |**supported resources**                  |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|productType                |enum                                     |                 |                       |                       |&#10006;          |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
+|descriptor                 |string<br/>`length=X`                    |                 |                       |                       |&#10006;          |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                       |[object](#sepa)                          |                 |                       |                       |&#10006;          |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
+|plans                      |[object](#payolution.plans)              |                 |                       |                       |&#10006;          |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
+|planDuration               |string<br/>`length=X`                    |                 |                       |                       |&#10006;          |This is the duration, in months, of the plan selected by the consumer. |
+|paymentInformation         |[object](#payolution.paymentInformation) |                 |                       |                       |&#10006;          |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
+|analysis                   |object                                   |                 |                       |                       |&#10006;          |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
 
 ```
 "payolution": {
@@ -1028,100 +1037,16 @@ __**LEGEND**__
 }
 ```
 
-<a name="payolution.installments" title="payolution.installments Object"></a>
-##  &nbsp;&nbsp; .installments
-
-|Element        |Type           |Description |
-|---            |---            |--- |
-|amount         |number         |This is the amount of the installment payment.<br/><i>Read Only</i>|
-|due            |string         |This is the due date of the installment payment.<br/><i>Read Only</i>|
-
-```
-            {
-                "installments": [{
-                        "amount": 16820,
-                        "due": "2013-07-16"
-                    },
-                    {
-                        "amount": 16820,
-                        "due": "2013-08-05"
-                    },
-                    {
-                        "amount": 16820,
-                        "due": "2013-09-05"
-                    }
-                ]
-            }
-```
-
-<a name="payolution.paymentDetails" title="payolution.paymentDetails Object"></a>
-## &nbsp;&nbsp; .paymentDetails
-
-|Element                |Type                       |Description |
-|---                    |---                        |--- |
-|installments           |[object](#payolution.installments)    |These are details about the payolution installment plan for the consumer. <br/><i>Read Only</i>|
-|originalAmount         |number                     |This is the original amount of the Verification, in minor units. <br/><i>Read Only</i>|
-|totalAmount            |number                     |This is the total amount to be paid by the consumer (i.e., the sum of all installments).<br/><i>Read Only</i>|
-|minimumInstallmentFee  |number                     |This is the minimum installment fee.<br/><i>Read Only</i>|
-|duration               |number                     |This is the duration, in months, of the payment plan.<br/><i>Read Only</i>|
-|interestRate           |number                     |This is interest rate of the payment plan.<br/><i>Read Only</i>|
-|effectiveInterestRate  |number                     |This is effective interest rate of the payment plan.<br/><i>Read Only</i>|
-|standardCreditInformationUrl |string               |This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.<br/><i>Read Only</i>|
-
-```
-"paymentDetails": [{
-    "installments": [{
-            "amount": 16820,
-            "due": "2013-07-16"
-        },
-        {
-            "amount": 16820,
-            "due": "2013-08-05"
-        },
-        {
-            "amount": 16820,
-            "due": "2013-09-05"
-        }
-    ],
-    "originalAmount": 49999,
-    "totalAmount": 50460,
-    "minimumInstallmentFee": 0,
-    "duration": 3,
-    "interestRate": 14.95,
-    "effectiveInterestRate": 15.60,
-    "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
-}]
-```
-
-<a name="payolution.paymentInformation" title="payolution.paymentInformation Object"></a>
-## &nbsp;&nbsp; .paymentInformation
-
-|Element                 |Type                  |Description |
-|---                     |---                   |--- |
-|paymentReference            |string            |The string to use as a reason for the payment.<br/><i>Read Only</i>|
-|iban                        |string            |The IBAN to send the payment to.<br/><i>Read Only</i>|
-|bic                         |string            |The BIC of the bank to send the payment to.<br/><i>Read Only</i>|
-|bankName                    |string            |This is the name of the bank to send the payment to.<br/><i>Read Only</i>|
-|accountHolderName           |string            |This is the name of the beneficiary.<br/><i>Read Only</i>|
-
-```
-{
-    "paymentReference": "YTTR-WMQX-KLGW",
-    "iban": "AT611904300234573201456",
-    "bic": "BFRILI22XXX",
-    "bankName": "Musterbank",
-    "accountHolderName": "Test Merchant"
-}
-```
 
 <a name="payolution.plans" title="payolution.plans Object"></a>
 ## &nbsp;&nbsp; .plans
 
-|Element                 |Type                     |Description |
-|---                     |---                      |--- |
-|paymentDetails          |[object](#payolution.paymentDetails) |This is an array of payment details objects. <br/><i>Read Only</i>|
-|tacUrl                  |string                    |This is a URL pointing to the Terms and Conditions for the payment plan.<br/><i>Read Only</i>|
-|dataPrivacyConsentUrl   |string                    |This is a URL pointing to the data privacy declaration for the payment plan.<br/><i>Read Only</i>|
+|Element                        |Type                                 |                 |                       |                       |                  |Description|
+|---                            |---                                  |:---:            |:---:                  |:---:                  |:---:             |---|
+|                               |**supported resources**              |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|paymentDetails                 |[object](#payolution.paymentDetails) |                 |                       |                       |&#10006;          |This is an array of payment details objects. <br/><i>Read Only</i>|
+|tacUrl                         |string                               |                 |                       |                       |&#10006;          |This is a URL pointing to the Terms and Conditions for the payment plan.<br/><i>Read Only</i>|
+|dataPrivacyConsentUrl          |string                               |                 |                       |                       |&#10006;          |This is a URL pointing to the data privacy declaration for the payment plan.<br/><i>Read Only</i>|
 
 ```
 {
@@ -1152,17 +1077,109 @@ __**LEGEND**__
 }
 ```
 
+<a name="payolution.paymentDetails" title="payolution.paymentDetails Object"></a>
+## &nbsp;&nbsp;&nbsp;&nbsp; .paymentDetails
+
+|Element                        |Type                                    |                 |                       |                       |                  |Description|
+|---                            |---                                     |:---:            |:---:                  |:---:                  |:---:             |---|
+|                               |**supported resources**                 |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|installments                   |[object](#payolution.installments)      |                 |                       |                       |&#10006;          |These are details about the payolution installment plan for the consumer. <br/><i>Read Only</i>|
+|originalAmount                 |number                                  |                 |                       |                       |&#10006;          |This is the original amount of the Verification, in minor units. <br/><i>Read Only</i>|
+|totalAmount                    |number                                  |                 |                       |                       |&#10006;          |This is the total amount to be paid by the consumer (i.e., the sum of all installments).<br/><i>Read Only</i>|
+|minimumInstallmentFee          |number                                  |                 |                       |                       |&#10006;          |This is the minimum installment fee.<br/><i>Read Only</i>|
+|duration                       |number                                  |                 |                       |                       |&#10006;          |This is the duration, in months, of the payment plan.<br/><i>Read Only</i>|
+|interestRate                   |number                                  |                 |                       |                       |&#10006;          |This is interest rate of the payment plan.<br/><i>Read Only</i>|
+|effectiveInterestRate          |number                                  |                 |                       |                       |&#10006;          |This is effective interest rate of the payment plan.<br/><i>Read Only</i>|
+|standardCreditInformationUrl   |string                                  |                 |                       |                       |&#10006;          |This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.<br/><i>Read Only</i>|
+
+```
+"paymentDetails": [{
+    "installments": [{
+            "amount": 16820,
+            "due": "2013-07-16"
+        },
+        {
+            "amount": 16820,
+            "due": "2013-08-05"
+        },
+        {
+            "amount": 16820,
+            "due": "2013-09-05"
+        }
+    ],
+    "originalAmount": 49999,
+    "totalAmount": 50460,
+    "minimumInstallmentFee": 0,
+    "duration": 3,
+    "interestRate": 14.95,
+    "effectiveInterestRate": 15.60,
+    "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
+}]
+```
+
+<a name="payolution.installments" title="payolution.installments Object"></a>
+##  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .installments
+
+|Element                        |Type                   |                 |                       |                       |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|amount                         |number                 |                 |                       |                       |&#10006;          |This is the amount of the installment payment.<br/><i>Read Only</i>|
+|due                            |string                 |                 |                       |                       |&#10006;          |This is the due date of the installment payment.<br/><i>Read Only</i>|
+
+```
+            {
+                "installments": [{
+                        "amount": 16820,
+                        "due": "2013-07-16"
+                    },
+                    {
+                        "amount": 16820,
+                        "due": "2013-08-05"
+                    },
+                    {
+                        "amount": 16820,
+                        "due": "2013-09-05"
+                    }
+                ]
+            }
+```
+
+<a name="payolution.paymentInformation" title="payolution.paymentInformation Object"></a>
+## &nbsp;&nbsp; .paymentInformation
+
+|Element                        |Type                   |                 |                       |                       |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|paymentReference               |string                 |                 |                       |                       |&#10006;          |The string to use as a reason for the payment.<br/><i>Read Only</i>|
+|iban                           |string                 |                 |                       |                       |&#10006;          |The IBAN to send the payment to.<br/><i>Read Only</i>|
+|bic                            |string                 |                 |                       |                       |&#10006;          |The BIC of the bank to send the payment to.<br/><i>Read Only</i>|
+|bankName                       |string                 |                 |                       |                       |&#10006;          |This is the name of the bank to send the payment to.<br/><i>Read Only</i>|
+|accountHolderName              |string                 |                 |                       |                       |&#10006;          |This is the name of the beneficiary.<br/><i>Read Only</i>|
+
+```
+{
+    "paymentReference": "YTTR-WMQX-KLGW",
+    "iban": "AT611904300234573201456",
+    "bic": "BFRILI22XXX",
+    "bankName": "Musterbank",
+    "accountHolderName": "Test Merchant"
+}
+```
+
+
+
 <a name="paysafecard" title="Paysafecard Payment Object"></a>
 ## paysafecard 
 
 ![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)
 
-|Element                        |Type                   |Description |
-|---                            |---                    |--- |
-|consumerId                     |string                 |**(Required)** The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
-|ageRestriction                 |number                 |Minimum age restriction for the transaction.|
-|kycLevelRestriction            |string                 |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
-|countryRestriction             |string<br>`length=2`   |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
+|Element                        |Type                   |                 |                       |                       |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|consumerId                     |string                 |                 |                       |                       |&#10006;          |**(Required)** The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
+|ageRestriction                 |number                 |                 |                       |                       |&#10006;          |Minimum age restriction for the transaction.|
+|kycLevelRestriction            |string                 |                 |                       |                       |&#10006;          |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
+|countryRestriction             |string<br>`length=2`   |                 |                       |                       |&#10006;          |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
 
 ```
 "paysafecard": {
@@ -1178,15 +1195,16 @@ __**LEGEND**__
 
 ![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)
 
-|Element                        |Type                   |Description |
-|---                            |---                    |--- |
-|descriptor                     |string<br/>`length=X`  |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|sepa                           |[object](#sepa)        |The consumer's SEPA bank account details (if applicable). |
-|sepa.bankName                  |enum                   |The consumer's bank.|
-|sepa.country                   |enum                   |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
-|sepa.iban                      |string                 |The International Bank Account Number (IBAN) of the account.|
-|sepa.bic                       |string                 |The Bank Identifier Code (BIC) of the account.|
-|sepa.accountHolderName         |string                 |The account holder's name.|
+|Element                        |Type                   |                 |                       |                       |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|descriptor                     |string<br/>`length=X`  |&#10006;         |&#10004;               |&#10006;               |&#10006;          |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                           |[object](#sepa)        |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The consumer's SEPA bank account details (if applicable). |
+|sepa.bankName                  |enum                   |&#10006;         |&#10006;               |&#10006;               |&#10006;          |The consumer's bank.|
+|sepa.country                   |enum                   |&#10006;         |&#10006;               |&#10006;               |&#10006;          |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
+|sepa.iban                      |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The International Bank Account Number (IBAN) of the account.|
+|sepa.bic                       |string                 |&#10006;         |&#10006;               |&#10006;               |&#10006;          |The Bank Identifier Code (BIC) of the account.|
+|sepa.accountHolderName         |string                 |&#10006;         |&#10006;               |&#10006;               |&#10006;          |The account holder's name.|
 
 ```
 "rapidTransfer": {
@@ -1199,17 +1217,17 @@ __**LEGEND**__
 
 ![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)
 
-|Element                 |Type                   |Request Type     |                       |                       |                  |Description|
+|Element                 |Type                   |                 |                       |                       |                  |Description|
 |---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |                       |_**Payment**_    |_**Settlement**_       |_**Standalone Credit**_|_**Verification**_|   |
-|consumerId              |string                 |&#10004;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
-|emailSubject            |string                 |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Subject line to use in customer email.|
-|emailMessage            |string                 |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |Message to use in customer email.|
-|recipientDescription    |string<br>`length<=30` |&#10004;         |&#10006;               |&#10006;               |&#10006;          |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
-|language                |string<br>`length=2`   |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The 2-character preferred language code for the consumer (e.g., EN, FR).|
-|logoUrl                 |string                 |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
-|detail1Description      |string                 |&#10004;         |&#10006;               |&#10006;               |&#10006;          |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text             |string                 |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|consumerId              |string                 |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10004;&#10013;  |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|emailSubject            |string                 |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10004;          |Subject line to use in customer email.|
+|emailMessage            |string                 |&#10006;         |&#10004;&#10013;       |&#10006;               |&#10004;          |Message to use in customer email.|
+|recipientDescription    |string<br>`length<=30` |&#10006;         |&#10004;               |&#10006;               |&#10006;          |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
+|language                |string<br>`length=2`   |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The 2-character preferred language code for the consumer (e.g., EN, FR).|
+|logoUrl                 |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
+|detail1Description      |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text             |string                 |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 
 ```
@@ -1228,11 +1246,12 @@ __**LEGEND**__
 
 ![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)
 
-|Element                 |Type                   |Request Type     |                       |                       |                  |Description|
+|Element                 |Type                   |                 |                       |                       |                  |Description|
 |---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |                       |_**Payment**_    |_**Settlement**_       |_**Standalone Credit**_|_**Verification**_|   |
-|descriptor              |string<br/>`length<=43`|&#10004;&#10013; |&#10006;               |&#10006;               |&#10006;          |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|sepa                    |[object](#sepa)        |&#10004;         |&#10006;               |&#10006;               |&#10006;          |The customer's SEPA bank account details.|
+|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|descriptor              |string<br/>`length<=43`|&#10006;         |&#10004;&#10013;       |&#10006;               |&#10006;          |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                    |[object](#sepa)        |&#10006;         |&#10004;               |&#10006;               |&#10006;          |The customer's SEPA bank account details.|
+
 
 ```
 "sofort": {
@@ -2313,7 +2332,7 @@ Click on **Void a Previously Authorized Payment** above to see how to reverse (c
 
 + Attributes
     + Include voidAuth
-    + Include paymentType voidauth
+    + Include paymentType
     + Include links
 
 + Request Void an Authorization (application/json)
