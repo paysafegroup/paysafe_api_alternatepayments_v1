@@ -373,9 +373,9 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|day                     |string<br/>`length=4`  |<b>(Required)</b> 4-digit year, YYYY|
+|day                     |string<br/>`length=2`  |<b>(Required)</b> 2-digit day, DD|
 |month                   |string<br/>`length=2`  |<b>(Required)</b> 2-digit month, MM|
-|year                    |string<br/>`length=2`  |<b>(Required)</b> 2-digit day, DD|
+|year                    |string<br/>`length=4`  |<b>(Required)</b> 4-digit year, YYYY|
 
 
 ```
@@ -404,7 +404,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 ```
 {
 "error": {
-    "code": 5068,
+    "code": "5068",
     "message": "Field Error(s)",
     "details": [
         "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
@@ -521,14 +521,14 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |Element                 |Type                     |Description |
 |---                     |---                      |--- |
 |title                   |string                   |This is the consumer's title, e.g. Ms.|
-|firstName               |string<br/>`length<=80`  |<b>(Required)</b>This is the consumer's first name.|
-|lastName                |string<br/>`length<=80`  |<b>(Required)</b>This is the consumer's last name.|
-|email                   |string<br/>`length<=255` |<b>(Required)</b>This is the consumer's email address.|
+|firstName               |string<br/>`min=2,length<=80`  |<b>(Required)</b>This is the consumer's first name.|
+|lastName                |string<br/>`min=2,length<=80`  |<b>(Required)</b>This is the consumer's last name.|
+|email                   |string<br/>`min=6,length<=128` |<b>(Required)</b>This is the consumer's email address.|
 |dateOfBirth             |[object](#date)          |This is the date of birth of the consumer associated to this profile.|
 |gender                  |enum                     |Options:<ul><li>M &ndash; Male</li><li>F &ndash; Female</li><li>O &ndash; Other</li><li>N &ndash; Not Specified</li></ul>|
-|phone                   |string                   |This is the consumer's primary phone.|
+|phone                   |string<br/>`max=40`      |This is the consumer's primary phone.|
 |cellphone               |string                   |This is the consumer's cell phone.|
-|ip                      |string<br/>`length<=50`  |This is the IP address the cconsumer's device.|
+|ip                      |string<br/>`length<=50`  |This is the IP address the cconsumer's device. (supports IPv4)|
 |locale                  |enum                     |This is the ISO language code representing the preferred language for this profile.|
 
 ```
@@ -1207,7 +1207,7 @@ __**LEGEND**__
 |descriptor                     |string<br/>`length=X`  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
 |sepa                           |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The consumer's SEPA bank account details (if applicable). |
 |sepa.bankName                  |enum                   |&#8210;          |&#8210;                |&#8210;                |&#8210;           |The consumer's bank.|
-|sepa.country                   |enum                   |&#8210;          |&#8210;                |&#8210;                |&#8210;           |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
+|sepa.country                   |enum                   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
 |sepa.iban                      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                       |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The Bank Identifier Code (BIC) of the account.|
 |sepa.accountHolderName         |string                 |&#8210;          |&#8210;                |&#8210;                |&#8210;           |The account holder's name.|
@@ -1313,7 +1313,7 @@ x-application-error-details: Either you submitted a request that is missing a ma
 
 {
     "error": {
-        "code": 5068,
+        "code": "5068",
         "message": "Field Error(s)",
         "details": [
             "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
