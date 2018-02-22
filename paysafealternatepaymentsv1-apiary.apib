@@ -10,6 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2018-02-22            |- Added Paysafecash|
 |v1             |2017-02-21            |- Added Skrill standalone credit|
 |v1             |2018-01-10            |- Added support for Payolution verifications and payment installments|
 |v1             |2017-11-15            |- Added RapidTransfer|
@@ -528,7 +529,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |gender                  |enum                     |Options:<ul><li>M &ndash; Male</li><li>F &ndash; Female</li><li>O &ndash; Other</li><li>N &ndash; Not Specified</li></ul>|
 |phone                   |string<br/>`max=40`      |This is the consumer's primary phone.|
 |cellphone               |string                   |This is the consumer's cell phone.|
-|ip                      |string<br/>`length<=50`  |This is the IP address the cconsumer's device. (supports IPv4)|
+|ip                      |string<br/>`length<=50`  |This is the IP address the cconsumer's device. (supports IPv4 or IPv6 format)|
 |locale                  |enum                     |This is the ISO language code representing the preferred language for this profile.|
 
 ```
@@ -1196,6 +1197,28 @@ __**LEGEND**__
 }
 ```
 
+<a name="paysafecash" title="Paysafecash Payment Object"></a>
+## paysafecashed 
+
+![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)
+
+|Element                        |Type                   |                 |                       |                       |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|consumerId                     |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
+|ageRestriction                 |number                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |Minimum age restriction for the transaction.|
+|kycLevelRestriction            |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
+|countryRestriction             |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
+
+```
+"paysafecash": {
+    "consumerId": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation",
+    "minAgeRestriction": 18,
+    "kycLevelRestriction": "SIMPLE",
+    "countryRestriction": "DE"
+}
+```
+
 <a name="rapidtransfer" title="Rapid Transfer Payment Object"></a>
 ## rapidtransfer 
 
@@ -1452,7 +1475,7 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)||||
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|||
 
 
 Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
