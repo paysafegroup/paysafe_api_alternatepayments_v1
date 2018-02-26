@@ -1190,7 +1190,7 @@ __**LEGEND**__
 
 ```
 "paysafecard": {
-    "consumerId": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation",
+    "consumerId": "merchantclientid",
     "minAgeRestriction": 18,
     "kycLevelRestriction": "SIMPLE",
     "countryRestriction": "DE"
@@ -1198,7 +1198,7 @@ __**LEGEND**__
 ```
 
 <a name="paysafecash" title="Paysafecash Payment Object"></a>
-## paysafecashed 
+## paysafecash 
 
 ![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)
 
@@ -1212,7 +1212,7 @@ __**LEGEND**__
 
 ```
 "paysafecash": {
-    "consumerId": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation",
+    "consumerId": "merchantclientid",
     "minAgeRestriction": 18,
     "kycLevelRestriction": "SIMPLE",
     "countryRestriction": "DE"
@@ -1494,6 +1494,7 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Include neteller
     + Include payolution    
     + Include paysafecard
+    + Include paysafecash    
     + Include rapidTransfer
     + Include skrill
     + Include sofort
@@ -3402,6 +3403,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `IDEAL`
         + `NETELLER`
         + `PAYSAFECARD`
+        + `PAYSAFECASH`        
         + `PAYOLUTION`
         + `RAPIDTRANSFER`
         + `SKRILL`
@@ -3425,6 +3427,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
     + Members
         + `PAYOLUTION`
         + `PAYSAFECARD`
+        + `PAYSAFECASH`
 
 ## `paymentTypeVerification`
 
@@ -3440,6 +3443,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
     + Members
         + `PAYOLUTION`
         + `PAYSAFECARD`
+        + `PAYSAFECASH`        
 
 ## `payolution`
 
@@ -3502,9 +3506,27 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 ## `paysafecard`
 
 + `paysafecard` (object)  - Optional attributes that can be passed  when making a PAYSAFECARD payment request. 
-    + `consumerId`: `john.doe@email.com` (string) : Email address of the consumer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the consumer has to enter their email address.
-    + `ageRestriction`: `item xyz` (string) : A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. 
-    + `kycLevelRestriction`: `EN` (string) : The 2 character preferred language code for the consumer (e.g., EN, FR).
+    + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons. 
+    + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country). 
+    + `kycLevelRestriction`: `FULL` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
+
+        + Members
+            + FULL
+            + SIMPLE
+
+    + `countryRestriction` : `DE` (string) : The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.
+
+## `paysafecash`
+
++ `paysafecash` (object)  - Optional attributes that can be passed  when making a PAYSAFECASH payment request. 
+    + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons. 
+    + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country). 
+    + `kycLevelRestriction`: `FULL` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
+
+        + Members
+            + FULL
+            + SIMPLE
+
     + `countryRestriction` : `DE` (string) : The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.
 
 ## `productType`
