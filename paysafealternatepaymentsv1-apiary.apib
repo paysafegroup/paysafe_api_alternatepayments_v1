@@ -10,6 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2018-03-01            |- Added Interac|
 |v1             |2018-02-22            |- Added Paysafecash|
 |v1             |2017-02-21            |- Added Skrill standalone credit|
 |v1             |2018-01-10            |- Added support for Payolution verifications and payment installments|
@@ -933,6 +934,20 @@ __**LEGEND**__
 }
 ```
 
+<a name="interac" title="INTERAC Payment Object"></a>
+## interac 
+
+![interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)
+
+|Element                 |Type                   |                 |                       |                       |                  |Description|
+|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+
+```
+"interac": {
+}
+```
+
 <a name="neteller" title="NETELLER Payment Object"></a>
 ## neteller 
 
@@ -1475,7 +1490,7 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|||
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)](#interac)||
 
 
 Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
