@@ -10,6 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2018-03-05            |- Removedemove iDeal
 |v1             |2018-02-22            |- Added Paysafecash|
 |v1             |2017-02-21            |- Added Skrill standalone credit|
 |v1             |2018-01-10            |- Added support for Payolution verifications and payment installments|
@@ -133,14 +134,14 @@ Sample Response with List Data
         "merchantRefNum": "xyz",
         "amount": 100,
         "currencyCode": "EUR",
-        "paymentType": "IDEAL",
+        "paymentType": "SOFORT",
         "profile": {
             "firstName": "Stan",
             "lastName": "Smith",    
             "email": "stan.smith@fox.com",
             "ip": "100.0.0.1"   
         },
-        "ideal": {
+        "sofort": {
             "descriptor": "mydescriptor",
             "sepa": {
                 "bankName": "ing",
@@ -476,7 +477,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
-|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -505,8 +506,8 @@ Notifications are configured by logging into the merchant backoffice and navigat
       "href": "https://mysite.com/return"
     }
   ],
-  "paymentType": "IDEAL",
-  "ideal": {
+  "paymentType": "SOFORT",
+  "sofort": {
     "descriptor": "sampledesc",
     "sepa": {
       "bankName": "ing",
@@ -572,7 +573,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
   "merchantRefNum": "xyz",
   "amount": 400,
   "currencyCode": "EUR",
-  "paymentType": "IDEAL",
+  "paymentType": "SOFORT",
   "txnTime": "2016-02-24T08:39:39Z",
   "status": "COMPLETED",
   "gatewayResponse": {
@@ -800,8 +801,8 @@ Notifications are configured by logging into the merchant backoffice and navigat
       "href": "https://mysite.com/return"
     }
   ],
-  "paymentType": "IDEAL",
-  "ideal": {
+  "paymentType": "SOFORT",
+  "sofort": {
     "descriptor": "sampledesc",
     "sepa": {
       "bankName": "ing",
@@ -903,32 +904,6 @@ __**LEGEND**__
         "accountHolderName": "John Doe",
         "bic": "ABNANL2APIP",
         "iban": "DE89370400440532013000"                
-    }
-}
-```
-
-<a name="ideal" title="iDEAL Payment Object"></a>
-## ideal 
-
-![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)
-
-|Element                 |Type                   |                 |                       |                       |                  |Description|
-|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|descriptor              |string<br/>`length=X`  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The consumer's SEPA bank account details \(if applicable\). |
-|sepa.bankName           |enum                   |&#8210;          |&#9864;                |&#8210;                |&#8210;           |The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
-|sepa.country            |enum                   |&#8210;          |&#9864;                |&#8210;                |&#8210;           |The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|sepa.iban               |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The International Bank Account Number (IBAN) of the account.|
-|sepa.bic                |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The Bank Identifier Code (BIC) of the account.|
-|sepa.accountHolderName  |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The account holder's name.|
-
-```
-"ideal": {
-    "descriptor": "custom descriptor",
-    "sepa": {
-        "bankName": "abn_amro",
-        "country": "NL"
     }
 }
 ```
@@ -1454,12 +1429,12 @@ your consumer to the link to complete the payment.
 In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
 these should be passed as a nested object in the root of your payment request.  
 <br/>
-For example, an iDEAL payment requires the following attributes to be included in your request:
+For example, a SOFORT payment can support the following attributes to be included in your request:
 
 ```
 {
-    "paymentType": "IDEAL",
-    "ideal": {
+    "paymentType": "SOFORT",
+    "sofort": {
        "sepa": {
            "bankName": "ing",
            "country": "NL"
@@ -1474,12 +1449,12 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 | | | | |
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
-|[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|||
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
+|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)||||
 
 
 Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
-* A standard Payment Authorization using the iDEAL payment method, with automatic settlement.
+* A standard Payment Authorization using the RapidTransfer payment method, with automatic settlement.
 * A Payment Authorization using the payolution payment method, offering payment by installments. You must first process a [Verification request](#createverification) for the consumer before they can pay by installments.
 
 + Parameters
@@ -1489,7 +1464,6 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Include payment
     + Include paymentType
     + Include boku
-    + Include ideal
     + Include giropay
     + Include neteller
     + Include payolution    
@@ -1500,7 +1474,7 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Include sofort
     + Include links    
 
-+ Request Create iDeal Payment (application/json)
++ Request Create Rapid Transfer Payment (application/json)
 
     + Headers
 
@@ -1533,8 +1507,8 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
                   "href": "https://mysite.com/return"
                 }
               ],
-              "paymentType": "IDEAL",
-              "ideal": {
+              "paymentType": "RAPIDTRANSFER",
+              "rapidTransfer": {
                 "descriptor": "sampledesc",
                 "sepa": {
                   "bankName": "ing",
@@ -1580,8 +1554,8 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
                 "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
                 "paymentType": "RF"
               },
-              "paymentType": "IDEAL",
-              "ideal": {
+              "paymentType": "RAPIDTRANSFER",
+              "rapidTransfer": {
                 "descriptor": "sampledesc",
                 "sepa": {
                   "bankName": "ing",
@@ -1782,7 +1756,7 @@ Click on **Get Payment by ID** above to see how to look up a [Payment](#payment)
                 "merchantRefNum": "P1234",
                 "amount": 105,
                 "currencyCode": "EUR",
-                "paymentType": "IDEAL",
+                "paymentType": "RAPIDTRANSFER",
                 "settleWithAuth": true,
                 "availableToSettle": 0,
                 "availableToRefund": 105,
@@ -1800,9 +1774,8 @@ Click on **Get Payment by ID** above to see how to look up a [Payment](#payment)
                     "country": "NL",
                     "state": "FL"
                 },
-                "ideal": {
+                "RAPIDTRANSFER": {
                     "sepa": {
-                        "bankName": "abn_amro",
                         "country": "NL"
                     }
                 },
@@ -1868,7 +1841,7 @@ is disabled.
                         "merchantRefNum": "P1234",
                         "amount": 105,
                         "currencyCode": "EUR",
-                        "paymentType": "IDEAL",
+                        "paymentType": "RAPIDTRANSFER",
                         "settleWithAuth": true,
                         "availableToSettle": 0,
                         "availableToRefund": 105,
@@ -1886,9 +1859,8 @@ is disabled.
                             "country": "NL",
                             "state": "FL"
                         },
-                        "ideal": {
+                        "rapidTransfer": {
                             "sepa": {
-                                "bankName": "abn_amro",
                                 "country": "NL"
                             }
                         },
@@ -2764,7 +2736,6 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
 + Attributes
     + Include refund
     + Include paymentTypeRefund
-    + Include ideal
     + Include neteller
     + Include payolution
     + Include skrill
@@ -2782,7 +2753,7 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
             {
                 "merchantRefNum": "Ref-1506977370",
                 "dupCheck": true,
-                "paymentType": "IDEAL"
+                "paymentType": "SOFORT"
                 "amount": 400,
                 "currencyCode": "EUR"
             }
@@ -2796,14 +2767,14 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
                 "merchantRefNum": "Ref-1506977370",
                 "amount": 400,
                 "currencyCode": "EUR",
-                "paymentType": "IDEAL",
+                "paymentType": "SOFORT",
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
                     "id": "9bcaa7f0dba44c64981881401794abby",                
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                    "processor": "PAYON",
+                    "processor": "SOFORT",
                     "paymentType": "RF"
                   },
                 "links": [
@@ -2836,7 +2807,7 @@ Click on **Refund a Settlement** above to see how to submit a Refund request aga
             {
                 "merchantRefNum": "Ref-1506977370",
                 "dupCheck": true,
-                "paymentType": "IDEAL"
+                "paymentType": "SOFORT"
                 "amount": 400,
                 "currencyCode": "EUR"
             }
@@ -2850,7 +2821,7 @@ Click on **Refund a Settlement** above to see how to submit a Refund request aga
                 "merchantRefNum": "Ref-1506977370",
                 "amount": 400,
                 "currencyCode": "EUR",
-                "paymentType": "IDEAL",
+                "paymentType": "SOFORT",
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
@@ -2892,7 +2863,7 @@ Click on **Get Refund by ID** above to see how to look up a Refund request using
                 "merchantRefNum": "Ref-1506977370",
                 "amount": 400,
                 "currencyCode": "EUR",
-                "paymentType": "IDEAL",
+                "paymentType": "SOFORT",
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
@@ -2946,7 +2917,7 @@ Click on **List Refunds by Merchant Reference Number** above to see how to look 
                         "merchantRefNum": "Ref-1506977370",
                         "amount": 400,
                         "currencyCode": "EUR",
-                        "paymentType": "IDEAL",
+                        "paymentType": "SOFORT",
                         "txnTime": "2017-02-10T20:17:51Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
@@ -3245,25 +3216,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `txId`: `SIM001270` (string)
         + `returnCode`: `0`
 
-## `ideal`
-
-+ `ideal` (object, optional) - Optional attributes that can be passed when making an IDEAL payment request. 
-    + `descriptor`: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
-    + `sepa` (sepa)
-
-## `idealGatewayResponse`
-
-+ `gatewayResponse` (object)- These are the details returned from the external gateway. 
-
-    _Read Only_
-
-    + Properties
-        + `id`: `4867bb8ce543409dbe1187849af28107` - The unique identifier for the transaction provided by the gateway.
-        + `code`: `000.200.000`
-        + `description`: `Transaction Pending`
-        + `processor`: `IDEAL`
-        + `paymentType`: `DB`
-
 
 ## `installment`
 
@@ -3377,7 +3329,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `AUTH_VOIDED`
         + `AUTH_EXPIRED`
 
-+ Include idealGatewayResponse
++ Include rapidTransferGatewayResponse
 
 ## paymentDetails
 
@@ -3400,7 +3352,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
     + Members
         + `BOKU`
         + `GIROPAY`        
-        + `IDEAL`
         + `NETELLER`
         + `PAYSAFECARD`
         + `PAYSAFECASH`        
@@ -3414,7 +3365,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
     + Members
-        + `IDEAL`
         + `NETELLER`
         + `PAYOLUTION`
         + `SKRILL`
@@ -3591,6 +3541,20 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
     + `sepa` (sepa)
 
+## `rapidTransferGatewayResponse`
+
++ `gatewayResponse` (object)- These are the details returned from the external gateway. 
+
+    _Read Only_
+
+    + Properties
+        + `bankTimestamp`: `2017-09-19 07:34:09`
+        + `returnCode`: `0`
+        + `requestDateTime`: `2017-09-19T03:34:09.542-04:00`
+        + `durationMillis`: `113`
+        + `id`: `01549f7d-eca7-4081-b63c-39f594f83c71`
+        + `processor`: `RAPIDTRANSFER`
+
 ## `refund`
 
 + `id`: `6565bce8-9ae2-4359-bc7c-48c2e560810b` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., lookups.
@@ -3633,7 +3597,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `ERROR`
         + `EXPIRED`    
 
-+ Include idealGatewayResponse
++ Include rapidTransferGatewayResponse
 
 ## `returnLinks`
 
@@ -3870,5 +3834,3 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `COMPLETED`
         + `FAILED`
         + `ERROR`
-
-+ Include idealGatewayResponse
