@@ -10,7 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
-|v1             |2018-03-05            |- Removedemove iDeal
+|v1             |2018-03-05            |- Removed iDeal
 |v1             |2018-02-22            |- Added Paysafecash|
 |v1             |2017-02-21            |- Added Skrill standalone credit|
 |v1             |2018-01-10            |- Added support for Payolution verifications and payment installments|
@@ -316,6 +316,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/webhooks_sample.png)
 
+<b>Supported Webhook Event Types</b>
 
 |Event|Description|
 |---|---|
@@ -343,7 +344,42 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |AP\_VOIDAUTH\_ERRORED|The Alternate Payments voidauth was unsuccessful due to error.|
 |AP\_VOIDAUTH\_FAILED|The Alternate Payments voidauth was declined.|
 
+<b>Wehooks Signature Validation</b>
 
+When you register an endpoint in the merchant back office, Paysafe will automatically generate an HMAC Secret Key that you can use to validate the authenticity of the notifications you receive.
+Notification payloads will include a signature as part of the header response. When you receive a webhook notification, you can validate the signature by using your HMAC Secret Key using the following
+logic: 
+
+digest = HMAC_SHA256 (Secret Key, UTF string)
+signature = base64 (digest)
+
+<br/>
+<b><i>Sample Webhook Signature</i></b>
+
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/sample_wh_signature.png)
+
+<br/>
+> The following code example shows how to calculate the HMAC signature using Java.
+
+```
+/**
+  * calculating the HMAC signature.
+  *
+  * digest = HMAC-SHA256 ( secret key, UTF8 string )
+  *
+  * signature = base64 ( digest )
+  *
+  * @param hmacKey key
+  * @param msg message
+  * @return Base64 encoded string
+  */
+ public static String generateHmacSignature(final String hmacKey, final String msg) {
+   final byte[] key = Base64.decodeBase64(hmacKey);
+   final byte[] hmac = HmacUtils.hmacSha256(key, msg.getBytes(StandardCharsets.UTF_8));
+   return Base64.encodeBase64String(hmac);
+ }
+ ```
+<br/>
 
 # Common Objects
 
