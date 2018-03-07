@@ -10,6 +10,7 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2018-03-05            |- Removed iDeal
 |v1             |2018-02-22            |- Added Paysafecash|
 |v1             |2017-02-21            |- Added Skrill standalone credit|
 |v1             |2018-01-10            |- Added support for Payolution verifications and payment installments|
@@ -133,14 +134,14 @@ Sample Response with List Data
         "merchantRefNum": "xyz",
         "amount": 100,
         "currencyCode": "EUR",
-        "paymentType": "IDEAL",
+        "paymentType": "SOFORT",
         "profile": {
             "firstName": "Stan",
             "lastName": "Smith",    
             "email": "stan.smith@fox.com",
             "ip": "100.0.0.1"   
         },
-        "ideal": {
+        "sofort": {
             "descriptor": "mydescriptor",
             "sepa": {
                 "bankName": "ing",
@@ -315,6 +316,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/webhooks_sample.png)
 
+<b>Supported Webhook Event Types</b>
 
 |Event|Description|
 |---|---|
@@ -342,7 +344,42 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |AP\_VOIDAUTH\_ERRORED|The Alternate Payments voidauth was unsuccessful due to error.|
 |AP\_VOIDAUTH\_FAILED|The Alternate Payments voidauth was declined.|
 
+<b>Wehooks Signature Validation</b>
 
+When you register an endpoint in the merchant back office, Paysafe will automatically generate an HMAC Secret Key that you can use to validate the authenticity of the notifications you receive.
+Notification payloads will include a signature as part of the header response. When you receive a webhook notification, you can validate the signature by using your HMAC Secret Key using the following
+logic: 
+
+digest = HMAC_SHA256 (Secret Key, UTF string)
+signature = base64 (digest)
+
+<br/>
+<b><i>Sample Webhook Signature</i></b>
+
+![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/sample_wh_signature.png)
+
+<br/>
+> The following code example shows how to calculate the HMAC signature using Java.
+
+```
+/**
+  * calculating the HMAC signature.
+  *
+  * digest = HMAC-SHA256 ( secret key, UTF8 string )
+  *
+  * signature = base64 ( digest )
+  *
+  * @param hmacKey key
+  * @param msg message
+  * @return Base64 encoded string
+  */
+ public static String generateHmacSignature(final String hmacKey, final String msg) {
+   final byte[] key = Base64.decodeBase64(hmacKey);
+   final byte[] hmac = HmacUtils.hmacSha256(key, msg.getBytes(StandardCharsets.UTF_8));
+   return Base64.encodeBase64String(hmac);
+ }
+ ```
+<br/>
 
 # Common Objects
 
@@ -476,7 +513,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
-|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -505,11 +542,10 @@ Notifications are configured by logging into the merchant backoffice and navigat
       "href": "https://mysite.com/return"
     }
   ],
-  "paymentType": "IDEAL",
-  "ideal": {
+  "paymentType": "SOFORT",
+  "sofort": {
     "descriptor": "sampledesc",
     "sepa": {
-      "bankName": "ing",
       "country": "NL"
     }
   }
@@ -572,7 +608,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
   "merchantRefNum": "xyz",
   "amount": 400,
   "currencyCode": "EUR",
-  "paymentType": "IDEAL",
+  "paymentType": "SOFORT",
   "txnTime": "2016-02-24T08:39:39Z",
   "status": "COMPLETED",
   "gatewayResponse": {
@@ -722,34 +758,65 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |amount                  |number                 |This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japanese yen, which has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
+|paymentType             |enum                   |Payment type of the original payment.|
 |profile                 |[object](#profile)     |These are some details about the customer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
+|gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
 
 ```
 {
-  "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
-  "dupCheck": true,
-  "amount": 100,
-  "currencyCode": "EUR",
-  "profile": {
-    "firstName": "Stan",
-    "lastName": "Smith",
-    "email": "stan.smith@fox.com",
-    "ip": "127.0.0.1"
-  },
-  "billingDetails": {
-    "street1": "Street line 1",
-    "street2": "Street line 2",
-    "city": "Calgary",
-    "state": "AB",
-    "country": "CA",
-    "zip": "T3H3L3"
-  },
-  "status":"COMPLETED",
-  "txnTime":"2014-03-14T15:12:18Z"
+    "id": "21fa4850-0c82-4c67-997d-2c9654de91cd",
+    "merchantRefNum": "1520357063",
+    "dupCheck": true,
+    "amount": 100,
+    "currencyCode": "EUR",
+    "paymentType": "SKRILL",
+    "profile": {
+        "firstName": "merchant",
+        "lastName": "simulator",
+        "email": "cc@cc.com",
+        "ip": "127.0.0.1"
+    },
+    "billingDetails": {
+        "street1": "string",
+        "street2": "string",
+        "zip": "string",
+        "city": "string",
+        "country": "NL",
+        "state": "FL"
+    },
+    "returnLinks": [
+        {
+            "rel": "on_cancelled",
+            "href": "http://www.google.ca"
+        },
+        {
+            "rel": "default",
+            "href": "http://www.amazon.ca"
+        }
+    ],
+    "skrill": {
+        "consumerId": "john.doe@email.com",
+        "emailSubject": "Email Subject",
+        "emailMessage": "Note for email here."
+    },
+    "liveMode": false,
+    "txnTime": "2018-03-06T17:24:23Z",
+    "status": "COMPLETED",
+    "gatewayResponse": {
+        "status": "2",
+        "sid": "58e330448aa4cc4e913fd690d3664c6f",
+        "processor": "SKRILL_QCO"
+    },
+    "links": [
+        {
+            "rel": "self",
+            "href": "http://api.paysafe.com/alternatepayments/v1/accounts/1520356513/standalonecredits/21fa4850-0c82-4c67-997d-2c9654de91cd"
+        }
+    ]
 }
 ```
 
@@ -800,8 +867,8 @@ Notifications are configured by logging into the merchant backoffice and navigat
       "href": "https://mysite.com/return"
     }
   ],
-  "paymentType": "IDEAL",
-  "ideal": {
+  "paymentType": "SOFORT",
+  "sofort": {
     "descriptor": "sampledesc",
     "sepa": {
       "bankName": "ing",
@@ -903,32 +970,6 @@ __**LEGEND**__
         "accountHolderName": "John Doe",
         "bic": "ABNANL2APIP",
         "iban": "DE89370400440532013000"                
-    }
-}
-```
-
-<a name="ideal" title="iDEAL Payment Object"></a>
-## ideal 
-
-![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)
-
-|Element                 |Type                   |                 |                       |                       |                  |Description|
-|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|descriptor              |string<br/>`length=X`  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The consumer's SEPA bank account details \(if applicable\). |
-|sepa.bankName           |enum                   |&#8210;          |&#9864;                |&#8210;                |&#8210;           |The customer's bank. <br/>Options:<ul><li>abn\_amro</li><li>rabobank</li><li>bunq</li><li>ing</li><li>triodos</li><li>asn\_bank</li><li>sns\_bank</li><li>regiobank</li><li>van\_lanshot</li><li>knab</li></ul></b>|
-|sepa.country            |enum                   |&#8210;          |&#9864;                |&#8210;                |&#8210;           |The ISO 3166-1 alpha-2 code for the customer's bank (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|sepa.iban               |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The International Bank Account Number (IBAN) of the account.|
-|sepa.bic                |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The Bank Identifier Code (BIC) of the account.|
-|sepa.accountHolderName  |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The account holder's name.|
-
-```
-"ideal": {
-    "descriptor": "custom descriptor",
-    "sepa": {
-        "bankName": "abn_amro",
-        "country": "NL"
     }
 }
 ```
@@ -1259,14 +1300,24 @@ __**LEGEND**__
 |detail1Text             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 
+> Payment
 ```
-"skrill":{
-    "consumerId": "johndoe@email.com",
+"skrill": {
+    "consumerId": "john.doe@email.com",
     "recipientDescription":"logo_url_alt_text",
     "language":"EN",
     "logoUrl":"http://www.paysafe.com/icon.jpg",
     "detail1Description":"Details 1 description",
     "detail1Text":"Details 1 text"
+}
+```
+
+> Standalone Credit
+```
+"skrill": {
+    "consumerId": "john.doe@email.com",
+    "emailSubject": "Email Subject",
+    "emailMessage": "Note for email here."
 }
 ```
 
@@ -1454,12 +1505,12 @@ your consumer to the link to complete the payment.
 In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
 these should be passed as a nested object in the root of your payment request.  
 <br/>
-For example, an iDEAL payment requires the following attributes to be included in your request:
+For example, a SOFORT payment can support the following attributes to be included in your request:
 
 ```
 {
-    "paymentType": "IDEAL",
-    "ideal": {
+    "paymentType": "SOFORT",
+    "sofort": {
        "sepa": {
            "bankName": "ing",
            "country": "NL"
@@ -1474,12 +1525,12 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 | | | | |
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
-|[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|||
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
+|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)||||
 
 
 Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
-* A standard Payment Authorization using the iDEAL payment method, with automatic settlement.
+* A standard Payment Authorization using the RapidTransfer payment method, with automatic settlement.
 * A Payment Authorization using the payolution payment method, offering payment by installments. You must first process a [Verification request](#createverification) for the consumer before they can pay by installments.
 
 + Parameters
@@ -1489,7 +1540,6 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Include payment
     + Include paymentType
     + Include boku
-    + Include ideal
     + Include giropay
     + Include neteller
     + Include payolution    
@@ -1500,7 +1550,7 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Include sofort
     + Include links    
 
-+ Request Create iDeal Payment (application/json)
++ Request Create Rapid Transfer Payment (application/json)
 
     + Headers
 
@@ -1509,38 +1559,29 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Body
 
             {
-              "merchantRefNum": "P1234",
-              "dupCheck": true,
-              "amount": 100,
-              "currencyCode": "EUR",
-              "profile": {
-                "firstName": "Stan",
-                "lastName": "Smith",
-                "email": "stan.smith@fox.com",
-                "ip": "127.0.0.1"
-              },
-              "billingDetails": {
-                "street1": "Street line 1",
-                "street2": "Street line 2",
-                "city": "Calgary",
-                "state": "AB",
-                "country": "CA",
-                "zip": "T3H3L3"
-              },
-              "returnLinks": [
-                {
+                "amount": 150,
+                "paymentType": "RAPIDTRANSFER",
+                "currencyCode": "GBP",
+                "merchantRefNum": "MR1000001",
+                "settleWithAuth": "true",
+                "profile": {
+                "email": "john.doe@email.com",
+                "firstName": "John",
+                "lastName": "Doe"
+            },
+            "billingDetails": {
+                "city": "Berlin",
+                "country": "DE",
+                "state": "Berlin",
+                "street1": "Street Address1",
+                "street2": "Street Address2",
+                "zip": "10179"
+            },  
+            "returnLinks": [
+              {
                   "rel": "default",
-                  "href": "https://mysite.com/return"
-                }
-              ],
-              "paymentType": "IDEAL",
-              "ideal": {
-                "descriptor": "sampledesc",
-                "sepa": {
-                  "bankName": "ing",
-                  "country": "NL"
-                }
-              }
+                  "href": "http://www.paysafe.com"
+              }]
             }
 
 + Response 201 (application/json)
@@ -1548,58 +1589,59 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Body
 
             {
-              "id": "25f6dadf-176a-415f-95c9-6ff39ff697ba",
-              "merchantRefNum": "P1234",
-              "amount": 100,
-              "currencyCode": "EUR",
-              "profile": {
-                "firstName": "Stan",
-                "lastName": "Smith",
-                "email": "stan.smith@fox.com",
-                "ip": "127.0.0.1"
-              },
-              "billingDetails": {
-                "street1": "Street line 1",
-                "street2": "Street line 2",
-                "city": "Calgary",
-                "state": "AB",
-                "country": "CA",
-                "zip": "T3H3L3"
-              },
-              "returnLinks": [
-                {
-                  "rel": "default",
-                  "href": "https://mysite.com/return"
-                }
-              ],
-              "liveMode": "false",
-              "txnTime": "2015-12-11T16:33:49Z",
-              "status": "INITIATED",
-              "gatewayResponse": {
-                "code": "000.100.110",
-                "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                "paymentType": "RF"
-              },
-              "paymentType": "IDEAL",
-              "ideal": {
-                "descriptor": "sampledesc",
-                "sepa": {
-                  "bankName": "ing",
-                  "country": "NL"
-                }
-              },
-              "links": [
-                {
-                  "rel": "self",
-                  "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21\""
+                "id": "c9659fcd-0c68-4cba-b7c9-6b6e353cfe00",
+                "gatewayReconciliationId": "QAAAAAAPU4",
+                "merchantRefNum": "MR1000001",
+                "amount": 150,
+                "currencyCode": "GBP",
+                "paymentType": "RAPIDTRANSFER",
+                "settleWithAuth": true,
+                "availableToSettle": 0,
+                "availableToRefund": 0,
+                "profile": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "email": "john.doe@email.com"
                 },
-                {
-                  "rel": "redirect_payment",
-                  "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1465330102/payments/9cc5376a-57b8-4351-b42c-3a02a1040b21/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhdGQiOiI5Y2M1Mzc2YS01N2I4LTQzNTEtYjQyYy0zYTAyYTEwNDBiMjEiLCJhY2QiOiIxNDY1MzMwMTAyIiwiZXhwIjoxNDY1NDAwNjg2fQ.EzLIFiXt40PLVuX7SOHRkZrNX7Nn0_97ZJsGx1yKRrc"
-                }
-              ]
+                "billingDetails": {
+                    "street1": "Street Address1",
+                    "street2": "Street Address2",
+                    "zip": "10179",
+                    "city": "Berlin",
+                    "country": "DE",
+                    "state": "Berlin"
+                },
+                "rapidTransfer": {
+                    "descriptor": "QAAAAAAPU4"
+                },
+                "returnLinks": [
+                    {
+                        "rel": "default",
+                        "href": "http://www.paysafe.com"
+                    }
+                ],
+                "txnTime": "2018-03-06T17:50:44Z",
+                "status": "INITIATED",
+                "gatewayResponse": {
+                    "bankTimestamp": "2018-03-06 18:50:49",
+                    "returnCode": "0",
+                    "requestDateTime": "2018-03-06T12:50:47.935-05:00",
+                    "durationMillis": "1363",
+                    "id": "17eba3bc-b1f3-43e0-8067-d53d4f3e53fa",
+                    "processor": "RAPIDTRANSFER"
+                },
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1002550404/payments/c9659fcd-0c68-4cba-b7c9-6b6e353cfe00"
+                    },
+                    {
+                        "rel": "redirect_payment",
+                        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1002550404/payments/c9659fcd-0c68-4cba-b7c9-6b6e353cfe00/redirect?token=eyJhbGciOiJIUzI1NiJ9.eyJhY2QiOiIxMDAyNTUwNDA0IiwicHlkIjoiYzk2NTlmY2QtMGM2OC00Y2JhLWI3YzktNmI2ZTM1M2NmZTAwIiwiZXhwIjoxNTIwMzYwNDQ0fQ.OCkfKTRq8Ca-VfNoXGWWv2msxOkYEksg8cDHNU06sjA"
+                    }
+                ]
             }
- 
+
 + Request Create payolution Payment with Installments (application/json)
 
     + Headers
@@ -1748,11 +1790,11 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
                 },
                 "links": [{
                         "rel": "self",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001186650/payments/5063daee-0e9e-4d0d-838f-b7bac2b04b8d"
+                        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1001186650/payments/5063daee-0e9e-4d0d-838f-b7bac2b04b8d"
                     },
                     {
                         "rel": "verification",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001186650/verifications/2f6f0150-2f08-43be-ad42-aa89fafde792"
+                        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1001186650/verifications/2f6f0150-2f08-43be-ad42-aa89fafde792"
                     }
                 ]
             }
@@ -1777,59 +1819,50 @@ Click on **Get Payment by ID** above to see how to look up a [Payment](#payment)
     + Body
 
             {
-                "id": "13c7873e-eccd-463d-b8ec-e3899f322a99",
-                "gatewayReconciliationId": "64d62a6e-d7da-43ca-9f18-52b4afaf2096",
-                "merchantRefNum": "P1234",
-                "amount": 105,
-                "currencyCode": "EUR",
-                "paymentType": "IDEAL",
+                "id": "c1e0236e-ba23-4f12-9eab-bfc7ed07d303",
+                "gatewayReconciliationId": "QAAAAAAAAI",
+                "merchantRefNum": "P123ASA4",
+                "amount": 100,
+                "currencyCode": "GBP",
+                "paymentType": "RAPIDTRANSFER",
                 "settleWithAuth": true,
                 "availableToSettle": 0,
-                "availableToRefund": 105,
                 "profile": {
-                    "firstName": "Greg",
-                    "lastName": "Roll",
-                    "email": "gregtest@email.com",
-                    "ip": "100.0.0.1"
+                    "firstName": "Stan",
+                    "lastName": "Smith",
+                    "email": "stan.smith@fox.com",
+                    "ip": "127.0.0.1"
                 },
                 "billingDetails": {
-                    "street1": "101 Bernies Bar",
-                    "street2": "Building 2",
-                    "zip": "t3h3l2",
-                    "city": "Neighneigh",
-                    "country": "NL",
-                    "state": "FL"
+                    "street1": "Street line 1",
+                    "street2": "Street line 2",
+                    "zip": "T3H3L3",
+                    "city": "Calgary",
+                    "country": "CA",
+                    "state": "AB"
                 },
-                "ideal": {
-                    "sepa": {
-                        "bankName": "abn_amro",
-                        "country": "NL"
-                    }
+                "rapidTransfer": {
+                    "descriptor": "QAAAAAAAAI custom descriptor"
                 },
                 "returnLinks": [
                     {
                         "rel": "default",
-                        "href": "http://www.codedrop.ca"
+                        "href": "https://mysite.com/return"
                     }
                 ],
-                "liveMode": true,
-                "txnTime": "2017-09-30T18:00:37Z",
+                "txnTime": "2018-02-21T11:37:12Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
-                    "id": "9499d89178e84387bfb002c985425535",
-                    "code": "000.000.000",
-                    "description": "Transaction succeeded",
-                    "processor": "PAYON",
-                    "paymentType": "RC"
+                    "processor": "RAPIDTRANSFER"
                 },
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments/13c7873e-eccd-463d-b8ec-e3899f322a99"
+                        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1002550404/payments/c1e0236e-ba23-4f12-9eab-bfc7ed07d303"
                     },
                     {
                         "rel": "settlements",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments/13c7873e-eccd-463d-b8ec-e3899f322a99/settlements"
+                        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1002550404/payments/c1e0236e-ba23-4f12-9eab-bfc7ed07d303/settlements"
                     }
                 ]
             }
@@ -1863,59 +1896,50 @@ is disabled.
                 },
                 "payments": [
                     {
-                        "id": "13c7873e-eccd-463d-b8ec-e3899f322a99",
-                        "gatewayReconciliationId": "64d62a6e-d7da-43ca-9f18-52b4afaf2096",
-                        "merchantRefNum": "P1234",
-                        "amount": 105,
-                        "currencyCode": "EUR",
-                        "paymentType": "IDEAL",
+                        "id": "c1e0236e-ba23-4f12-9eab-bfc7ed07d303",
+                        "gatewayReconciliationId": "QAAAAAAAAI",
+                        "merchantRefNum": "P123ASA4",
+                        "amount": 100,
+                        "currencyCode": "GBP",
+                        "paymentType": "RAPIDTRANSFER",
                         "settleWithAuth": true,
                         "availableToSettle": 0,
-                        "availableToRefund": 105,
                         "profile": {
-                            "firstName": "John",
-                            "lastName": "Doe",
-                            "email": "john.doe@email.com",
-                            "ip": "100.0.0.1"
+                            "firstName": "Stan",
+                            "lastName": "Smith",
+                            "email": "stan.smith@fox.com",
+                            "ip": "127.0.0.1"
                         },
                         "billingDetails": {
-                            "street1": "101 Bernies Bar",
-                            "street2": "Building 2",
-                            "zip": "t3h3l2",
-                            "city": "Neighneigh",
-                            "country": "NL",
-                            "state": "FL"
+                            "street1": "Street line 1",
+                            "street2": "Street line 2",
+                            "zip": "T3H3L3",
+                            "city": "Calgary",
+                            "country": "CA",
+                            "state": "AB"
                         },
-                        "ideal": {
-                            "sepa": {
-                                "bankName": "abn_amro",
-                                "country": "NL"
-                            }
+                        "rapidTransfer": {
+                            "descriptor": "QAAAAAAAAI custom descriptor"
                         },
                         "returnLinks": [
                             {
                                 "rel": "default",
-                                "href": "http://www.codedrop.ca"
+                                "href": "https://mysite.com/return"
                             }
                         ],
-                        "liveMode": true,
-                        "txnTime": "2017-09-30T18:00:37Z",
+                        "txnTime": "2018-02-21T11:37:12Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
-                            "id": "9499d89178e84387bfb002c985425535",                        
-                            "code": "000.000.000",
-                            "description": "Transaction succeeded",
-                            "processor": "PAYON",
-                            "paymentType": "RC"
+                            "processor": "RAPIDTRANSFER"
                         },
                         "links": [
                             {
                                 "rel": "self",
-                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments/13c7873e-eccd-463d-b8ec-e3899f322a99"
+                                "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1002550404/payments/c1e0236e-ba23-4f12-9eab-bfc7ed07d303"
                             },
                             {
                                 "rel": "settlements",
-                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments/13c7873e-eccd-463d-b8ec-e3899f322a99/settlements"
+                                "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1002550404/payments/c1e0236e-ba23-4f12-9eab-bfc7ed07d303/settlements"
                             }
                         ]
                     }
@@ -1923,10 +1947,11 @@ is disabled.
                 "links": [
                     {
                         "rel": "self",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001145040/payments?merchantRefNum=GR-1506794436&limit=10&offset=0&startDate=2017-08-31T18:24:29Z&endDate=2017-09-30T18:24:30Z"
+                        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/1002550404/payments?merchantRefNum=P123ASA4&limit=10&offset=0&startDate=2018-02-04T18:06:45Z&endDate=2018-03-06T18:06:46Z"
                     }
                 ]
             }
+
 
 # Verifications [/verifications]
 <a name="verifications" title="Verifications"></a>
@@ -2764,7 +2789,6 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
 + Attributes
     + Include refund
     + Include paymentTypeRefund
-    + Include ideal
     + Include neteller
     + Include payolution
     + Include skrill
@@ -2782,7 +2806,7 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
             {
                 "merchantRefNum": "Ref-1506977370",
                 "dupCheck": true,
-                "paymentType": "IDEAL"
+                "paymentType": "SOFORT"
                 "amount": 400,
                 "currencyCode": "EUR"
             }
@@ -2796,14 +2820,14 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
                 "merchantRefNum": "Ref-1506977370",
                 "amount": 400,
                 "currencyCode": "EUR",
-                "paymentType": "IDEAL",
+                "paymentType": "SOFORT",
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
                     "id": "9bcaa7f0dba44c64981881401794abby",                
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
-                    "processor": "PAYON",
+                    "processor": "SOFORT",
                     "paymentType": "RF"
                   },
                 "links": [
@@ -2836,7 +2860,7 @@ Click on **Refund a Settlement** above to see how to submit a Refund request aga
             {
                 "merchantRefNum": "Ref-1506977370",
                 "dupCheck": true,
-                "paymentType": "IDEAL"
+                "paymentType": "SOFORT"
                 "amount": 400,
                 "currencyCode": "EUR"
             }
@@ -2850,7 +2874,7 @@ Click on **Refund a Settlement** above to see how to submit a Refund request aga
                 "merchantRefNum": "Ref-1506977370",
                 "amount": 400,
                 "currencyCode": "EUR",
-                "paymentType": "IDEAL",
+                "paymentType": "SOFORT",
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
@@ -2892,7 +2916,7 @@ Click on **Get Refund by ID** above to see how to look up a Refund request using
                 "merchantRefNum": "Ref-1506977370",
                 "amount": 400,
                 "currencyCode": "EUR",
-                "paymentType": "IDEAL",
+                "paymentType": "SOFORT",
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
@@ -2946,7 +2970,7 @@ Click on **List Refunds by Merchant Reference Number** above to see how to look 
                         "merchantRefNum": "Ref-1506977370",
                         "amount": 400,
                         "currencyCode": "EUR",
-                        "paymentType": "IDEAL",
+                        "paymentType": "SOFORT",
                         "txnTime": "2017-02-10T20:17:51Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
@@ -3245,25 +3269,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `txId`: `SIM001270` (string)
         + `returnCode`: `0`
 
-## `ideal`
-
-+ `ideal` (object, optional) - Optional attributes that can be passed when making an IDEAL payment request. 
-    + `descriptor`: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
-    + `sepa` (sepa)
-
-## `idealGatewayResponse`
-
-+ `gatewayResponse` (object)- These are the details returned from the external gateway. 
-
-    _Read Only_
-
-    + Properties
-        + `id`: `4867bb8ce543409dbe1187849af28107` - The unique identifier for the transaction provided by the gateway.
-        + `code`: `000.200.000`
-        + `description`: `Transaction Pending`
-        + `processor`: `IDEAL`
-        + `paymentType`: `DB`
-
 
 ## `installment`
 
@@ -3377,7 +3382,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `AUTH_VOIDED`
         + `AUTH_EXPIRED`
 
-+ Include idealGatewayResponse
++ Include rapidTransferGatewayResponse
 
 ## paymentDetails
 
@@ -3400,7 +3405,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
     + Members
         + `BOKU`
         + `GIROPAY`        
-        + `IDEAL`
         + `NETELLER`
         + `PAYSAFECARD`
         + `PAYSAFECASH`        
@@ -3414,7 +3418,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
 
     + Members
-        + `IDEAL`
         + `NETELLER`
         + `PAYOLUTION`
         + `SKRILL`
@@ -3589,7 +3592,21 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 + `rapidTransfer` (object) - Optional attributes that can be passed when making a RAPIDTRANSFER payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
-    + `sepa` (sepa)
+    + Include sepa
+
+## `rapidTransferGatewayResponse`
+
++ `gatewayResponse` (object)- These are the details returned from the external gateway. 
+
+    _Read Only_
+
+    + Properties
+        + `bankTimestamp`: `2017-09-19 07:34:09`
+        + `returnCode`: `0`
+        + `requestDateTime`: `2017-09-19T03:34:09.542-04:00`
+        + `durationMillis`: `113`
+        + `id`: `01549f7d-eca7-4081-b63c-39f594f83c71`
+        + `processor`: `RAPIDTRANSFER`
 
 ## `refund`
 
@@ -3633,7 +3650,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `ERROR`
         + `EXPIRED`    
 
-+ Include idealGatewayResponse
++ Include rapidTransferGatewayResponse
 
 ## `returnLinks`
 
@@ -3775,7 +3792,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 + `sofort` (object) - Optional attributes that can be passed when making a SOFORT payment request. 
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
-    + `sepa` (sepa)
+    + Include sepa
     
 ## `sofortGatewayResponse`
 
@@ -3870,5 +3887,3 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `COMPLETED`
         + `FAILED`
         + `ERROR`
-
-+ Include idealGatewayResponse
