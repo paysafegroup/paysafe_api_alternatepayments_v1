@@ -10,7 +10,8 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
-|v1             |2018-03-05            |- Removed iDeal
+|v1             |2018-03-01            |- Added Interac|
+|v1             |2018-03-05            |- Removed iDeal|
 |v1             |2018-02-22            |- Added Paysafecash|
 |v1             |2017-02-21            |- Added Skrill standalone credit|
 |v1             |2018-01-10            |- Added support for Payolution verifications and payment installments|
@@ -348,7 +349,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 
 When you register an endpoint in the merchant back office, Paysafe will automatically generate an HMAC Secret Key that you can use to validate the authenticity of the notifications you receive.
 Notification payloads will include a signature as part of the header response. When you receive a webhook notification, you can validate the signature by using your HMAC Secret Key using the following
-logic: 
+logic:
 
 digest = HMAC_SHA256 (Secret Key, UTF string)
 signature = base64 (digest)
@@ -427,17 +428,17 @@ signature = base64 (digest)
 <a name="error" title="error Object"></a>
 ## error
 
-|Element            |Type                           |Description|
-|---                |---                            |---|
-|error.code         |string                         |This is the error code.<br/><i>Read Only</i>|
-|error.message      |string                         |This is a description of the error.<br/><i>Read Only</i>|
-|error.details      |array of string                |This is a collection of detailed descriptions.<br/><i>Read Only</i>|
-|error.fieldErrors  |array of [object](#fieldError) |This is a list of fields that have problems.<br/><i>Read Only</i>|
-|error.links        |array of [object](#link)       |Links to the error documentation.<br/><i>Read Only</i>|
-|id                 |string                         |This is the is the unique identifier for the related resource.<br/><i>Read Only</i>|
-|merchantRefNum     |string                         |This is the identifier provided by the merchant for a transaction.<br/><i>Read Only</i>|
-|riskReasonCode     |string                         |This is the associated risk reason.<br/><i>Read Only</i>|
-|links              |array of [object](#link)       |The link to the related resource.<br/><i>Read Only</i>|
+|Element            |Type                             |Description|
+|---                |---                              |---|
+|error.code         |string                           |This is the error code.<br/><i>Read Only</i>|
+|error.message      |string                           |This is a description of the error.<br/><i>Read Only</i>|
+|error.details      |array of string                  |This is a collection of detailed descriptions.<br/><i>Read Only</i>|
+|error.fieldErrors  |[array of [object](#fieldError)] |This is a list of fields that have problems.<br/><i>Read Only</i>|
+|error.links        |[array of [object](#link)]       |Links to the error documentation.<br/><i>Read Only</i>|
+|id                 |string                           |This is the is the unique identifier for the related resource.<br/><i>Read Only</i>|
+|merchantRefNum     |string                           |This is the identifier provided by the merchant for a transaction.<br/><i>Read Only</i>|
+|riskReasonCode     |string                           |This is the associated risk reason.<br/><i>Read Only</i>|
+|links              |[array of [object](#link)]       |The link to the related resource.<br/><i>Read Only</i>|
 
 ```
 {
@@ -507,7 +508,7 @@ signature = base64 (digest)
 |profile                 |[object](#profile)     |These are some details about the consumer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |shippingDetails         |[object](#shippingDetails) |These are the shipping details for the payment.|
-|returnLinks             |[object](#returnLinks) |The URL endpoint to redirect the consumer to. You can customize the return URL based on the transaction status. 'default' is mandatory|
+|returnLinks             |[array of [object](#returnLinks)]|The URL endpoint to redirect the consumer to. You can customize the return URL based on the transaction status. 'default' is mandatory|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this payment, if applicable.<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
@@ -1022,7 +1023,7 @@ __**LEGEND**__
 "payolution": {
     "productType": "INSTALLMENTS",
     "descriptor": "Order with ID 4ab2",
-    "plans": [{
+    "plans": {
         "paymentDetails": [{
             "installments": [{
                     "amount": 16820,
@@ -1044,7 +1045,7 @@ __**LEGEND**__
             "interestRate": 14.95,
             "effectiveInterestRate": 15.60,
             "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
-        }],
+        },
         "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
         "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment",
         "planDuration": "3",
@@ -1086,7 +1087,7 @@ __**LEGEND**__
 |Element                        |Type                                 |                 |                       |                       |                  |Description|
 |---                            |---                                  |:---:            |:---:                  |:---:                  |:---:             |---|
 |                               |**supported resources**              |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|paymentDetails                 |[object](#payolution.paymentDetails) |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |This is an array of payment details objects. <br/><i>Read Only</i>|
+|paymentDetails                 |[array of [object](#payolution.paymentDetails)] |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |This is an array of payment details objects. <br/><i>Read Only</i>|
 |tacUrl                         |string                               |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |This is a URL pointing to the Terms and Conditions for the payment plan.<br/><i>Read Only</i>|
 |dataPrivacyConsentUrl          |string                               |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |This is a URL pointing to the data privacy declaration for the payment plan.<br/><i>Read Only</i>|
 
@@ -1576,7 +1577,7 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
                 "street1": "Street Address1",
                 "street2": "Street Address2",
                 "zip": "10179"
-            },  
+            },
             "returnLinks": [
               {
                   "rel": "default",
@@ -3384,7 +3385,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 + Include rapidTransferGatewayResponse
 
-## paymentDetails
+## `paymentDetails`
 
 + `paymentDetails` (object) - Information about payment installments, including due dates and amounts.
     _Read Only_
@@ -3404,7 +3405,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
     + Members
         + `BOKU`
-        + `GIROPAY`        
+        + `GIROPAY`
         + `NETELLER`
         + `PAYSAFECARD`
         + `PAYSAFECASH`        
@@ -3476,7 +3477,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `payolutionAnalysis`
 
-+ `analysis` (object) - This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.
++ `analysis` (array) - This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.
     + `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
     + `value`: `TOP` (string)
 
@@ -3532,6 +3533,15 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
     + `countryRestriction` : `DE` (string) : The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.
 
+## `plans`
+
++ `plans` (object, optional) - These are details about the installment plan, including amount and due date plus some additional parameters like interest, etc.
+    + `tacUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment` (string) - This is a URL pointing to the Terms and Conditions for the payment plan.
+    _Read Only_
+    + `dataPrivacyConsentUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment` (string) - This is a URL pointing to the data privacy declaration for the payment plan.
+    clean_Read Only_
+    + Include paymentDetails
+
 ## `productType`
 
 + `productType` (enum) - This is the type of payment request to use for for a [Payment Authorization](#createauthorization). **Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS.
@@ -3579,14 +3589,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         _Length<=50_
     + `locale`: `en` (string) - ISO language code representing the preferred language for this profile.
 
-## `plans`
-
-+ `plans` (object, optional) - These are details about the installment plan, including amount and due date plus some additional parameters like interest, etc.
-    + Include paymentDetails
-    + `tacUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment` (string) - This is a URL pointing to the Terms and Conditions for the payment plan.
-        _Read Only_
-    + `dataPrivacyConsentUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment` (string) - This is a URL pointing to the data privacy declaration for the payment plan.
-        _Read Only_
 
 ## `rapidTransfer`
 
@@ -3596,7 +3598,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `rapidTransferGatewayResponse`
 
-+ `gatewayResponse` (object)- These are the details returned from the external gateway. 
++ `gatewayResponse` (object)- These are the details returned from the external gateway.
 
     _Read Only_
 
