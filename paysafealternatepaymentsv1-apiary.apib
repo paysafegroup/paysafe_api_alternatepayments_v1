@@ -30,12 +30,12 @@ variety of non-card regional payment methods with a single integration.
 
 
 # Technical Introduction
-This section provides a technical introduction to the Paysafe Alternate Payments API. 
+This section provides a technical introduction to the Paysafe Alternate Payments API.
 
 ## API Endpoints
 
-The Paysafe Alternate Payments API is available in the Test environment for integration testing purposes. 
-To switch between the Test and the live Production systems you  need only to change the endpoint URI and the 
+The Paysafe Alternate Payments API is available in the Test environment for integration testing purposes.
+To switch between the Test and the live Production systems you  need only to change the endpoint URI and the
 credentials.
 
 The following endpoints form the basis of a resource URI:
@@ -50,14 +50,14 @@ Because the Test environment is completely isolated, any changes you perform on 
 ## Versioning
 
 The API version will influence the request/response object structure as well as the functionality that is available through the API. A new version of the API will  be introduced only if we roll out a backwards-incompatible change
-that may impact your existing integrations.  
+that may impact your existing integrations.
 
 ### Major Version
 
-The major version \(i.e., /v1/ \) represents a major technology shift between versions of the API. Changes in the 
+The major version \(i.e., /v1/ \) represents a major technology shift between versions of the API. Changes in the
 major version are reserved for large-scale changes to the API that fundamentally change integration requirements
-from the previous version.  Modified business domain models, re-design of functional flows, or change in API 
-resource patterns are all considered major changes.  Changes to a major version are rare and typically require 
+from the previous version.  Modified business domain models, re-design of functional flows, or change in API
+resource patterns are all considered major changes.  Changes to a major version are rare and typically require
 an extended deprecation cycle \(~2 years\) from prior versions to allow all consumers of the API to adapt.
 
 > Your integration should take the following backwards-compatible changes into consideration so as not to break when additional fields are added to the API.
@@ -79,7 +79,7 @@ an extended deprecation cycle \(~2 years\) from prior versions to allow all cons
 ***
 
 <a name="apikey" title="Authentication"></a>
-## Authentication 
+## Authentication
 
 In order for you to use the Paysafe REST API, Paysafe must first set you up on their system
 and provide you with an API key. Your API key looks something like this:
@@ -106,7 +106,7 @@ For additional details, please refer to [http://en.wikipedia.org/wiki/Basic_acce
 ## Pagination
 
 API calls that return multiple resources will wrap the response as a named JSON array.  For example, a collection of "payment" objects would
-be returned as "payments". By default, 10 items at a time will be returned and you can navigate to the next set of resources using the 
+be returned as "payments". By default, 10 items at a time will be returned and you can navigate to the next set of resources using the
 supplied HATEOAS links.  List responses will also include a meta data section that will identify the number of records included in the collection,
 the number of records per page (limit), and the current page number.
 <br/><br/>
@@ -128,7 +128,7 @@ Sample Response with List Data
     "meta": {
         "numberOfRecords": 77,
         "limit": 10,
-        "page": 1 
+        "page": 1
     },
     "payments": [{
         "id": "044e3915-b612-40c7-b652-283bb288521f",
@@ -138,9 +138,9 @@ Sample Response with List Data
         "paymentType": "SOFORT",
         "profile": {
             "firstName": "Stan",
-            "lastName": "Smith",    
+            "lastName": "Smith",
             "email": "stan.smith@fox.com",
-            "ip": "100.0.0.1"   
+            "ip": "100.0.0.1"
         },
         "sofort": {
             "descriptor": "mydescriptor",
@@ -237,7 +237,7 @@ HTTP response codes are used to indicate the status of a request.
 The Alternate Payments API uses a RESTful endpoint structure and relies on HTTP verbs (GET, PUT, POST, DELETE)
 to determine what action you are attempting to perform on a specific resource.
 
-Each API call response includes an array of HATEOAS (Hypermedia as the Engine of Application State) links. 
+Each API call response includes an array of HATEOAS (Hypermedia as the Engine of Application State) links.
 These links can be used to integrate subsequent flows and typically they will provide you information as to
 what you can do next.  Additionally these links might be used to link to other resources related to the
 current response object.
@@ -258,9 +258,9 @@ are provided to navigate through the set of resources in the collection.
 
 ```
 GET https://api.test.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=10
- 
+
 ...result set
- 
+
 "links": [{
     "rel": "self",
     "href": "https://api.test.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNum={MERCHANT_REF_NUM}&limit=10&offset=10"
@@ -303,15 +303,15 @@ valid statuses for these complex resources and how they are linked.
 
 # Notifications
 
-You can configure custom notification events for your account(s) from the merchant backoffice.  Notification events could include webhooks, email, and/or SMS.  The availibity of notification types will vary 
+You can configure custom notification events for your account(s) from the merchant backoffice.  Notification events could include webhooks, email, and/or SMS.  The availibity of notification types will vary
 depending upon your account type and setup.
 <br/>
 
-The most common notification used as part of your Alternate Payments integration comes in the form of a webhook.  A webhook allows you to define an HTTP callback that will be POST to when 
-an event occurs that you would like to be notified of.  This would typically include status changes to a payment request.   As many alternate payment flows involve redirecting your customer 
-to a third-party site, you have no guarantee they will be properly returned to your site once payment is completed.   For these situations you should make use of webhook notifications.   
+The most common notification used as part of your Alternate Payments integration comes in the form of a webhook.  A webhook allows you to define an HTTP callback that will be POST to when
+an event occurs that you would like to be notified of.  This would typically include status changes to a payment request.   As many alternate payment flows involve redirecting your customer
+to a third-party site, you have no guarantee they will be properly returned to your site once payment is completed.   For these situations you should make use of webhook notifications.
 
-Notifications are configured by logging into the merchant backoffice and navigating to the <i>Settings --> Notifications</i> section.  
+Notifications are configured by logging into the merchant backoffice and navigating to the <i>Settings --> Notifications</i> section.
 <br/>
 > NOTE: Access to this function is dependent upon your user account privileges.  If you are unable to access this function please contact your merchant account support representative for assistance.
 
@@ -447,7 +447,7 @@ signature = base64 (digest)
     "message": "Field Error(s)",
     "details": [
         "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
-    ],        
+    ],
     "fieldErrors": [{
         "field": "recipientEmail",
         "error": "john@hi@you.c.c.c.c is not a valid e-mail address."
@@ -514,7 +514,7 @@ signature = base64 (digest)
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
-|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -717,7 +717,7 @@ signature = base64 (digest)
     "country": "NL",
     "accountHolderName": "John Doe",
     "bic": "ABNANL2APIP",
-    "iban": "DE89370400440532013000"      
+    "iban": "DE89370400440532013000"
 }
 ```
 
@@ -953,7 +953,7 @@ __**LEGEND**__
 <a name="giropay" title="Giropay Payment Object"></a>
 ## giropay
 
-![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png) 
+![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)
 
 |Element                 |Type                   |                 |                       |                       |                  |Description|
 |---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -970,13 +970,13 @@ __**LEGEND**__
     "sepa": {
         "accountHolderName": "John Doe",
         "bic": "ABNANL2APIP",
-        "iban": "DE89370400440532013000"                
+        "iban": "DE89370400440532013000"
     }
 }
 ```
 
 <a name="neteller" title="NETELLER Payment Object"></a>
-## neteller 
+## neteller
 
 ![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)
 
@@ -997,14 +997,14 @@ __**LEGEND**__
     "consumerVerivicationId":"123456",
     "recipientDescription":"logo_url_alt_text",
     "language":"EN",
-    "logoUrl":"http://www.paysafe.com/icon.jpg",    
+    "logoUrl":"http://www.paysafe.com/icon.jpg",
     "detail1Description":"Details 1 description",
     "detail1Text":"Details 1 text"
 }
 ```
 
 <a name="payolution" title="Payolution Payment Object"></a>
-## payolution 
+## payolution
 
 ![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)
 
@@ -1023,7 +1023,7 @@ __**LEGEND**__
 "payolution": {
     "productType": "INSTALLMENTS",
     "descriptor": "Order with ID 4ab2",
-    "plans": {
+    "plans": [{
         "paymentDetails": [{
             "installments": [{
                     "amount": 16820,
@@ -1045,7 +1045,7 @@ __**LEGEND**__
             "interestRate": 14.95,
             "effectiveInterestRate": 15.60,
             "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
-        },
+        }],
         "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
         "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment",
         "planDuration": "3",
@@ -1218,7 +1218,7 @@ __**LEGEND**__
 
 
 <a name="paysafecard" title="Paysafecard Payment Object"></a>
-## paysafecard 
+## paysafecard
 
 ![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)
 
@@ -1240,7 +1240,7 @@ __**LEGEND**__
 ```
 
 <a name="paysafecash" title="Paysafecash Payment Object"></a>
-## paysafecash 
+## paysafecash
 
 ![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)
 
@@ -1262,7 +1262,7 @@ __**LEGEND**__
 ```
 
 <a name="rapidtransfer" title="Rapid Transfer Payment Object"></a>
-## rapidtransfer 
+## rapidtransfer
 
 ![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)
 
@@ -1345,13 +1345,13 @@ __**LEGEND**__
 
 # Error Summary
 
-To ease integration and support for developers 
-integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.  
+To ease integration and support for developers
+integrating to our APIs, the error messages that are returned should be verbose enough to correct the problem.
 
 > See [error Object](#error)
 
-The error structure contains a code as well as a human readable message. 
-Additionally, the application error code will be returned in the header as *x-application-error-code* 
+The error structure contains a code as well as a human readable message.
+Additionally, the application error code will be returned in the header as *x-application-error-code*
 so it can be easily used by an application without parsing the body.
 <br/>
 
@@ -1360,7 +1360,7 @@ so it can be easily used by an application without parsing the body.
 ```
 Status-Code: 402
 
-x-application-status-code: ALTERNATIVE-PAYMENTS-GATEWAY-6 
+x-application-status-code: ALTERNATIVE-PAYMENTS-GATEWAY-6
 x-application-error-code: ALTERNATIVE-PAYMENTS-GATEWAY-6
 x-application-error-message: Bad Request
 x-application-error-details: Illegal unquoted character ((CTRL-CHAR, code 10)): has to be escaped using backslash to be included in string value at  [line: 2, column: 61]
@@ -1375,7 +1375,7 @@ x-application-error-details: Illegal unquoted character ((CTRL-CHAR, code 10)): 
     }
 }
 ```
- 
+
 **Error message example with field errors**
 
 ```
@@ -1392,7 +1392,7 @@ x-application-error-details: Either you submitted a request that is missing a ma
         "message": "Field Error(s)",
         "details": [
             "Either you submitted a request that is missing a mandatory field or the value of a field does not match the format expected."
-        ],        
+        ],
         "fieldErrors": [{
             "field": "recipientEmail",
             "error": "john@hi@you.c.c.c.c is not a valid e-mail address."
@@ -1424,7 +1424,7 @@ These are the error codes common to all subsystems.
 |401           |5275           |Authentication credentials expired      |The authentication credentials provided with the request have expired.|
 |              |5276           |Authentication credentials disabled     |The authentication credentials provided with the request provided have been disabled.|
 |              |5277           |Authentication credentials locked       |The authentication credentials provided with the request have been locked due to multiple authentication failures.|
-|              |5278           |Cannot authenticate                     |The authentication credentials provided with the request were not accepted for an unknown reason.| 
+|              |5278           |Cannot authenticate                     |The authentication credentials provided with the request were not accepted for an unknown reason.|
 |              |5279           |Authentication credentials are invalid  |The authentication credentials are invalid.|
 |              |5280           |Authentication credentials not provided |The required authentication credentials were not provided.|
 |403           |5270           |Unauthorized access                     |The credentials provided with the request do not have permission to access the requested data.|
@@ -1440,7 +1440,7 @@ These are the error codes common to all subsystems.
 
 These errors are specific to the Alternate Payments API.
 
-|HTTP Status   |Error Code                    |Message                                 |Details|                                 
+|HTTP Status   |Error Code                    |Message                                 |Details|
 |---           |---                           |---                                     |---|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-1  |Transaction cancelled at the gateway    |The transaction was cancelled at the gateway.|
 |402           |ALTERNATE-PAYMENTS-GATEWAY-4  |Transaction declined by the gateway     |The transaction declined by the gateway. |
@@ -1482,7 +1482,7 @@ This call returns a status of READY if the API is available.
 
 The payments resource represents a Payment Authorization.
 
-A Payment and Settlement work in conjunction and a complete transaction will always have both resources associated to it (Payment + Settlement).  
+A Payment and Settlement work in conjunction and a complete transaction will always have both resources associated to it (Payment + Settlement).
 
 When requesting a payment, by default it will include automatic Settlement (*settleWithAuth* = *true*). This will trigger creation of a corresponding Settlement record.  The
 Settlement record represents the actual capture of funds to your merchant account. For cases  when *settleWithAuth* is *true*, the corresponding Settlement will have the same
@@ -1499,12 +1499,12 @@ a subsequent Settlement request when you wish to capture the payment.  The abili
 ## Create an Authorized Payment [POST /accounts/{accountId}/payments]
 <a name="createauthorization" title="Create an Authorized Payment"></a>
 
-Submit a payment request using local payment methods that your customers are familiar with.  
+Submit a payment request using local payment methods that your customers are familiar with.
 Once you have submited your request, if you are returned a *redirect_payment* HATEOAS link, then you must redirect
 your consumer to the link to complete the payment.
 
-In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes, 
-these should be passed as a nested object in the root of your payment request.  
+In addition to specifying *paymentType* as part of your API request, if the desired payment method also requires additional attributes,
+these should be passed as a nested object in the root of your payment request.
 <br/>
 For example, a SOFORT payment can support the following attributes to be included in your request:
 
@@ -1526,8 +1526,8 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 | | | | |
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
-|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)||||
+|[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![Interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)](#interac)||
 
 
 Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
@@ -1543,13 +1543,13 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Include boku
     + Include giropay
     + Include neteller
-    + Include payolution    
+    + Include payolution
     + Include paysafecard
-    + Include paysafecash    
+    + Include paysafecash
     + Include rapidTransfer
     + Include skrill
     + Include sofort
-    + Include links    
+    + Include links
 
 + Request Create Rapid Transfer Payment (application/json)
 
@@ -1812,8 +1812,8 @@ Click on **Get Payment by ID** above to see how to look up a [Payment](#payment)
 + Request Get Payment (application/json)
 
     + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
 
@@ -1882,8 +1882,8 @@ is disabled.
 + Request List Payments (application/json)
 
     + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
 
@@ -2394,20 +2394,20 @@ Click on **Void a Previously Authorized Payment** above to see how to reverse (c
 + Request Void an Authorization (application/json)
 
     + Headers
-    
-            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY  
-            
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
     + Body
 
             {
               "merchantRefNum":"VA-1506981708"
-            }    
+            }
 
 + Response 201 (application/json)
 
-    
+
     + Body
-    
+
             {
                 "id": "a839679f-0a23-4b8d-a3f9-1a92074579ab",
                 "merchantRefNum": "VA-1506981708",
@@ -2418,7 +2418,7 @@ Click on **Void a Previously Authorized Payment** above to see how to reverse (c
                 "txnTime": "2017-10-02T22:01:47Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
-                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",                
+                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
                     "code": "0.0.0",
                     "description": "The request was processed successfully.",
                     "processor": "PAYOLUTION"
@@ -2448,15 +2448,15 @@ Click on **Get Void Authorization by ID** above to see how to look up a Void Aut
 + Request Get Void Authorization (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
 + Response 200 (application/json)
 
-    
+
     + Body
-    
+
             {
                 "id": "a839679f-0a23-4b8d-a3f9-1a92074579ab",
                 "merchantRefNum": "VA-1506981708",
@@ -2466,7 +2466,7 @@ Click on **Get Void Authorization by ID** above to see how to look up a Void Aut
                 "txnTime": "2017-10-02T22:01:47Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
-                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",                
+                    "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
                     "code": "0.0.0",
                     "description": "The request was processed successfully.",
                     "processor": "PAYOLUTION"
@@ -2495,14 +2495,14 @@ Click on **List Void Authorizations** above to see how to retrieve a list of any
 + Request List Void Authorizations (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "meta": {
                     "numberOfRecords": 1,
@@ -2520,7 +2520,7 @@ Click on **List Void Authorizations** above to see how to retrieve a list of any
                         "txnTime": "2017-10-02T22:01:47Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
-                            "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",                        
+                            "id": "b47bbaf7-3129-414c-ae83-9e6c58c2a65d",
                             "code": "0.0.0",
                             "description": "The request was processed successfully.",
                             "processor": "PAYOLUTION"
@@ -2543,7 +2543,7 @@ Click on **List Void Authorizations** above to see how to retrieve a list of any
                         "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001109280/payments/6d62cd86-a268-48f1-a852-73d0ac1c4ece/voidauths?limit=10&offset=0&startDate=2017-09-02T22:19:03Z&endDate=2017-10-02T22:19:04Z"
                     }
                 ]
-            }    
+            }
 
 # Settlements [/settlements]
 <a name="settlements" title="Settlements"></a>
@@ -2567,8 +2567,8 @@ Click on **Settle an Authorized Payment** above to see an example of a settlemen
     + Include settlement
     + Include paymentTypeSettlement
     + Include payolution
-    + Include paysafecard    
-    + Include links     
+    + Include paysafecard
+    + Include links
 
 + Request Create Settlement (application/json)
 
@@ -2627,14 +2627,14 @@ Click on **Get Settlement by ID** above to look up a Settlement request using th
 + Request Get Settlement (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "id": "a99f93a7-a35c-4f9e-9b48-a7d588a53c32",
                 "merchantRefNum": "GR-1506977370",
@@ -2660,7 +2660,7 @@ Click on **Get Settlement by ID** above to look up a Settlement request using th
                         "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001146950/payments/21572c64-19eb-4d45-973f-fc03c6243158"
                     }
                 ]
-            }    
+            }
 
 
 ## List Settlements by Merchant Reference Number [GET /accounts/{accountId}/settlements/?merchantRefNum={merchantRefNum}]
@@ -2675,14 +2675,14 @@ Click on **List Settlements by Merchant Reference Number ID** above to look up S
 + Request List Settlements (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "meta": {
                     "numberOfRecords": 1,
@@ -2727,7 +2727,7 @@ Click on **List Settlements for a Payment** above to retrieve a list of any Sett
 + Request List Settlements for a Payment(application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
@@ -2735,7 +2735,7 @@ Click on **List Settlements for a Payment** above to retrieve a list of any Sett
 
 
     + Body
-    
+
             {
                 "meta": {
                     "numberOfRecords": 1,
@@ -2793,13 +2793,13 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
     + Include neteller
     + Include payolution
     + Include skrill
-    + Include sofort    
+    + Include sofort
     + Include links
-     
+
 + Request Refund a Payment (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
     + Body
@@ -2825,7 +2825,7 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
-                    "id": "9bcaa7f0dba44c64981881401794abby",                
+                    "id": "9bcaa7f0dba44c64981881401794abby",
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
                     "processor": "SOFORT",
@@ -2853,7 +2853,7 @@ Click on **Refund a Settlement** above to see how to submit a Refund request aga
 + Request Refund a Settlement (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
     + Body
@@ -2879,7 +2879,7 @@ Click on **Refund a Settlement** above to see how to submit a Refund request aga
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
-                    "id": "9bcaa7f0dba44c64981881401794abby",                
+                    "id": "9bcaa7f0dba44c64981881401794abby",
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
                     "processor": "PAYON",
@@ -2905,7 +2905,7 @@ Click on **Get Refund by ID** above to see how to look up a Refund request using
 + Request Get Refund (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
@@ -2921,7 +2921,7 @@ Click on **Get Refund by ID** above to see how to look up a Refund request using
                 "txnTime": "2016-02-24T08:39:39Z",
                 "status": "COMPLETED",
                 "gatewayResponse": {
-                    "id": "9bcaa7f0dba44c64981881401794abby",                
+                    "id": "9bcaa7f0dba44c64981881401794abby",
                     "code": "000.100.110",
                     "description": "Request successfully processed in 'Merchant in Integrator Test Mode'",
                     "processor": "PAYON",
@@ -2935,7 +2935,7 @@ Click on **Get Refund by ID** above to see how to look up a Refund request using
                     {
                       "rel": "payment",
                       "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1234567891/payments/25f6dadf-176a-415f-95c9-6ff39ff697ba"
-                    }                    
+                    }
                   ]
                 }
 
@@ -2952,13 +2952,13 @@ Click on **List Refunds by Merchant Reference Number** above to see how to look 
 + Request List Refunds (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "meta": {
                     "numberOfRecords": 1,
@@ -2975,7 +2975,7 @@ Click on **List Refunds by Merchant Reference Number** above to see how to look 
                         "txnTime": "2017-02-10T20:17:51Z",
                         "status": "COMPLETED",
                         "gatewayResponse": {
-                          "id": "9bcaa7f0dba44c64981881401794abby",                        
+                          "id": "9bcaa7f0dba44c64981881401794abby",
                           "code": "000.100.110",
                           "description": "Request successfully processed",
                           "processor": "PAYON",
@@ -2988,7 +2988,7 @@ Click on **List Refunds by Merchant Reference Number** above to see how to look 
                             {
                                 "rel": "payment",
                                 "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/25f6dadf-176a-415f-95c9-6ff39ff697ba"
-                            }                            
+                            }
                         ]
                     }
                 ],
@@ -3003,7 +3003,7 @@ Click on **List Refunds by Merchant Reference Number** above to see how to look 
 # Returns [/returns]
 <a name="returns" title="Returns"></a>
 
-Returns transactions will be created by Paysafe if we receive a chargeback or return notification from the service provider, indicating that the Alternate Payments request never settled.  
+Returns transactions will be created by Paysafe if we receive a chargeback or return notification from the service provider, indicating that the Alternate Payments request never settled.
 
 As a merchant, you cannot create a Return directly.
 
@@ -3021,14 +3021,14 @@ Click on **Get Return by ID** above to see how to look up a Return using an ID.
 + Request Get Return (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "meta": {
                     "numberOfRecords": 1,
@@ -3062,7 +3062,7 @@ Click on **Get Return by ID** above to see how to look up a Return using an ID.
                         "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1486757865/payments/670c8464-f7bf-45da-ba53-972abf7701e4"
                     }
                 ]
-            }    
+            }
 
 
 ## List Returns for a Settlement [GET /accounts/{accountId}/settlements/{settlementId}/returns]
@@ -3077,13 +3077,13 @@ Click on **List Returns for a Settlement** above to see how to retrieve a list o
 + Request List Returns for a Settlement (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "meta": {
                     "numberOfRecords": 1,
@@ -3138,12 +3138,12 @@ Click on **List Return Reversals for a Return** above to see how to retrieve a c
 + Request List Return Reversals (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
 + Response 200 (application/json)
-                                                
+
 
 ## Get Return Reversal by ID [GET /accounts/{accountId}/returns/{returnId}/returnreversals/{returnReversalId}]
 <a name="getreturnreversal" title="Look Up a Return Reversal"></a>
@@ -3158,7 +3158,7 @@ Click on **Get Return Reversal by ID** above to see how to retrieve details for 
 + Request Get Return Reversal (application/json)
 
     + Headers
-    
+
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
@@ -3226,7 +3226,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `boku`
 
-+ `boku` (object, optional) - Optional attributes that can be passed when making a BOKU payment request. 
++ `boku` (object, optional) - Optional attributes that can be passed when making a BOKU payment request.
     + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the consumer's statement.
     + `consumerId`: `CUS_12345677` (string, required) - Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.
     + `consumerCountry` : `US` (string, required) - The ISO 3166-1 alpha-2 code for the consumer's mobile country of registration (e.g., Germany = DE, JP=Japan. CA=Canada).
@@ -3234,7 +3234,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `bokuGatewayResponse`
 
-+ `gatewayResponse` (object)- These are the details returned from the external gateway. 
++ `gatewayResponse` (object)- These are the details returned from the external gateway.
 
     _Read Only_
 
@@ -3255,13 +3255,13 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `giropay`
 
-+ `giropay` (object, optional) - Optional attributes that can be passed when making a GIROPAY payment request. 
++ `giropay` (object, optional) - Optional attributes that can be passed when making a GIROPAY payment request.
     + Properties
         + descriptor: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
 
 ## `giropayGatewayResponse`
 
-+ `gatewayResponse` (object)- These are the details returned from the external gateway. 
++ `gatewayResponse` (object)- These are the details returned from the external gateway.
 
     _Read Only_
 
@@ -3291,22 +3291,22 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `paymentType`: `DD`
 
 ## `link`
-+ rel: self 
++ rel: self
 + href: `https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
-    
+
 ## `links`
-+ links (array[link]) - This is an array of links related to the resource.  
++ links (array[link]) - This is an array of links related to the resource.
 
     Typically you will have reference to any parent resources, and a reference to the child resource (if applicable).
     You may also see links for any call to action flows.  For example, when creating a payment that involves a redirect, the response will include a *redirect_payment* rel that you must direct your consumer to.
-    
+
     _Read Only_
 
 ## `neteller`
 
-+ `neteller` (object)  - Optional attributes that can be passed when making a NETELLER payment request. 
++ `neteller` (object)  - Optional attributes that can be passed when making a NETELLER payment request.
     + `consumerId`: `john.doe@email.com` (string) : Email address or NETELLER account ID of the consumer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the consumer has to enter their email address.
-    + `consumerVerificationId`: `123123` (string) : The consumer's NETELLER secure ID, or two-step authorization token generated on their device. 
+    + `consumerVerificationId`: `123123` (string) : The consumer's NETELLER secure ID, or two-step authorization token generated on their device.
     + `language`: `EN` (string) : The 2 character preferred language code for the consumer (e.g., EN, FR).
     + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
     + `detail1Description` : `description` (string) : You can show additional details about the product in the More Information section in the header of Quick Checkout.
@@ -3317,7 +3317,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e,g., Settlements.
 
     _Read Only_
-    
+
 + `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
 
     _length<=255_
@@ -3325,12 +3325,12 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
 
     + Default: true
-    
+
 + `settleWithAuth`: `true` (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
 
-    To find out whether an authorization has been settled, check the *availableToSettle* element. 
+    To find out whether an authorization has been settled, check the *availableToSettle* element.
     If the amount is 0, the authorization has been fully settled.
-    
+
     + Default: true
 
 + `availableToSettle`:`2500` (number) - This is the amount remaining to settle, in minor units.
@@ -3344,7 +3344,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 
     _max=99999999999_
-    
+
 + `verificationId`:`2f6f0150-2f08-43be-ad42-aa89fafde792` (string) - This is the ID returned in the response to a [Verification request](#createverification). **Note:** This parameter is **required** if the *productType* is set to *INSTALLMENTS* for the *payolution* object.
 
 + `currencyCode`: `EUR` (string) - This is the currency of the payment. Defaults to the account currency.
@@ -3358,11 +3358,11 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 
     _Read Only_
-    
+
 + `status`:`PROCESSING` (enum) - This is the status of the request.
 
     _Read Only_
-    
+
     + Members
         + `RECEIVED`
         + `PENDING`
@@ -3372,11 +3372,11 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `FAILED`
         + `ERROR`
         + `EXPIRED`
-        
+
 + `statusReason`: `USER_CANCELLED` (enum)
 
     _Read Only_
-    
+
     + Members
         + `USER_CANCELLED`
         + `MERCHANT_CANCELLED`
@@ -3385,7 +3385,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 + Include rapidTransferGatewayResponse
 
-## `paymentDetails`
+## paymentDetails
 
 + `paymentDetails` (object) - Information about payment installments, including due dates and amounts.
     _Read Only_
@@ -3408,7 +3408,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `GIROPAY`
         + `NETELLER`
         + `PAYSAFECARD`
-        + `PAYSAFECASH`        
+        + `PAYSAFECASH`
         + `PAYOLUTION`
         + `RAPIDTRANSFER`
         + `SKRILL`
@@ -3447,7 +3447,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
     + Members
         + `PAYOLUTION`
         + `PAYSAFECARD`
-        + `PAYSAFECASH`        
+        + `PAYSAFECASH`
 
 ## `payolution`
 
@@ -3483,12 +3483,12 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `paysafecardGatewayResponse`
 
-+ `gatewayResponse` (object) - These are the details returned from the external gateway. 
++ `gatewayResponse` (object) - These are the details returned from the external gateway.
 
     _Read Only_
 
     + Properties
-        + `id`: `9bcaa7f0dba44c64981881401794abby` - The unique identifier for the transaction provided by the gateway.    
+        + `id`: `9bcaa7f0dba44c64981881401794abby` - The unique identifier for the transaction provided by the gateway.
         + `code`: `000.100.110` (string)
         + `description`: `Request successfully processed` (string)
         + `processor`: `PAYSAFECARD` (enum)
@@ -3496,7 +3496,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `payonGatewayResponse`
 
-+ `gatewayResponse` (object) - These are the details returned from the external gateway. 
++ `gatewayResponse` (object) - These are the details returned from the external gateway.
 
     _Read Only_
 
@@ -3505,13 +3505,13 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `code`: `000.100.110` (string)
         + `description`: `Request successfully processed in 'Merchant in Integrator Test Mode'` (string)
         + `processor`: `PAYON`
-        + `paymentType`: `RF` (string)    
+        + `paymentType`: `RF` (string)
 
 ## `paysafecard`
 
-+ `paysafecard` (object)  - Optional attributes that can be passed  when making a PAYSAFECARD payment request. 
-    + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons. 
-    + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country). 
++ `paysafecard` (object)  - Optional attributes that can be passed  when making a PAYSAFECARD payment request.
+    + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons.
+    + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country).
     + `kycLevelRestriction`: `FULL` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
 
         + Members
@@ -3522,9 +3522,9 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `paysafecash`
 
-+ `paysafecash` (object)  - Optional attributes that can be passed  when making a PAYSAFECASH payment request. 
-    + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons. 
-    + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country). 
++ `paysafecash` (object)  - Optional attributes that can be passed  when making a PAYSAFECASH payment request.
+    + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons.
+    + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country).
     + `kycLevelRestriction`: `FULL` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
 
         + Members
@@ -3532,15 +3532,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
             + SIMPLE
 
     + `countryRestriction` : `DE` (string) : The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.
-
-## `plans`
-
-+ `plans` (object, optional) - These are details about the installment plan, including amount and due date plus some additional parameters like interest, etc.
-    + `tacUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment` (string) - This is a URL pointing to the Terms and Conditions for the payment plan.
-    _Read Only_
-    + `dataPrivacyConsentUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment` (string) - This is a URL pointing to the data privacy declaration for the payment plan.
-    clean_Read Only_
-    + Include paymentDetails
 
 ## `productType`
 
@@ -3589,10 +3580,18 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         _Length<=50_
     + `locale`: `en` (string) - ISO language code representing the preferred language for this profile.
 
+## `plans`
+
++ `plans` (object, optional) - These are details about the installment plan, including amount and due date plus some additional parameters like interest, etc.
+    + Include paymentDetails
+    + `tacUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment` (string) - This is a URL pointing to the Terms and Conditions for the payment plan.
+        _Read Only_
+    + `dataPrivacyConsentUrl`: `https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment` (string) - This is a URL pointing to the data privacy declaration for the payment plan.
+        _Read Only_
 
 ## `rapidTransfer`
 
-+ `rapidTransfer` (object) - Optional attributes that can be passed when making a RAPIDTRANSFER payment request. 
++ `rapidTransfer` (object) - Optional attributes that can be passed when making a RAPIDTRANSFER payment request.
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
     + Include sepa
 
@@ -3641,7 +3640,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `status`: `PROCESSING` (enum) - This is the status of the transaction request.
 
     _Read Only_
-    
+
     + Members
         + `RECEIVED`
         + `PENDING`
@@ -3650,7 +3649,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `CANCELLED`
         + `FAILED`
         + `ERROR`
-        + `EXPIRED`    
+        + `EXPIRED`
 
 + Include rapidTransferGatewayResponse
 
@@ -3703,7 +3702,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `status`:`COMPLETED` (enum) - This is the status of the request.
 
     _Read Only_
-    
+
     + Members
         + `RECEIVED`
         + `PENDING`
@@ -3782,9 +3781,9 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `skrill`
 
-+ `skrill` (object)  - Optional attributes that can be passed when making a SKRILL payment request. 
++ `skrill` (object)  - Optional attributes that can be passed when making a SKRILL payment request.
     + `consumerId`: `john.doe@email.com` (string) : Email address of the consumer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the consumer has to enter their email address.
-    + `recipientDescription`: `item xyz` (string) : A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. 
+    + `recipientDescription`: `item xyz` (string) : A description to be shown on the Skrill payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment.
     + `language`: `EN` (string) : The 2 character preferred language code for the consumer (e.g., EN, FR).
     + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
     + `detail1Description` : `description` (string) : You can show additional details about the product in the More information section in the header of Quick Checkout.
@@ -3792,13 +3791,13 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 ## `sofort`
 
-+ `sofort` (object) - Optional attributes that can be passed when making a SOFORT payment request. 
++ `sofort` (object) - Optional attributes that can be passed when making a SOFORT payment request.
     + `descriptor` : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
-    + Include sepa
-    
+    + `sepa` (sepa)
+
 ## `sofortGatewayResponse`
 
-+ `gatewayResponse` (object) - These are the details returned from the external gateway. 
++ `gatewayResponse` (object) - These are the details returned from the external gateway.
 
     _Read Only_
 
@@ -3856,7 +3855,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ff697ba` (string) - This is the ID returned in the response. This ID can be used for future associated requests.
 
     _Read Only_
-    
+
 + `merchantRefNum`: `VA-1506981708` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
 
     _length<=255_
@@ -3864,26 +3863,26 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 + `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
 
     + Default: true
-    
+
 + `amount`: `100` (number, optional) - This is the amount of the request, in minor units.
 
     _max=99999999999_
-    
+
 + `currencyCode`: `EUR` (string) - This is the currency of the request.
 
-    _length=3_ 
+    _length=3_
     _Read Only_
 
     + Default: `The account currency`
-    
+
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 
     _Read Only_
-    
+
 + `status`:`COMPLETED` (enum) - This is the status of the request.
 
     _Read Only_
-    
+
     + Members
         + `RECEIVED`
         + `COMPLETED`
