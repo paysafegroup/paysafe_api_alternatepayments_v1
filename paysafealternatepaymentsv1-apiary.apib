@@ -762,7 +762,7 @@ signature = base64 (digest)
 |consumerIp              |string                 |This is the consumer's IP address.|
 |amount                  |number                 |This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japanese yen, which has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
-|paymentType             |enum                   |Payment type for this request.|
+|paymentType             |enum                   |This is the payment type for this request.|
 |profile                 |[object](#profile)     |These are some details about the customer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
