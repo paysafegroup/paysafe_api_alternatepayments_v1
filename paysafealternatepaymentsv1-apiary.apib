@@ -500,6 +500,7 @@ signature = base64 (digest)
 |merchantRefNum          |string                 |<b>(Required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent Settlement to capture funds.<br/><b>true</b> - the request is settled (default).<br/>If the merchant wants to find out whether an authorization has been settled, they should check the *availableToSettle* element.<br/>If the amount is 0, the authorization has been fully settled.|
+|consumerIp              |string                 |This is the consumer's IP address.|
 |amount                  |number                 |<b>(Required)</b> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
 |verificationId          |string                 |This is the ID returned in the response to a [Verification request](#createverification). |
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.<br/><i>Read Only</i>|
@@ -521,6 +522,7 @@ signature = base64 (digest)
 {
   "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
   "dupCheck": true,
+  "consumerIp": "222.35.22.21",
   "amount": 100,
   "currencyCode": "EUR",
   "profile": {
@@ -757,9 +759,10 @@ signature = base64 (digest)
 |id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>Read Only</i> |
 |merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|consumerIp              |string                 |This is the consumer's IP address.|
 |amount                  |number                 |This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japanese yen, which has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
-|paymentType             |enum                   |Payment type of the original payment.|
+|paymentType             |enum                   |This is the payment type for this request.|
 |profile                 |[object](#profile)     |These are some details about the customer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
@@ -3184,6 +3187,15 @@ Submit a Standalone Credit using a specific payment type.
 
 Click on **Create a Standalone Credit** above to see how to submit a Standalone Credit request.
 
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+
++ Attributes
+    + Include standaloneCredit
+    + Include paymentTypeStandaloneCredit
+    + Include skrillStandaloneCredit
+    + Include links
+    
 + Request Create Standalone Credit (application/json)
 
     + Headers
@@ -3191,8 +3203,48 @@ Click on **Create a Standalone Credit** above to see how to submit a Standalone 
             Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
 
 
+    + Body
+    
+            {
+              "merchantRefNum": "XYZ3331102",
+              "amount": 300,
+              "currencyCode": "EUR",
+              "paymentType": "SKRILL",
+              "consumerIp": "206.172.46.138",
+              "skrill": {
+                "consumerId": "john.doe@mail.com",
+                "emailSubject": "Payment for XYZ",
+                "emailMessage": "Hi John, here is the payment I owe you"
+              }
+            }    
+
+
 + Response 200 (application/json)
 
+    + Body
+    
+            {
+                "id": "b3492142-b28b-415e-8504-62bbd452eed1",
+                "gatewayReconciliationId": "AQAAAAAAZI",
+                "merchantRefNum": "XYZ3331102",
+                "dupCheck": true,
+                "amount": 300,
+                "currencyCode": "EUR",
+                "paymentType": "SKRILL",
+                "skrill": {
+                    "consumerId": "john.doe@mail.com",
+                    "emailSubject": "Payment for XYZ",
+                    "emailMessage": "Hi John, here is the payment I owe you"
+                },
+                "txnTime": "2018-04-17T19:04:27Z",
+                "status": "PENDING",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001152240/standalonecredits/b3492142-b28b-415e-8504-62bbd452eed1"
+                    }
+                ]
+            }    
 
 ## Get Standalone Credit by ID [GET /accounts/{accountId}/standalonecredits/{standaloneCreditId}]
 <a name="getstandalonecredit" title="Get standalone Credit by ID"></a>
@@ -3203,7 +3255,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + standaloneCreditId (string, required, `81294868-e69a-4410-b592-46e2ab5b5673`) - This is your unique standalonecredit identifier.
+    + standaloneCreditId (string, required, `b3492142-b28b-415e-8504-62bbd452eed1`) - This is your unique standalonecredit identifier.
 
 + Request Get Standalone Credit (application/json)
 
@@ -3214,6 +3266,30 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 + Response 200 (application/json)
 
+    + Body
+    
+            {
+                "id": "b3492142-b28b-415e-8504-62bbd452eed1",
+                "gatewayReconciliationId": "AQAAAAAAZI",
+                "merchantRefNum": "XYZ3331102",
+                "dupCheck": true,
+                "amount": 300,
+                "currencyCode": "EUR",
+                "paymentType": "SKRILL",
+                "skrill": {
+                    "consumerId": "john.doe@mail.com",
+                    "emailSubject": "Payment for XYZ",
+                    "emailMessage": "Hi John, here is the payment I owe you"
+                },
+                "txnTime": "2018-04-17T19:04:27Z",
+                "status": "PENDING",
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001152240/standalonecredits/b3492142-b28b-415e-8504-62bbd452eed1"
+                    }
+                ]
+            }    
 
 # Data Structures
 
@@ -3332,6 +3408,8 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
     + Default: true
 
++ `consumerIp`: `142.44.111.22` (string) - This is the consumers IP address.
+
 + `settleWithAuth`: `true` (boolean, optional) - This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).
 
     To find out whether an authorization has been settled, check the *availableToSettle* element.
@@ -3429,6 +3507,13 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `PAYOLUTION`
         + `SKRILL`
         + `SOFORT`
+
+## `paymentTypeStandaloneCredit`
+
++ `paymentType` (enum) - Specifies the type of payment. If applicable, you can pass additional attributes for the payment type. See [Payment Objects](#Payment Objects)
+
+    + Members
+        + `SKRILL`
 
 ## `paymentTypeSettlement`
 
@@ -3784,7 +3869,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `ERROR`
 
 
-
 ## `skrill`
 
 + `skrill` (object)  - Optional attributes that can be passed when making a SKRILL payment request.
@@ -3794,6 +3878,13 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
     + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
     + `detail1Description` : `description` (string) : You can show additional details about the product in the More information section in the header of Quick Checkout.
     + `detail1Text` : `detail text` (string) : The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a consumer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
+
+## `skrillStandaloneCredit`
+
++ `skrill` (object)  - Optional attributes that can be passed when making a SKRILL payment request.
+    + `consumerId`: `john.doe@email.com` (string) : Email address of the consumer who is receiving the payment. 
+    + `emailSubject`: `item xyz` (string) : Subject line to use in consumer email.
+    + `emailMessage`: `EN` (string) : Message to use in consumer email.
 
 ## `sofort`
 
@@ -3813,6 +3904,53 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `description`: `Request successfully processed` (string)
         + `processor`: `SOFORT`
         + `paymentType`: `DB` (string)
+
+## `standaloneCredit`
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ggf697ba` (string) - This is the ID returned in the response. 
+
+    _Read Only_
+
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
+
+    + Default: true
+
++ `consumerIp`: `212.22.14.41` (string, optional) - This is the consumers IP address.
+
++ `amount`: `100` (number, required) - This is the amount of the request, in minor units.
+
+    _max=99999999999_
+
++ `currencyCode`: `EUR` (string) - This is the currency of the request. Defaults to the account currency.
+
+    _Read Only_
+
++ Include paymentTypeStandaloneCredit
++ Include profile
++ Include billingDetails
+
++ `txnTime`: `2017-01-26T10:32:28Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+    
++ `status`:`PROCESSING` (enum) - This is the status of the request.
+
+    _Read Only_
+
+    + Members
+        + `RECEIVED`
+        + `PENDING`
+        + `PROCESSING`
+        + `COMPLETED`
+        + `CANCELLED`
+        + `FAILED`
+        + `ERROR`
+        + `EXPIRED`
+
 
 ## `verification`
 
