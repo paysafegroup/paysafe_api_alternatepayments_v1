@@ -497,6 +497,7 @@ signature = base64 (digest)
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |id                      |string                 |Unique system-generated identifier for this payment.<br/><i>Read Only</i> |
+|gatewayReconciliationId |string                 |Transaction identifier that can be used to reconcile this transaction with the provider gateway.<br/><i>Read Only</i>|
 |merchantRefNum          |string                 |<b>(Required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |settleWithAuth          |boolean                |This indicates whether the request is an Authorization only (no Settlement), or a Purchase (Authorization and Settlement).<br/><b>false</b> - the request is not automatically settled, you have to post a subsequent Settlement to capture funds.<br/><b>true</b> - the request is settled (default).<br/>If the merchant wants to find out whether an authorization has been settled, they should check the *availableToSettle* element.<br/>If the amount is 0, the authorization has been fully settled.|
@@ -520,6 +521,8 @@ signature = base64 (digest)
 
 ```
 {
+  "id": "35cff450-e529-47a7-b758-d03e30f5c8ac",
+  "gatewayReconciliationId": "AQAAAAAAZI",
   "merchantRefNum": "0b0ceaa3-42ad-442d-b85b-c3b70f24835d",
   "dupCheck": true,
   "consumerIp": "222.35.22.21",
@@ -668,6 +671,7 @@ signature = base64 (digest)
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>Read Only</i>|
+|gatewayReconciliationId |string                 |Transaction identifier that can be used to reconcile this transaction with the provider gateway.<br/><i>Read Only</i>|
 |merchantRefNum          |string                 |<b>(Required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |amount                  |number                 |<b>(Required)</b> This is the amount of the request, in minor units.|
@@ -684,6 +688,7 @@ signature = base64 (digest)
 ```
 {
     "id": "30381792-1237-4868-8fd3-73196e94d009",
+    "gatewayReconciliationId": "QAAAAABHCI",
     "merchantRefNum": "1489522059",
     "dupCheck": true,
     "amount": 100,
@@ -757,6 +762,7 @@ signature = base64 (digest)
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>Read Only</i> |
+|gatewayReconciliationId |string                 |Transaction identifier that can be used to reconcile this transaction with the provider gateway.<br/><i>Read Only</i>|
 |merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |consumerIp              |string                 |This is the consumer's IP address.|
@@ -769,10 +775,12 @@ signature = base64 (digest)
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
+|[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
 {
     "id": "21fa4850-0c82-4c67-997d-2c9654de91cd",
+    "gatewayReconciliationId": "AQAAAAAAZI",    
     "merchantRefNum": "1520357063",
     "dupCheck": true,
     "amount": 100,
@@ -3400,6 +3408,10 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
     _Read Only_
 
++ `gatewayReconciliationId`: `QAAAAABHCI` (string) - Transaction identifier that can be used to reconcile this transaction with the provider gateway.
+
+    _Read Only_
+    
 + `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
 
     _length<=255_
@@ -3764,6 +3776,10 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
     _Read Only_
 
++ `gatewayReconciliationId`: `QAAAAABHCI` (string) - Transaction identifier that can be used to reconcile this transaction with the provider gateway.
+
+    _Read Only_
+
 + `merchantRefNum`: `GR-1506977370` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.
 
     _length<=255_
@@ -3908,6 +3924,10 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 ## `standaloneCredit`
 
 + `id`: `25f6dadf-176a-415f-95c9-6ff39ggf697ba` (string) - This is the ID returned in the response. 
+
+    _Read Only_
+
++ `gatewayReconciliationId`: `QAAAAABHCI` (string) - Transaction identifier that can be used to reconcile this transaction with the provider gateway.
 
     _Read Only_
 
