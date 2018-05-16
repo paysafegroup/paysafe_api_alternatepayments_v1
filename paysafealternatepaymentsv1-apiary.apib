@@ -10,6 +10,8 @@ variety of non-card regional payment methods with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2018-05-16            |- Added Identities, Recipient objects|
+|               |                      |- Added Instarem|
 |v1             |2018-04-02            |- Added Interac|
 |v1             |2018-03-05            |- Removed iDeal|
 |v1             |2018-02-22            |- Added Paysafecash|
@@ -1015,7 +1017,23 @@ __**LEGEND**__
     }
 }
 ```
-<a name="interac" title="INTERAC Payment Object"></a>
+
+<a name="interac" title="INSTAREM Payment Object"></a>
+## instarem 
+
+![instarem](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/instarem.png)
+
+|Element                 |Type                   |                 |                       |                       |                  |Description|
+|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
+|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|descriptor              |string<br/>`length<=16`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+
+```
+"instarem": {
+}
+```
+
+<a name="instarem" title="INTERAC Payment Object"></a>
 ## interac 
 
 ![interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)
@@ -2854,7 +2872,7 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
             {
                 "merchantRefNum": "Ref-1506977370",
                 "dupCheck": true,
-                "paymentType": "SOFORT"
+                "paymentType": "SOFORT",
                 "amount": 400,
                 "currencyCode": "EUR"
             }
