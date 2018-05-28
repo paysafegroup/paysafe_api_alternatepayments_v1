@@ -3,15 +3,15 @@ HOST: https://api.paysafe.com/alternatepayments/v1/
 
 # Paysafe Alternate Payments API
 
-The Paysafe Alternate Payments API allows you to collect payments from your consumers using a
-variety of non-card regional payment methods with a single integration.
+The Paysafe Alternate Payments API allows you to send and/or receive payments from your consumers, using a
+variety of non-card regional payment methods, with a single integration.
 
 # Release Notes
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
 |v1             |2018-05-16            |- Added Identities, Recipient objects|
-|               |                      |- Added Instarem|
+|               |                      |- Rebrand Paysafe Pay Later
 |v1             |2018-04-02            |- Added Interac|
 |v1             |2018-03-05            |- Removed iDeal|
 |v1             |2018-02-22            |- Added Paysafecash|
@@ -141,8 +141,7 @@ Sample Response with List Data
         "profile": {
             "firstName": "Stan",
             "lastName": "Smith",
-            "email": "stan.smith@fox.com",
-            "ip": "100.0.0.1"
+            "email": "stan.smith@fox.com"
         },
         "sofort": {
             "descriptor": "mydescriptor",
@@ -304,7 +303,7 @@ valid statuses for these complex resources and how they are linked.
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/return_state_transition_diagram.png)
 
 
-## Currencies
+# Currencies
 <a name="currencies"></a>
 
 > When specifying amounts in your API calls be aware of the number of decimal places (minor units) that 
@@ -314,168 +313,164 @@ valid statuses for these complex resources and how they are linked.
 
 |Currency Code|Description            |Decimal Places<br/>(Minor Units)|
 |---          |---                    |---|
-|Afghan afghani|AFN|2|
-|Albanian lek|ALL|2|
-|Algerian dinar|DZD|2|
-|Angolan kwanza|AOA|2|
-|Argentine peso|ARS|2|
-|Armenian dram|AMD|2|
-|Aruban florin|AWG|2|
-|Australian dollar|AUD|2|
-|Azerbaijani manat|AZN|2|
-|Bahamian dollar|BSD|2|
-|Bahraini dinar|BHD|3|
-|Bangladeshi taka|BDT|2|
-|Barbados dollar|BBD|2|
-|Belarusian ruble|BYR|0|
-|Belize dollar|BZD|2|
-|Bermudian dollar|BMD|2|
-|Bhutanese ngultrum|BTN|2|
+|Afghananistan Afghani|AFN|2|
+|Albanian Lek|ALL|2|
+|Algerian Dinar|DZD|2|
+|Angolan Kwanza|AOA|2|
+|Argentine Peso|ARS|2|
+|Armenian Dram|AMD|2|
+|Aruban Florin|AWG|2|
+|Australian Dollar|AUD|2|
+|Azerbaijani Manat|AZN|2|
+|Bahamian Dollar|BSD|2|
+|Bahraini Dinar|BHD|3|
+|Bangladeshi Taka|BDT|2|
+|Barbados Dollar|BBD|2|
+|Belarusian Ruble|BYR|0|
+|Belize Dollar|BZD|2|
+|Bermudian Dollar|BMD|2|
+|Bhutanese Ngultrum|BTN|2|
 |Bolivian Mvdol (funds code)|BOV|2|
 |Boliviano|BOB|2|
-|Bosnia and Herzegovina convertible mark|BAM|2|
-|Botswana pula|BWP|2|
-|Brazilian real|BRL|2|
-|Brunei dollar|BND|2|
-|Bulgarian lev|BGN|2|
-|Burundian franc|BIF|0|
-|CFA franc BCEAO|XOF|0|
-|CFA franc BEAC|XAF|0|
-|CFP franc (franc Pacifique)|XPF|0|
-|Cambodian riel|KHR|2|
-|Canadian dollar|CAD|2|
-|Cape Verde escudo|CVE|0|
-|Cayman Islands dollar|KYD|2|
-|Chilean peso|CLP|0|
-|Chinese yuan|CNY|2|
-|Colombian peso|COP|2|
-|Comoro franc|KMF|0|
-|Congolese franc|CDF|2|
-|Costa Rican colon|CRC|2|
-|Croatian kuna|HRK|2|
-|Cuban convertible peso|CUC|2|
-|Cuban peso|CUP|2|
-|Czech koruna|CZK|2|
-|Danish krone|DKK|2|
-|Djiboutian franc|DJF|0|
-|Dominican peso|DOP|2|
-|East Caribbean dollar|XCD|2|
-|Egyptian pound|EGP|2|
-|Eritrean nakfa|ERN|2|
-|Ethiopian birr|ETB|2|
+|Bosnia and Herzegovina Convertible Mark|BAM|2|
+|Botswana Pula|BWP|2|
+|Brazilian Real|BRL|2|
+|Brunei Dollar|BND|2|
+|Bulgarian Lev|BGN|2|
+|Burundian Franc|BIF|0|
+|CFA Franc BCEAO|XOF|0|
+|CFA Franc BEAC|XAF|0|
+|CFP Franc (Franc Pacifique)|XPF|0|
+|Cambodian Riel|KHR|2|
+|Canadian Dollar|CAD|2|
+|Cayman Islands Dollar|KYD|2|
+|Chilean Peso|CLP|0|
+|Chinese Yuan Renminbi|CNY|2|
+|Colombian Peso|COP|2|
+|Comorian Franc|KMF|0|
+|Congolese Franc|CDF|2|
+|Costa Rican Colon|CRC|2|
+|Croatian Kuna|HRK|2|
+|Cuban Pero Convertible|CUC|2|
+|Cuban Peso|CUP|2|
+|Czech Koruna|CZK|2|
+|Danish Krone|DKK|2|
+|Djibouti Franc|DJF|0|
+|Dominican Peso|DOP|2|
+|East Caribbean Dollar|XCD|2|
+|Egyptian Pound|EGP|2|
+|Eritrean Nakfa|ERN|2|
+|Ethiopian Birr|ETB|2|
 |Euro|EUR|2|
-|Falkland Islands pound|FKP|2|
-|Fiji dollar|FJD|2|
-|Gambian dalasi|GMD|2|
-|Georgian lari|GEL|2|
-|Ghanaian cedi|GHS|2|
-|Gibraltar pound|GIP|2|
-|Guatemalan quetzal|GTQ|2|
-|Guinean franc|GNF|0|
-|Guyanese dollar|GYD|2|
-|Haitian gourde|HTG|2|
-|Honduran lempira|HNL|2|
-|Hong Kong dollar|HKD|2|
-|Hungarian forint|HUF|2|
-|Icelandic kr¿na|ISK|0|
-|Indian rupee|INR|2|
-|Indonesian rupiah|IDR|2|
-|Iranian rial|IRR|2|
-|Iraqi dinar|IQD|3|
-|Israeli new shekel|ILS|2|
-|Jamaican dollar|JMD|2|
-|Japanese yen|JPY|0|
-|Jordanian dinar|JOD|3|
-|Kazakhstani tenge|KZT|2|
-|Kenyan shilling|KES|2|
-|Kuwaiti dinar|KWD|3|
-|Kyrgyzstani som|KGS|2|
-|Lao kip|LAK|2|
-|Lebanese pound|LBP|2|
-|Lesotho loti|LSL|2|
-|Liberian dollar|LRD|2|
-|Libyan dinar|LYD|3|
-|Macanese pataca|MOP|2|
-|Macedonian denar|MKD|2|
-|Malagasy ariary|MGA|1|
-|Malawian kwacha|MWK|2|
-|Malaysian ringgit|MYR|2|
-|Maldivian rufiyaa|MVR|2|
-|Mauritanian ouguiya|MRO|1|
-|Mauritian rupee|MUR|2|
+|Falkland Islands Pound|FKP|2|
+|Fiji Dollar|FJD|2|
+|Gambian Dalasi|GMD|2|
+|Georgian Lari|GEL|2|
+|Ghanaian Cedi|GHS|2|
+|Gibraltar Pound|GIP|2|
+|Guatemalan Quetzal|GTQ|2|
+|Guinean Franc|GNF|0|
+|Guyanese Dollar|GYD|2|
+|Haitian Gourde|HTG|2|
+|Honduran Lempira|HNL|2|
+|Hong Kong Dollar|HKD|2|
+|Hungarian Forint|HUF|2|
+|Icelandic Krona|ISK|0|
+|Indian Rupee|INR|2|
+|Indonesian Rupiah|IDR|2|
+|Iranian Rial|IRR|2|
+|Iraqi Dinar|IQD|3|
+|Israeli New Sheqel|ILS|2|
+|Jamaican Dollar|JMD|2|
+|Japanese Yen|JPY|0|
+|Jordanian Dinar|JOD|3|
+|Kazakhstani Tenge|KZT|2|
+|Kenyan Shilling|KES|2|
+|Kuwaiti Dinar|KWD|3|
+|Kyrgyzstani Som|KGS|2|
+|Lao Kip|LAK|2|
+|Lebanese Pound|LBP|2|
+|Lesotho Loti|LSL|2|
+|Liberian Dollar|LRD|2|
+|Libyan Dinar|LYD|3|
+|Macanese Pataca|MOP|2|
+|Macedonian Denar|MKD|2|
+|Malagasy Ariary|MGA|1|
+|Malawian Kwacha|MWK|2|
+|Malaysian Ringgit|MYR|2|
+|Maldivian Rufiyaa|MVR|2|
+|Mauritanian Ouguiya|MRO|1|
+|Mauritian Rupee|MUR|2|
 |Mexican Unidad de Inversion (UDI) (funds code)|MXV|2|
-|Mexican peso|MXN|2|
-|Moldovan leu|MDL|2|
-|Mongolian tugrik|MNT|2|
-|Moroccan dirham|MAD|2|
-|Mozambican metical|MZN|2|
-|Myanmar kyat|MMK|2|
-|Namibian dollar|NAD|2|
-|Nepalese rupee|NPR|2|
-|Netherlands Antillean guilder|ANG|2|
-|New Taiwan dollar|TWD|2|
-|New Zealand dollar|NZD|2|
-|Nicaraguan c¿rdoba|NIO|2|
-|Nigerian naira|NGN|2|
-|North Korean won|KPW|2|
-|Norwegian krone|NOK|2|
-|Omani rial|OMR|3|
-|Pakistani rupee|PKR|2|
-|Panamanian balboa|PAB|2|
-|Papua New Guinean kina|PGK|2|
-|Paraguayan guaran¿|PYG|0|
-|Peruvian nuevo sol|PEN|2|
-|Philippine peso|PHP|2|
-|Polish zloty|PLN|2|
-|Pound sterling|GBP|2|
-|Qatari riyal|QAR|2|
-|Romanian leu|RON|2|
-|Russian ruble|RUB|2|
-|Rwandan franc|RWF|0|
-|Saint Helena pound|SHP|2|
-|Samoan tala|WST|2|
-|Saudi riyal|SAR|2|
-|Serbian dinar|RSD|2|
-|Seychelles rupee|SCR|2|
-|Sierra Leonean leone|SLL|2|
-|Singapore dollar|SGD|2|
-|Solomon Islands dollar|SBD|2|
-|Somali shilling|SOS|2|
-|South African rand|ZAR|2|
-|South Korean won|KRW|0|
-|South Sudanese pound|SSP|2|
-|Sri Lankan rupee|LKR|2|
-|Sudanese pound|SDG|2|
-|Surinamese dollar|SRD|2|
-|Swazi lilangeni|SZL|2|
-|Swedish krona/kronor|SEK|2|
-|Swiss franc|CHF|2|
-|Syrian pound|SYP|2|
-|S¿o Tom¿ and Pr¿ncipe dobra|STD|2|
-|Tajikistani somoni|TJS|2|
-|Tanzanian shilling|TZS|2|
-|Thai baht|THB|2|
-|Tongan paanga|TOP|2|
-|Trinidad and Tobago dollar|TTD|2|
-|Tunisian dinar|TND|3|
-|Turkish lira|TRY|2|
-|Turkmenistani manat|TMT|2|
-|Ugandan shilling|UGX|0|
-|Ukrainian hryvnia|UAH|2|
+|Mexican Peso|MXN|2|
+|Moldovan Leu|MDL|2|
+|Mongolian Tugrik|MNT|2|
+|Moroccan Dirham|MAD|2|
+|Mozambican Metical|MZN|2|
+|Myanmar Kyat|MMK|2|
+|Namibian Dollar|NAD|2|
+|Nepalese Rupee|NPR|2|
+|Netherlands Antillean Guilder|ANG|2|
+|New Taiwan Dollar|TWD|2|
+|New Zealand Dollar|NZD|2|
+|Nicaraguan Cordoba|NIO|2|
+|Nigerian Naira|NGN|2|
+|North Korean Won|KPW|2|
+|Norwegian Krone|NOK|2|
+|Omani Rial|OMR|3|
+|Pakistani Rupee|PKR|2|
+|Panamanian Balboa|PAB|2|
+|Papua New Guinean Kina|PGK|2|
+|Paraguayan Guarani|PYG|0|
+|Peruvian Nuevo sol|PEN|2|
+|Philippine Peso|PHP|2|
+|Polish Zloty|PLN|2|
+|Pound Sterling|GBP|2|
+|Qatari Riyal|QAR|2|
+|Romanian Leu|RON|2|
+|Russian Ruble|RUB|2|
+|Rwandan Franc|RWF|0|
+|Saint Helena Pound|SHP|2|
+|Samoan Tala|WST|2|
+|Saudi Riyal|SAR|2|
+|Serbian Dinar|RSD|2|
+|Seychelles Rupee|SCR|2|
+|Sierra Leonean Leone|SLL|2|
+|Singapore Dollar|SGD|2|
+|Solomon Islands Dollar|SBD|2|
+|Somali Shilling|SOS|2|
+|South African Rand|ZAR|2|
+|South Korean Won|KRW|0|
+|South Sudanese Pound|SSP|2|
+|Sri Lankan Rupee|LKR|2|
+|Sudanese Pound|SDG|2|
+|Surinamese Dollar|SRD|2|
+|Swazi Lilangeni|SZL|2|
+|Swedish Krona/kronor|SEK|2|
+|Swiss Franc|CHF|2|
+|Syrian Pound|SYP|2|
+|Tajikistani Somoni|TJS|2|
+|Tanzanian Shilling|TZS|2|
+|Thai Baht|THB|2|
+|Tongan Paanga|TOP|2|
+|Trinidad and Tobago Dollar|TTD|2|
+|Tunisian Dinar|TND|3|
+|Turkish Lira|TRY|2|
+|Turkmenistani Manat|TMT|2|
+|Ugandan Shilling|UGX|0|
+|Ukrainian Hryvnia|UAH|2|
 |Unidad de Fomento (funds code)|CLF|4|
 |Unidad de Valor Real (UVR) (funds code)|COU|2|
-|United Arab Emirates dirham|AED|2|
-|United States dollar|USD|2|
-|Uruguay Peso en Unidades Indexadas (URUIURUI) (funds code)|UYI|0|
-|Uruguayan peso|UYU|2|
-|Uzbekistan som|UZS|2|
-|Vanuatu vatu|VUV|0|
-|Venezuelan bol¿var|VEF|2|
-|Vietnamese dong|VND|0|
-|WIR Euro (complementary currency)|CHE|2|
-|WIR Franc (complementary currency)|CHW|2|
-|Yemeni rial|YER|2|
-|Zambian kwacha|ZMW|2|
+|United Arab Emirates Dirham|AED|2|
+|United States Dollar|USD|2|
+|Uruguay Peso en Unidades|UYI|0|
+|Uruguayan Peso|UYU|2|
+|Uzbekistan Sum|UZS|2|
+|Vanuatu Vatu|VUV|0|
+|Venezuelan Bolivar|VEF|2|
+|Vietnamese Dong|VND|0|
+|Yemeni Rial|YER|2|
+|Zambian Kwacha|ZMW|2|
 
 
 ***
@@ -655,6 +650,34 @@ signature = base64 (digest)
 }
 ```
 
+<a name="identityDocument" title="identityDocument Object"></a>
+## identityDocument
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|type                    |string                 |For Individuals:<br/><ul><li>PASSPORT</li><li>IDENTITY\_CARD</li><li>DRIVING\_LICENSE</li><li>SOCIAL\_SECURITY</li><li>NATIONAL\_IDENTITY</li><li>TAX\_IDENTIFICATION</li></ul><br/><br/>For Businesses:<ul><li>REGISTRATION\_ID</li><li>ACRA</li><li>LICENSE\_NUMBER</li><li>REGISTRATION_NUMBER</li></ul>|
+|documentNumber          |string                 |This is the URL to which to send the link. If this is an HTTPS address, please ensure that your certificate is valid – otherwise, the link will cause the browser to display a certificate warning.<br/><i>Read Only</i>|
+|countryOfIssue          |string<br>`length=2`   |The ISO 3166-1 alpha-2 code (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|issueDate               |[object](#date)        |This is the issue date of the document.|
+|expiryDate              |[object](#date)        |This is the expiration date of the document.|
+
+```
+{
+    "type": "DRIVING_LICENSE",
+    "documentNumber": "1234567890",
+    "countryOfIssue": "CA",
+    "issueDate": {
+        "year": 2017,
+        "month": 12,
+        "day": 25
+    }
+    "expiryDate": {
+        "year": 2027,
+        "month": 12,
+        "day": 25
+}
+```
+
 <a name="link" title="link Object"></a>
 ## link
 
@@ -695,7 +718,7 @@ signature = base64 (digest)
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
-|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>INTERAC</li><li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -710,8 +733,7 @@ signature = base64 (digest)
   "profile": {
     "firstName": "Stan",
     "lastName": "Smith",
-    "email": "stan.smith@fox.com",
-    "ip": "127.0.0.1"
+    "email": "stan.smith@fox.com"
   },
   "billingDetails": {
     "street1": "Street line 1",
@@ -750,7 +772,6 @@ signature = base64 (digest)
 |gender                  |enum                     |Options:<ul><li>M &ndash; Male</li><li>F &ndash; Female</li><li>O &ndash; Other</li><li>N &ndash; Not Specified</li></ul>|
 |phone                   |string<br/>`max=40`      |This is the consumer's primary phone.|
 |cellphone               |string                   |This is the consumer's cell phone.|
-|ip                      |string<br/>`length<=50`  |This is the IP address the cconsumer's device. (supports IPv4 or IPv6 format)|
 |locale                  |enum                     |This is the ISO language code representing the preferred language for this profile.|
 
 ```
@@ -769,6 +790,51 @@ signature = base64 (digest)
     "cellPhone": "14033332345",
     "ip": "23.51.55.523",
     "locale": "en"
+}
+```
+
+<a name="recipient" title="recipient Object"></a>
+## recipient
+
+|Element                 |Type                         |Description |
+|---                     |---                          |--- |
+|profile                 |object                       |This is the recipients profile.|
+|billingDetails          |object                       |This is the recipients billing details.|
+|shippingDetails         |                             |This is the recipients shipping details.|
+|identityDocuments       |[object]                     |Identity documentation specific to the recipient.  Usage will vary depending upon payment type.|
+|\<paymentVehicle\>      |object                       |The associated payment vechicle.  ie: bank account detail for online banking payment and/or credit.|
+
+```
+{
+    "recipient": {
+        "profile": {
+            "title": "Mr",
+            "firstName": "John",
+            "lastName": "Smith",
+            "email": "jsmith@email.com",
+            "dateOfBirth": {
+                "day": "31",
+                "month": "10",
+                "year": "1995"
+            },
+            "gender": "M",
+            "phone": "14032221234",
+            "cellphone": "14033332345",
+            "ip": "23.51.55.523",
+            "locale": "en",
+            "identityDocuments": [{
+                    "type": "DRIVING_LICENSE",
+                    "idNumber": "1234567890"
+                },
+                {
+                    "type": "PASSPORT",
+                    "idNumber": "1234567890"
+                }
+            ]
+        },
+        "billingDetails": {},
+        "shippingDetails": {}        
+    }
 }
 ```
 
@@ -997,8 +1063,7 @@ signature = base64 (digest)
     "profile": {
         "firstName": "merchant",
         "lastName": "simulator",
-        "email": "cc@cc.com",
-        "ip": "127.0.0.1"
+        "email": "cc@cc.com"
     },
     "billingDetails": {
         "street1": "string",
@@ -1071,8 +1136,7 @@ signature = base64 (digest)
   "profile": {
     "firstName": "Stan",
     "lastName": "Smith",
-    "email": "stan.smith@fox.com",
-    "ip": "127.0.0.1"
+    "email": "stan.smith@fox.com"
   },
   "billingDetails": {
     "street1": "Street line 1",
@@ -1195,27 +1259,12 @@ __**LEGEND**__
 }
 ```
 
-<a name="interac" title="INSTAREM Payment Object"></a>
-## instarem 
-
-![instarem](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/instarem.png)
-
-|Element                 |Type                   |                 |                       |                       |                  |Description|
-|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|descriptor              |string<br/>`length<=16`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-
-```
-"instarem": {
-}
-```
-
-<a name="instarem" title="INTERAC Payment Object"></a>
+<a name="interac" title="INTERAC Payment Object"></a>
 ## interac 
 
 ![interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)
 
-> No optional values supported
+> No additional values supported, please use the common payment object.
 
 <a name="neteller" title="NETELLER Payment Object"></a>
 ## neteller
@@ -1245,10 +1294,10 @@ __**LEGEND**__
 }
 ```
 
-<a name="payolution" title="Payolution Payment Object"></a>
+<a name="payolution" title="Paysafe Pay Later Payment Object"></a>
 ## payolution
 
-![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)
+![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png)
 
 |Element                    |Type                                     |                 |                       |                       |                  |Description|
 |---                        |---                                      |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1767,9 +1816,9 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 
 | | | | |
 |---|---|---|---|
-|[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/payolution.png)](#payolution)|
+|[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|
 |[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![Interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)](#interac)||
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png)](#payolution)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![Interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)](#interac)||
 
 
 Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
@@ -1808,23 +1857,23 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
                 "merchantRefNum": "MR1000001",
                 "settleWithAuth": "true",
                 "profile": {
-                "email": "john.doe@email.com",
-                "firstName": "John",
-                "lastName": "Doe"
-            },
-            "billingDetails": {
-                "city": "Berlin",
-                "country": "DE",
-                "state": "Berlin",
-                "street1": "Street Address1",
-                "street2": "Street Address2",
-                "zip": "10179"
-            },
-            "returnLinks": [
-              {
-                  "rel": "default",
-                  "href": "http://www.paysafe.com"
-              }]
+                  "email": "john.doe@email.com",
+                  "firstName": "John",
+                  "lastName": "Doe"
+                },
+                "billingDetails": {
+                    "city": "Berlin",
+                    "country": "DE",
+                    "state": "Berlin",
+                    "street1": "Street Address1",
+                    "street2": "Street Address2",
+                    "zip": "10179"
+                },
+                "returnLinks": [
+                  {
+                      "rel": "default",
+                      "href": "http://www.paysafe.com"
+                }]
             }
 
 + Response 201 (application/json)
@@ -1922,7 +1971,6 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
                     "firstName": "John",
                     "lastName": "Doe",
                     "email": "johndoe@paysafe.com",
-                    "ip": "127.0.0.1",
                     "dateOfBirth": {
                         "day": "01",
                         "month": "01",
@@ -1956,7 +2004,6 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
                     "firstName": "John",
                     "lastName": "Doe",
                     "email": "johndoe@paysafe.com",
-                    "ip": "127.0.0.1",
                     "dateOfBirth": {
                         "day": 1,
                         "month": 1,
@@ -2073,8 +2120,7 @@ Click on **Get Payment by ID** above to see how to look up a [Payment](#payment)
                 "profile": {
                     "firstName": "Stan",
                     "lastName": "Smith",
-                    "email": "stan.smith@fox.com",
-                    "ip": "127.0.0.1"
+                    "email": "stan.smith@fox.com"
                 },
                 "billingDetails": {
                     "street1": "Street line 1",
@@ -2150,8 +2196,7 @@ is disabled.
                         "profile": {
                             "firstName": "Stan",
                             "lastName": "Smith",
-                            "email": "stan.smith@fox.com",
-                            "ip": "127.0.0.1"
+                            "email": "stan.smith@fox.com"
                         },
                         "billingDetails": {
                             "street1": "Street line 1",
@@ -2239,7 +2284,6 @@ Click on **Process a Verification Request** above to see how to process a Verifi
                     "firstName": "John",
                     "lastName": "Doe",
                     "email": "johndoe@paysafe.com",
-                    "ip": "127.0.0.1",
                     "dateOfBirth": {
                         "day": "01",
                         "month": "01",
@@ -2286,7 +2330,6 @@ Click on **Process a Verification Request** above to see how to process a Verifi
                     "firstName": "John",
                     "lastName": "Doe",
                     "email": "johndoe@paysafe.com",
-                    "ip": "127.0.0.1",
                     "dateOfBirth": {
                         "day": 1,
                         "month": 1,
@@ -2556,7 +2599,6 @@ Click on **Get Verification by ID** above to see how to look up a [Verification]
                     "firstName": "John",
                     "lastName": "Doe",
                     "email": "johndoe@paysafe.com",
-                    "ip": "127.0.0.1",
                     "dateOfBirth": {
                         "day": 1,
                         "month": 1,
@@ -3880,8 +3922,6 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         _Length<=80_
     + `email`: `stan.smith@email.com` (string, required) - This is the consumer's email address.
         _Length<=255_
-    + `ip`: `127.0.0.1` (string) - This is the consumer's IP address.
-        _Length<=50_
 
 ## `profilePayolution`
 
