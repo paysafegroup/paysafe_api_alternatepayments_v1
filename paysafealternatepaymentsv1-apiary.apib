@@ -12,6 +12,7 @@ variety of non-card regional payment methods, with a single integration.
 |---            |---                   |---|
 |v1             |2018-05-16            |- Added Identities, Recipient objects|
 |               |                      |- Rebrand Paysafe Pay Later
+|               |                      |- Added Instarem |
 |v1             |2018-04-02            |- Added Interac|
 |v1             |2018-03-05            |- Removed iDeal|
 |v1             |2018-02-22            |- Added Paysafecash|
@@ -1213,9 +1214,34 @@ __**LEGEND**__
 |SC              |Standalone Credit|
 
 <a name="boku" title="Boku Payment Object"></a>
-## boku
+## boku 
 
-![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)
+<table>
+<tr>
+    <td rowspan="5"><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/beta_50.png"></img><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png"></img></td>
+</tr>
+<tr>
+    <td><b>Supported Endpoints:</b></td>
+    <td>Payment (P), Refund (R), Return (R)</td>
+</tr>
+<tr>
+    <td><b>Available Country / Currencies:</b></td>
+    <td>UK - GBP, SE - SEK, CH - CHF, NO - NOK</td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic Settlement</td>
+</tr>
+</table>
+
+
+Boku is a leading direct carrier billing mobile payments company that is integrated with hundreds of mobile operators all over the world.
+> Please refer to [Payment Considerations](https://developer.paysafe.com/en/rest-api/alternate-payments/payment-type-considerations/) for more information.
+
 
 |Element                 |Type                    |                 |                       |                       |                  |Description|
 |---                     |---                     |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1259,12 +1285,66 @@ __**LEGEND**__
 }
 ```
 
+<a name="instarem" title="INSTAREM Payment Object"></a>
+## instarem 
+
+![instarem](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/instarem.png)
+
+|Element                 |Type                          |                 |                       |                       |                  |Description|
+|---                     |---                           |:---:            |:---:                  |:---:                  |:---:             |---|
+|                        |**supported resources**       |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
+|descriptor              |string<br/>`length<=200`      |&#8210;          |&#9864;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|purposeCode             |[enum](#instaremPurposeCodes) |&#8210;          |&#9864;                |&#8210;                |&#8210;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
+
+```
+"instarem": {
+    "descriptor": "Wallet deposit",
+    "purposeCode": "IR001"
+}
+```
+
+<a name="instaremPurposeCodes" title="INSTAREM Purpose Codes"></a>
+
+<b>Instarem purposeCode options:</b><br/>
+<ul>
+    <li><b>IR001</b> - Transfer to own account</li>
+    <li><b>IR002</b> - Family Maintenance</li>
+    <li><b>IR003</b> - Education-related student expenses</li>
+    <li><b>IR004</b> - Medical Treatment</li>
+    <li><b>IR005</b> - Hotel Accomodation</li>
+    <li><b>IR006</b> - Travel</li>
+    <li><b>IR007</b> - Utility Bills</li>
+    <li><b>IR008</b> - Repayment of Loans</li>
+    <li><b>IR009</b> - Tax Payment</li>
+    <li><b>IR010</b> - Purchase of Residential Property</li>
+    <li><b>IR011</b> - Payment of Property Rental</li>
+    <li><b>IR012</b> - Insurance Premium</li>
+    <li><b>IR013</b> - Product indemnity insurance</li>
+    <li><b>IR014</b> - Insurance Claims Payment</li>
+    <li><b>IR015</b> - Mutual Fund Investment</li>
+    <li><b>IR016</b> - Investment in Shares</li>
+    <li><b>IR017</b> - Donations</li>
+    <li><b>IR01801</b> - Information Service Charges</li>
+    <li><b>IR01802</b> - Advertising & Public relations-related expenses</li>
+    <li><b>IR01803</b> - Royalty fees, trademark fees, patent fees, and copyright fees</li>
+    <li><b>IR01804</b> - Fees for brokers, front end fee, commitment fee, guarantee fee and custodian fee</li>
+    <li><b>IR01805</b> - Fees for advisors, technical assistance, and academic purpose\_code_number, including remuneration for specialists</li>
+    <li><b>IR01806</b> - Representative office expenses</li>
+    <li><b>IR01807</b> - Construction costs/expenses</li>
+    <li><b>IR01808</b> - Transportation fees for goods</li>
+    <li><b>IR01809</b> - For payment of exported goods</li>
+    <li><b>IR01810</b> - Delivery fees for goods</li>
+    <li><b>IR01811</b> - General Goods Trades - Offine trade</li>
+</ul>
+
+
 <a name="interac" title="INTERAC Payment Object"></a>
 ## interac 
 
 ![interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)
 
 > No additional values supported, please use the common payment object.
+
 
 <a name="neteller" title="NETELLER Payment Object"></a>
 ## neteller
