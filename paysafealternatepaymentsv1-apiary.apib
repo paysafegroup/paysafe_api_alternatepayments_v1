@@ -1216,31 +1216,9 @@ __**LEGEND**__
 <a name="boku" title="Boku Payment Object"></a>
 ## boku 
 
-<table>
-<tr>
-    <td rowspan="5"><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/beta_50.png"></img><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png"></img></td>
-</tr>
-<tr>
-    <td><b>Supported Endpoints:</b></td>
-    <td>Payment (P), Refund (R), Return (R)</td>
-</tr>
-<tr>
-    <td><b>Available Country / Currencies:</b></td>
-    <td>UK - GBP, SE - SEK, CH - CHF, NO - NOK</td>
-</tr>
-<tr>
-    <td><b>Integration Type:</b></td>
-    <td>Consumer Redirect</td>
-</tr>
-<tr>
-    <td><b>Settlement Types:</b></td>
-    <td>Automatic Settlement</td>
-</tr>
-</table>
-
+![boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)
 
 Boku is a leading direct carrier billing mobile payments company that is integrated with hundreds of mobile operators all over the world.
-> Please refer to [Payment Considerations](https://developer.paysafe.com/en/rest-api/alternate-payments/payment-type-considerations/) for more information.
 
 
 |Element                 |Type                    |                 |                       |                       |                  |Description|
@@ -1293,8 +1271,8 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 |Element                 |Type                          |                 |                       |                       |                  |Description|
 |---                     |---                           |:---:            |:---:                  |:---:                  |:---:             |---|
 |                        |**supported resources**       |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|descriptor              |string<br/>`length<=200`      |&#8210;          |&#9864;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|purposeCode             |[enum](#instaremPurposeCodes) |&#8210;          |&#9864;                |&#8210;                |&#8210;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
+|descriptor              |string<br/>`length<=200`      |&#8210;          |&#8210;                |&#8210;                |&#9864;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|purposeCode             |[enum](#instaremPurposeCodes) |&#8210;          |&#8210;                |&#8210;                |&#9864;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
 
 ```
 "instarem": {
