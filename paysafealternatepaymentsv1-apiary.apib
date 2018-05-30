@@ -1207,27 +1207,53 @@ __**LEGEND**__
 |&#9864;         |Required      |
 |&#8210;         |Not Applicable|
 |                |              |
-|**Abbreviation**|**Resource Type**|
+|**Abbreviation**|**Request Type**|
 |V               |Verification  |
 |P               |Payment       |
 |S               |Settlement    |
 |SC              |Standalone Credit|
+|RF              |Refund        |
+
+> Please contact your Paysafe Support to request additional payment methods for your account.
 
 <a name="boku" title="Boku Payment Object"></a>
 ## boku 
 
-![boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment, Refund, Return</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>UK - GBP, SE - SEK, CH - CHF, NO - NOK</td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic Settlement</td>
+</tr>
+</table>
+
 
 Boku is a leading direct carrier billing mobile payments company that is integrated with hundreds of mobile operators all over the world.
+<br/><br/>
+The following values should be passed in your Boku<b>Payment (P)</b> request.
 
-
-|Element                 |Type                    |                 |                       |                       |                  |Description|
-|---                     |---                     |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |**supported resources** |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|descriptor              |string<br/>`length<=20` |&#8210;          |&#9864;                |&#8210;                |&#8210;           |Descriptor to display on customer's statement.|
-|consumerId              |string<br/>`length<=255`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
-|consumerCountry         |string                  |&#8210;          |&#9864;                |&#8210;                |&#8210;           |The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|consumerMobilePhone     |string                  |&#8210;          |&#9864;                |&#8210;                |&#8210;           |The customer's mobile phone number.|
+|Element                 |Type                    |                 |                       |                       |                  |                  |Description|
+|---                     |---                     |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                        |**Request Type**        |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|descriptor              |string<br/>`length<=20` |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |Descriptor to display on customer's statement.|
+|consumerId              |string<br/>`length<=255`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
+|consumerCountry         |string                  |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|consumerMobilePhone     |string                  |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The customer's mobile phone number.|
 
 ```
 "boku": {
@@ -1241,7 +1267,33 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="giropay" title="Giropay Payment Object"></a>
 ## giropay
 
-![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>DE - EUR</td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic Settlement</td>
+</tr>
+</table>
+
+
+Giropay is an interbank system and the official implementation of German banks for online bank payments.
+<br/><br/>
+The following values should be passed in your Giropay <b>Payment (P)</b> request.
 
 |Element                 |Type                   |                 |                       |                       |                  |Description|
 |---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1266,7 +1318,32 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="instarem" title="INSTAREM Payment Object"></a>
 ## instarem 
 
-![instarem](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/instarem.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/instarem.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Standalone Credit</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>HK - HKD, LK - LKR </td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Asyncronous</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic Settlement</td>
+</tr>
+</table>
+
+
+<br/><br/>
+The following values should be passed in your Instarem <b>Standalone Credit (SC)</b> request.
 
 |Element                 |Type                          |                 |                       |                       |                  |Description|
 |---                     |---                           |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1319,7 +1396,28 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="interac" title="INTERAC Payment Object"></a>
 ## interac 
 
-![interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>CA - CAD</td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic Settlement</td>
+</tr>
+</table>
 
 > No additional values supported, please use the common payment object.
 
@@ -1327,7 +1425,33 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="neteller" title="NETELLER Payment Object"></a>
 ## neteller
 
-![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>
+        All countries except: AF,AM,BT,BV,MM,CN,CC,CD,CK,CU,ER,GS,GU,GN,HM,IR,IQ,CI,KZ,KP,KG,LR,LY,MN,MP,FM,MH,PW,PK,TL,PR,SL,SO,ZW, SD,SY,TJ,TM,UG,US,VI,UZ,YE<br/>
+        EUR,USD,GBP,HKD,SGD,JPY,CAD,AUD,CHF,DKK,SEK,NOK,ILS,MYR,NZD,TRY,AED,MAD,QAR,SAR,TWD,THB,CZK,HUF,BGN,PLN,ISK,INR,KRW,ZAR,RON,HRK,JOD,OMR,RSD,TND,BHD,KWD
+    </td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic Settlement</td>
+</tr>
+</table>
+
+The following values should be passed in your NETELLER <b>Payment (P)</b> request.
 
 |Element                        |Type                   |                 |                       |                       |                  |Description|
 |---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1355,7 +1479,32 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="payolution" title="Paysafe Pay Later Payment Object"></a>
 ## payolution
 
-![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment, Refund</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>DE, AT, CH, NL, UK, CA<br/>
+        EUR, GBP, CHF, CAD
+    </td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Asyncronous</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Manual Settlement</td>
+</tr>
+</table>
+
+The following values should be passed in your Paysafe Pay Later <b>Verification (V) or Payment (P)</b> request.
 
 |Element                    |Type                                     |                 |                       |                       |                  |Description|
 |---                        |---                                      |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1569,7 +1718,30 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="paysafecard" title="Paysafecard Payment Object"></a>
 ## paysafecard
 
-![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment, Settlement, Refund</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>supported in 61 countries</td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Manual Settlement</td>
+</tr>
+</table>
+
+The following values should be passed in your Paysafecard <b>Payment (P)</b> request.
 
 |Element                        |Type                   |                 |                       |                       |                  |Description|
 |---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1591,7 +1763,30 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="paysafecash" title="Paysafecash Payment Object"></a>
 ## paysafecash
 
-![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment, Settlement, Refund</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>Austria, Spain, Slovenia, Portugal, Hungary, Bulgaria, Finland, Croatia, Italy, Latvia, Romania, Switzerland, Chezh Republic, Denmark, France, UK, Ireland, Luxemburg, Netherlands, Poland, Slovakia, USA, Canada, Australia</td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Manual Settlement</td>
+</tr>
+</table>
+
+The following values should be passed in your Paysafecash <b>Payment (P)</b> request.
 
 |Element                        |Type                   |                 |                       |                       |                  |Description|
 |---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1613,7 +1808,30 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="rapidtransfer" title="Rapid Transfer Payment Object"></a>
 ## rapidtransfer
 
-![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>Austria, France, Germany, Hungary, Italy, Spain, UK, Poland, Portugal</td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic Settlement</td>
+</tr>
+</table>
+
+The following values should be passed in your Rapid Transfer <b>Payment (P)</b> request.
 
 |Element                        |Type                   |                 |                       |                       |                  |Description|
 |---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1635,7 +1853,33 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="skrill" title="Skrill Payment Object"></a>
 ## skrill
 
-![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>
+        All countries except: AF,CU,ER,IR,IQ,JP,KG,LY,KP,SD,SS,SY</br>
+        EUR,USD,GBP,HKD,SGD,JPY,CAD,AUD,CHF,DKK,SEK,NOK,ILS,MYR,NZD,TRY,AED,MAD,QAR,SAR,TWD,THB,CZK,HUF,BGN,PLN,ISK,INR,KRW,ZAR,RON,HRK,JOD,OMR,RSD,TND,BHD,KWD
+    </td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic Settlement</td>
+</tr>
+</table>
+
+The following values should be passed in your Skrill <b>Payment (P)</b> or <b>Standalone Credit (SC)</b> request.
 
 |Element                 |Type                   |                 |                       |                       |                  |Description|
 |---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
@@ -1674,7 +1918,33 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <a name="sofort" title="Sofort Payment Object"></a>
 ## sofort
 
-![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/klarna.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment, Refund, Return, Return Reversal</td>
+</tr>
+<tr>
+    <td><b>Countries / Currencies:</b></td>
+    <td>
+        DE, AT, CH, NL, UK, BE, FR, IT, PL, ES, HU, CZ, SK</br>
+        EUR, GBP, CHF
+    </td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic Settlement</td>
+</tr>
+</table>
+
+The following values should be passed in your Klarna <b>Payment (P)</b> request.
 
 |Element                 |Type                   |                 |                       |                       |                  |Description|
 |---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
