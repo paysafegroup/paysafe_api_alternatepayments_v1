@@ -1229,8 +1229,12 @@ __**LEGEND**__
     <td>Payment, Refund, Return</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
-    <td>UK - GBP, SE - SEK, CH - CHF, NO - NOK</td>
+    <td><b>Countries:</b></td>
+    <td>UK, SE, CH, NO</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>GBP, SEK, CHF, NOK</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1245,7 +1249,7 @@ __**LEGEND**__
 
 Boku is a leading direct carrier billing mobile payments company that is integrated with hundreds of mobile operators all over the world.
 <br/><br/>
-The following values should be passed in your Boku<b>Payment (P)</b> request.
+The following values should be passed in your Boku <b>Payment (P)</b> request.
 
 |Element                 |Type                    |                 |                       |                       |                  |                  |Description|
 |---                     |---                     |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
@@ -1277,8 +1281,12 @@ The following values should be passed in your Boku<b>Payment (P)</b> request.
     <td>Payment</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
-    <td>DE - EUR</td>
+    <td><b>Countries:</b></td>
+    <td>DE</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>EUR</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1293,16 +1301,16 @@ The following values should be passed in your Boku<b>Payment (P)</b> request.
 
 Giropay is an interbank system and the official implementation of German banks for online bank payments.
 <br/><br/>
-The following values should be passed in your Giropay <b>Payment (P)</b> request.
+The following custom attributes can be passed in your Giropay <b>Payment (P)</b> request.
 
-|Element                 |Type                   |                 |                       |                       |                  |Description|
-|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|descriptor              |string<br/>`length<=16`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The consumer's SEPA bank account details.|
-|sepa.accountHolderName  |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The account holder's name.|
-|sepa.bic                |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The Bank Identifier Code (BIC) of the account.|
-|sepa.iban               |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The International Bank Account Number (IBAN) of the account.|
+|Element                 |Type                   |                 |                       |                       |                  |                  |Description|
+|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|descriptor              |string<br/>`length<=16`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                    |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The consumer's SEPA bank account details.|
+|sepa.accountHolderName  |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The account holder's name.|
+|sepa.bic                |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The Bank Identifier Code (BIC) of the account.|
+|sepa.iban               |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The International Bank Account Number (IBAN) of the account.|
 
 ```
 "giropay": {
@@ -1328,8 +1336,12 @@ The following values should be passed in your Giropay <b>Payment (P)</b> request
     <td>Standalone Credit</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
-    <td>HK - HKD, LK - LKR </td>
+    <td><b>Countries:</b></td>
+    <td>HK, LK</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>HKD, LKR</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1343,13 +1355,13 @@ The following values should be passed in your Giropay <b>Payment (P)</b> request
 
 
 <br/><br/>
-The following values should be passed in your Instarem <b>Standalone Credit (SC)</b> request.
+The following custom attributes can be passed in your Instarem <b>Standalone Credit (SC)</b> request.
 
-|Element                 |Type                          |                 |                       |                       |                  |Description|
-|---                     |---                           |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |**supported resources**       |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|descriptor              |string<br/>`length<=200`      |&#8210;          |&#8210;                |&#8210;                |&#9864;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|purposeCode             |[enum](#instaremPurposeCodes) |&#8210;          |&#8210;                |&#8210;                |&#9864;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
+|Element                 |Type                          |                 |                       |                       |                  |                  |Description|
+|---                     |---                           |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                        |**supported resources**       |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|descriptor              |string<br/>`length<=200`      |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|purposeCode             |[enum](#instaremPurposeCodes) |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
 
 ```
 "instarem": {
@@ -1406,8 +1418,12 @@ The following values should be passed in your Instarem <b>Standalone Credit (SC)
     <td>Payment</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
-    <td>CA - CAD</td>
+    <td><b>Countries:</b></td>
+    <td>CA</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>CAD</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1435,11 +1451,12 @@ The following values should be passed in your Instarem <b>Standalone Credit (SC)
     <td>Payment</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
-    <td>
-        All countries except: AF,AM,BT,BV,MM,CN,CC,CD,CK,CU,ER,GS,GU,GN,HM,IR,IQ,CI,KZ,KP,KG,LR,LY,MN,MP,FM,MH,PW,PK,TL,PR,SL,SO,ZW, SD,SY,TJ,TM,UG,US,VI,UZ,YE<br/>
-        EUR,USD,GBP,HKD,SGD,JPY,CAD,AUD,CHF,DKK,SEK,NOK,ILS,MYR,NZD,TRY,AED,MAD,QAR,SAR,TWD,THB,CZK,HUF,BGN,PLN,ISK,INR,KRW,ZAR,RON,HRK,JOD,OMR,RSD,TND,BHD,KWD
-    </td>
+    <td><b>Countries:</b></td>
+    <td>All countries except: AF,AM,BT,BV,MM,CN,CC,CD,CK,CU,ER,GS,GU,GN,HM,IR,IQ,CI,KZ,KP,KG,LR,LY,MN,MP,FM,MH,PW,PK,TL,PR,SL,SO,ZW, SD,SY,TJ,TM,UG,US,VI,UZ,YE</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>EUR,USD,GBP,HKD,SGD,JPY,CAD,AUD,CHF,DKK,SEK,NOK,ILS,MYR,NZD,TRY,AED,MAD,QAR,SAR,TWD,THB,CZK,HUF,BGN,PLN,ISK,INR,KRW,ZAR,RON,HRK,JOD,OMR,RSD,TND,BHD,KWD</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1451,18 +1468,18 @@ The following values should be passed in your Instarem <b>Standalone Credit (SC)
 </tr>
 </table>
 
-The following values should be passed in your NETELLER <b>Payment (P)</b> request.
+The following custom attributes can be passed in your NETELLER <b>Payment (P)</b> request.
 
-|Element                        |Type                   |                 |                       |                       |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|consumerId                     |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |Email address or NETELLER Account ID of the consumer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
-|consumerVerificationId         |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The consumers NETELLER secure ID, or two step authorization token generated on their device.|
-|recipientDescription           |string<br>`length<=30` |&#8210;          |&#9862;                |&#8210;                |&#8210;           |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
-|language                       |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
-|logoUrl                        |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
-|detail1Description             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text                    |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|Element                        |Type                   |                 |                       |                       |                  |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|consumerId                     |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |Email address or NETELLER Account ID of the consumer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|consumerVerificationId         |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The consumers NETELLER secure ID, or two step authorization token generated on their device.|
+|recipientDescription           |string<br>`length<=30` |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
+|language                       |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
+|logoUrl                        |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
+|detail1Description             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text                    |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 ```
 "neteller": {
@@ -1489,10 +1506,12 @@ The following values should be passed in your NETELLER <b>Payment (P)</b> reques
     <td>Payment, Refund</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
-    <td>DE, AT, CH, NL, UK, CA<br/>
-        EUR, GBP, CHF, CAD
-    </td>
+    <td><b>Countries:</b></td>
+    <td>DE, AT, CH, NL, UK, CA</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>EUR, GBP, CHF, CAD</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1504,18 +1523,18 @@ The following values should be passed in your NETELLER <b>Payment (P)</b> reques
 </tr>
 </table>
 
-The following values should be passed in your Paysafe Pay Later <b>Verification (V) or Payment (P)</b> request.
+The following custom attributes can be passed in your Paysafe Pay Later <b>Verification (V)</b> or <b>Payment (P)</b> request.
 
-|Element                    |Type                                     |                 |                       |                       |                  |Description|
-|---                        |---                                      |:---:            |:---:                  |:---:                  |:---:             |---|
-|                           |**supported resources**                  |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|productType                |enum                                     |&#9864;          |&#9864;                |&#9862;                |&#8210;           |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
-|descriptor                 |string<br/>`length=X`                    |&#9862;          |&#9862;                |&#9862;                |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|sepa                       |[object](#sepa)                          |&#9864;          |&#9862;                |&#9862;                |&#8210;           |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
-|plans                      |[object](#payolution.plans)              |&#9862;          |&#9862;                |&#9862;                |&#8210;           |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
-|planDuration               |string<br/>`length=X`                    |&#9862;          |&#9862;                |&#9862;                |&#8210;           |This is the duration, in months, of the plan selected by the consumer. |
-|paymentInformation         |[object](#payolution.paymentInformation) |&#9862;          |&#9862;                |&#9862;                |&#8210;           |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
-|analysis                   |object                                   |&#9862;          |&#9862;                |&#9862;                |&#8210;           |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
+|Element                    |Type                                     |                 |                       |                       |                  |                  |Description|
+|---                        |---                                      |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                           |**supported resources**                  |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|productType                |enum                                     |&#9864;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
+|descriptor                 |string<br/>`length=X`                    |&#9862;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                       |[object](#sepa)                          |&#9864;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
+|plans                      |[object](#payolution.plans)              |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
+|planDuration               |string<br/>`length=X`                    |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the duration, in months, of the plan selected by the consumer. |
+|paymentInformation         |[object](#payolution.paymentInformation) |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
+|analysis                   |object                                   |&#9862;          |&#9862;                |&#9862;                |&#8210;           |&#8210;           |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
 
 ```
 "payolution": {
@@ -1582,12 +1601,12 @@ The following values should be passed in your Paysafe Pay Later <b>Verification 
 <a name="payolution.plans" title="payolution.plans Object"></a>
 ## &nbsp;&nbsp; .plans
 
-|Element                        |Type                                 |                 |                       |                       |                  |Description|
-|---                            |---                                  |:---:            |:---:                  |:---:                  |:---:             |---|
-|                               |**supported resources**              |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|paymentDetails                 |[array of [object](#payolution.paymentDetails)] |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |This is an array of payment details objects. <br/><i>Read Only</i>|
-|tacUrl                         |string                               |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |This is a URL pointing to the Terms and Conditions for the payment plan.<br/><i>Read Only</i>|
-|dataPrivacyConsentUrl          |string                               |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |This is a URL pointing to the data privacy declaration for the payment plan.<br/><i>Read Only</i>|
+|Element                        |Type                                 |Description|
+|---                            |---                                  |---|
+|                               |**supported resources**              |   |
+|paymentDetails                 |[array of [object](#payolution.paymentDetails)] |This is an array of payment details objects. <br/><i>Read Only</i>|
+|tacUrl                         |string                               |This is a URL pointing to the Terms and Conditions for the payment plan.<br/><i>Read Only</i>|
+|dataPrivacyConsentUrl          |string                               |This is a URL pointing to the data privacy declaration for the payment plan.<br/><i>Read Only</i>|
 
 > &#8224; - These fields are only returned for Payolution INSTALLMENT responses.
 
@@ -1623,17 +1642,17 @@ The following values should be passed in your Paysafe Pay Later <b>Verification 
 <a name="payolution.paymentDetails" title="payolution.paymentDetails Object"></a>
 ## &nbsp;&nbsp;&nbsp;&nbsp; .paymentDetails
 
-|Element                        |Type                                    |                 |                       |                       |                  |Description|
-|---                            |---                                     |:---:            |:---:                  |:---:                  |:---:             |---|
-|                               |**supported resources**                 |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|installments                   |[object](#payolution.installments)      |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |These are details about the payolution installment plan for the consumer. <br/><i>Read Only</i>|
-|originalAmount                 |number                                  |&#9864;          |&#9864;                |&#8210;                |&#8210;           |This is the original amount of the Verification, in minor units. <br/><i>Read Only</i>|
-|totalAmount                    |number                                  |&#9864;          |&#9864;                |&#8210;                |&#8210;           |This is the total amount to be paid by the consumer (i.e., the sum of all installments).<br/><i>Read Only</i>|
-|minimumInstallmentFee          |number                                  |&#9864;          |&#9864;                |&#8210;                |&#8210;           |This is the minimum installment fee.<br/><i>Read Only</i>|
-|duration                       |number                                  |&#9864;          |&#9864;                |&#8210;                |&#8210;           |This is the duration, in months, of the payment plan.<br/><i>Read Only</i>|
-|interestRate                   |number                                  |&#9864;          |&#9864;                |&#8210;                |&#8210;           |This is interest rate of the payment plan.<br/><i>Read Only</i>|
-|effectiveInterestRate          |number                                  |&#9864;          |&#9864;                |&#8210;                |&#8210;           |This is effective interest rate of the payment plan.<br/><i>Read Only</i>|
-|standardCreditInformationUrl   |string                                  |&#9864;          |&#9864;                |&#8210;                |&#8210;           |This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.<br/><i>Read Only</i>|
+|Element                        |Type                                    |Description|
+|---                            |---                                     |---|
+|                               |**supported resources**                 |   |
+|installments                   |[object](#payolution.installments)      |These are details about the payolution installment plan for the consumer. <br/><i>Read Only</i>|
+|originalAmount                 |number                                  |This is the original amount of the Verification, in minor units. <br/><i>Read Only</i>|
+|totalAmount                    |number                                  |This is the total amount to be paid by the consumer (i.e., the sum of all installments).<br/><i>Read Only</i>|
+|minimumInstallmentFee          |number                                  |This is the minimum installment fee.<br/><i>Read Only</i>|
+|duration                       |number                                  |This is the duration, in months, of the payment plan.<br/><i>Read Only</i>|
+|interestRate                   |number                                  |This is interest rate of the payment plan.<br/><i>Read Only</i>|
+|effectiveInterestRate          |number                                  |This is effective interest rate of the payment plan.<br/><i>Read Only</i>|
+|standardCreditInformationUrl   |string                                  |This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.<br/><i>Read Only</i>|
 
 > &#8224; - These fields are only returned for Payolution INSTALLMENT responses.
 
@@ -1665,11 +1684,11 @@ The following values should be passed in your Paysafe Pay Later <b>Verification 
 <a name="payolution.installments" title="payolution.installments Object"></a>
 ##  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .installments
 
-|Element                        |Type                   |                 |                       |                       |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|amount                         |number                 |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |This is the amount of the installment payment.<br/><i>Read Only</i>|
-|due                            |string                 |&#9864;&#8224;   |&#9864;&#8224;         |&#8210;                |&#8210;           |This is the due date of the installment payment.<br/><i>Read Only</i>|
+|Element                        |Type                   |Description|
+|---                            |---                    |---|
+|                               |**supported resources**|   |
+|amount                         |number                 |This is the amount of the installment payment.<br/><i>Read Only</i>|
+|due                            |string                 |This is the due date of the installment payment.<br/><i>Read Only</i>|
 
 > &#8224; - These fields are only returned for Payolution INSTALLMENT responses.
 
@@ -1694,14 +1713,14 @@ The following values should be passed in your Paysafe Pay Later <b>Verification 
 <a name="payolution.paymentInformation" title="payolution.paymentInformation Object"></a>
 ## &nbsp;&nbsp; .paymentInformation
 
-|Element                        |Type                   |                 |                       |                       |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|paymentReference               |string                 |&#9864;          |&#9864;                |&#8210;                |&#8210;           |The string to use as a reason for the payment.<br/><i>Read Only</i>|
-|iban                           |string                 |&#9864;          |&#9864;                |&#8210;                |&#8210;           |The IBAN to send the payment to.<br/><i>Read Only</i>|
-|bic                            |string                 |&#9864;          |&#9864;                |&#8210;                |&#8210;           |The BIC of the bank to send the payment to.<br/><i>Read Only</i>|
-|bankName                       |string                 |&#9864;          |&#9864;                |&#8210;                |&#8210;           |This is the name of the bank to send the payment to.<br/><i>Read Only</i>|
-|accountHolderName              |string                 |&#9864;          |&#9864;                |&#8210;                |&#8210;           |This is the name of the beneficiary.<br/><i>Read Only</i>|
+|Element                        |Type                   |Description|
+|---                            |---                    |---|
+|                               |**supported resources**|   |
+|paymentReference               |string                 |The string to use as a reason for the payment.<br/><i>Read Only</i>|
+|iban                           |string                 |The IBAN to send the payment to.<br/><i>Read Only</i>|
+|bic                            |string                 |The BIC of the bank to send the payment to.<br/><i>Read Only</i>|
+|bankName                       |string                 |This is the name of the bank to send the payment to.<br/><i>Read Only</i>|
+|accountHolderName              |string                 |This is the name of the beneficiary.<br/><i>Read Only</i>|
 
 ```
 {
@@ -1728,8 +1747,12 @@ The following values should be passed in your Paysafe Pay Later <b>Verification 
     <td>Payment, Settlement, Refund</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
+    <td><b>Countries:</b></td>
     <td>supported in 61 countries</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>Contact Payafe Support</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1741,15 +1764,15 @@ The following values should be passed in your Paysafe Pay Later <b>Verification 
 </tr>
 </table>
 
-The following values should be passed in your Paysafecard <b>Payment (P)</b> request.
+The following custom attributes can be passed in your Paysafecard <b>Payment (P)</b> request.
 
-|Element                        |Type                   |                 |                       |                       |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|consumerId                     |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
-|ageRestriction                 |number                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |Minimum age restriction for the transaction.|
-|kycLevelRestriction            |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
-|countryRestriction             |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
+|Element                        |Type                   |                 |                       |                       |                  |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|consumerId                     |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
+|ageRestriction                 |number                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |Minimum age restriction for the transaction.|
+|kycLevelRestriction            |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
+|countryRestriction             |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
 
 ```
 "paysafecard": {
@@ -1773,8 +1796,12 @@ The following values should be passed in your Paysafecard <b>Payment (P)</b> req
     <td>Payment, Settlement, Refund</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
+    <td><b>Countries:</b></td>
     <td>Austria, Spain, Slovenia, Portugal, Hungary, Bulgaria, Finland, Croatia, Italy, Latvia, Romania, Switzerland, Chezh Republic, Denmark, France, UK, Ireland, Luxemburg, Netherlands, Poland, Slovakia, USA, Canada, Australia</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>Contact Payafe Support</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1786,15 +1813,15 @@ The following values should be passed in your Paysafecard <b>Payment (P)</b> req
 </tr>
 </table>
 
-The following values should be passed in your Paysafecash <b>Payment (P)</b> request.
+The following custom attributes can be passed in your Paysafecash <b>Payment (P)</b> request.
 
-|Element                        |Type                   |                 |                       |                       |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|consumerId                     |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
-|ageRestriction                 |number                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |Minimum age restriction for the transaction.|
-|kycLevelRestriction            |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
-|countryRestriction             |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
+|Element                        |Type                   |                 |                       |                       |                  |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|consumerId                     |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
+|ageRestriction                 |number                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |Minimum age restriction for the transaction.|
+|kycLevelRestriction            |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
+|countryRestriction             |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
 
 ```
 "paysafecash": {
@@ -1818,8 +1845,12 @@ The following values should be passed in your Paysafecash <b>Payment (P)</b> req
     <td>Payment</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
+    <td><b>Countries:</b></td>
     <td>Austria, France, Germany, Hungary, Italy, Spain, UK, Poland, Portugal</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>EUR, GBP</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1831,18 +1862,18 @@ The following values should be passed in your Paysafecash <b>Payment (P)</b> req
 </tr>
 </table>
 
-The following values should be passed in your Rapid Transfer <b>Payment (P)</b> request.
+The following custom attributes can be passed in your Rapid Transfer <b>Payment (P)</b> request.
 
-|Element                        |Type                   |                 |                       |                       |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|descriptor                     |string<br/>`length=X`  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|sepa                           |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The consumer's SEPA bank account details (if applicable). |
-|sepa.bankName                  |enum                   |&#8210;          |&#8210;                |&#8210;                |&#8210;           |The consumer's bank.|
-|sepa.country                   |enum                   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
-|sepa.iban                      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The International Bank Account Number (IBAN) of the account.|
-|sepa.bic                       |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The Bank Identifier Code (BIC) of the account.|
-|sepa.accountHolderName         |string                 |&#8210;          |&#8210;                |&#8210;                |&#8210;           |The account holder's name.|
+|Element                        |Type                   |                 |                       |                       |                  |                  |Description|
+|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|descriptor                     |string<br/>`length=X`  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                           |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The consumer's SEPA bank account details (if applicable). |
+|sepa.bankName                  |enum                   |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |The consumer's bank.|
+|sepa.country                   |enum                   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
+|sepa.iban                      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The International Bank Account Number (IBAN) of the account.|
+|sepa.bic                       |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The Bank Identifier Code (BIC) of the account.|
+|sepa.accountHolderName         |string                 |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |The account holder's name.|
 
 ```
 "rapidTransfer": {
@@ -1863,11 +1894,12 @@ The following values should be passed in your Rapid Transfer <b>Payment (P)</b> 
     <td>Payment</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
-    <td>
-        All countries except: AF,CU,ER,IR,IQ,JP,KG,LY,KP,SD,SS,SY</br>
-        EUR,USD,GBP,HKD,SGD,JPY,CAD,AUD,CHF,DKK,SEK,NOK,ILS,MYR,NZD,TRY,AED,MAD,QAR,SAR,TWD,THB,CZK,HUF,BGN,PLN,ISK,INR,KRW,ZAR,RON,HRK,JOD,OMR,RSD,TND,BHD,KWD
-    </td>
+    <td><b>Countries:</b></td>
+    <td>All countries except: AF,CU,ER,IR,IQ,JP,KG,LY,KP,SD,SS,SY</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>EUR,USD,GBP,HKD,SGD,JPY,CAD,AUD,CHF,DKK,SEK,NOK,ILS,MYR,NZD,TRY,AED,MAD,QAR,SAR,TWD,THB,CZK,HUF,BGN,PLN,ISK,INR,KRW,ZAR,RON,HRK,JOD,OMR,RSD,TND,BHD,KWD</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1879,19 +1911,19 @@ The following values should be passed in your Rapid Transfer <b>Payment (P)</b> 
 </tr>
 </table>
 
-The following values should be passed in your Skrill <b>Payment (P)</b> or <b>Standalone Credit (SC)</b> request.
+The following custom attributes can be passed in your Skrill <b>Payment (P)</b> or <b>Standalone Credit (SC)</b> request.
 
-|Element                 |Type                   |                 |                       |                       |                  |Description|
-|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|consumerId              |string                 |&#8210;          |&#9864;                |&#8210;                |&#9864;           |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
-|emailSubject            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |Subject line to use in customer email.|
-|emailMessage            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |Message to use in customer email.|
-|recipientDescription    |string<br>`length<=30` |&#8210;          |&#9862;                |&#8210;                |&#8210;           |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
-|language                |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
-|logoUrl                 |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
-|detail1Description      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|Element                 |Type                   |                 |                       |                       |                  |                  |Description|
+|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|consumerId              |string                 |&#8210;          |&#9864;                |&#8210;                |&#9864;           |&#9864;           |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|emailSubject            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#9864;           |Subject line to use in customer email.|
+|emailMessage            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#9864;           |Message to use in customer email.|
+|recipientDescription    |string<br>`length<=30` |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
+|language                |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
+|logoUrl                 |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
+|detail1Description      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 
 > Payment
@@ -1928,11 +1960,12 @@ The following values should be passed in your Skrill <b>Payment (P)</b> or <b>St
     <td>Payment, Refund, Return, Return Reversal</td>
 </tr>
 <tr>
-    <td><b>Countries / Currencies:</b></td>
-    <td>
-        DE, AT, CH, NL, UK, BE, FR, IT, PL, ES, HU, CZ, SK</br>
-        EUR, GBP, CHF
-    </td>
+    <td><b>Countries:</b></td>
+    <td>DE, AT, CH, NL, UK, BE, FR, IT, PL, ES, HU, CZ, SK</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>EUR, GBP, CHF</td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1944,13 +1977,13 @@ The following values should be passed in your Skrill <b>Payment (P)</b> or <b>St
 </tr>
 </table>
 
-The following values should be passed in your Klarna <b>Payment (P)</b> request.
+The following custom attributes can be passed in your Klarna <b>Payment (P)</b> request.
 
-|Element                 |Type                   |                 |                       |                       |                  |Description|
-|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |---|
-|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |   |
-|descriptor              |string<br/>`length<=43`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|sepa                    |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |The customer's SEPA bank account details.|
+|Element                 |Type                   |                 |                       |                       |                  |                  |Description|
+|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|descriptor              |string<br/>`length<=43`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                    |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The customer's SEPA bank account details.|
 
 
 ```
