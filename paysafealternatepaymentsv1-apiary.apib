@@ -3838,6 +3838,7 @@ Click on **Create a Standalone Credit** above to see how to submit a Standalone 
     + Include standaloneCredit
     + Include paymentTypeStandaloneCredit
     + Include skrillStandaloneCredit
+    + Include instarem    
     + Include links
     
 + Request Create Standalone Credit (application/json)
@@ -3996,12 +3997,49 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
         + `txId`: `SIM001270` (string)
         + `returnCode`: `0`
 
-
 ## `installment`
 
 + `installments` (object)
     + `amount`: `1000` (number) - This is the amount of the installment payment.
     + `due`: `2013-07-16` (string) - This is the due date of the installment payment.
+
+## `instarem`
+
++ `instarem` (object, optional) - Optional attributes that can be passed when making a INSTAREM  instrequest.
+    + Properties
+        + descriptor: `XYZ Merch #438A` (string, required) - This is the merchant descriptor that will be displayed on the consumer's bank statement.
+        + purposeCode: `IR001` (enum, required) - This is the Instarem purpose code associated with the required.
+        
+            + Members
+                + `IR001` - Transfer to own account
+                + `IR002` - Family Maintenance
+                + `IR003` - Education-related student expenses
+                + `IR004` - Medical Treatment
+                + `IR005` - Hotel Accomodation
+                + `IR006` - Travel
+                + `IR007` - Utility Bills
+                + `IR008` - Repayment of Loans
+                + `IR009` - Tax Payment
+                + `IR010` - Purchase of Residential Property
+                + `IR011` - Payment of Property Rental
+                + `IR012` - Insurance Premium
+                + `IR013` - Product indemnity insurance
+                + `IR014` - Insurance Claims Payment
+                + `IR015` - Mutual Fund Investment
+                + `IR016` - Investment in Shares
+                + `IR017` - Donations
+                + `IR01801` - Information Service Charges
+                + `IR01802` - Advertising & Public relations-related expenses
+                + `IR01803` - Royalty fees, trademark fees, patent fees, and copyright fees
+                + `IR01804` - Fees for brokers, front end fee, commitment fee, guarantee fee and custodian fee
+                + `IR01805` - Fees for advisors, technical assistance, and academic purpose\_code_number, including remuneration for specialists
+                + `IR01806` - Representative office expenses
+                + `IR01807` - Construction costs/expenses
+                + `IR01808` - Transportation fees for goods
+                + `IR01809` - For payment of exported goods
+                + `IR01810` - Delivery fees for goods
+                + `IR01811` - General Goods Trades - Offine trade
+
 
 ## `payolutionGatewayResponse`
 
@@ -4162,6 +4200,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
     + Members
         + `SKRILL`
+        + `INSTAREM`
 
 ## `paymentTypeSettlement`
 
@@ -4540,6 +4579,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
     + `emailSubject`: `item xyz` (string) : Subject line to use in consumer email.
     + `emailMessage`: `EN` (string) : Message to use in consumer email.
 
+    
 ## `sofort`
 
 + `sofort` (object) - Optional attributes that can be passed when making a SOFORT payment request.
