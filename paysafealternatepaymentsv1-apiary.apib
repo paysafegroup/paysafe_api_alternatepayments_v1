@@ -1555,7 +1555,7 @@ The following custom attributes can be passed in your Paysafe Pay Later <b>Verif
 |                           |**supported resources**                  |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
 |productType                |enum                                     |&#9864;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
 |descriptor                 |string<br/>`length=X`                    |&#9862;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|sepa                       |[object](#sepa)                          |&#9864;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
+|<paymentVehicle>           |[object](#Payment Vehicle Objects)       |&#9864;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
 |plans                      |[object](#payolution.plans)              |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
 |planDuration               |string<br/>`length=X`                    |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the duration, in months, of the plan selected by the consumer. |
 |paymentInformation         |[object](#payolution.paymentInformation) |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
@@ -1565,59 +1565,25 @@ The following custom attributes can be passed in your Paysafe Pay Later <b>Verif
 "payolution": {
     "productType": "INSTALLMENTS",
     "descriptor": "Order with ID 4ab2",
-    "plans": [{
-        "paymentDetails": [{
-            "installments": [{
-                    "amount": 16820,
-                    "due": "2013-07-16"
-                },
-                {
-                    "amount": 16820,
-                    "due": "2013-08-05"
-                },
-                {
-                    "amount": 16820,
-                    "due": "2013-09-05"
-                }
-            ],
-            "originalAmount": 49999,
-            "totalAmount": 50460,
-            "minimumInstallmentFee": 0,
-            "duration": 3,
-            "interestRate": 14.95,
-            "effectiveInterestRate": 15.60,
-            "standardCreditInformationUrl": "https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-xzprcfl958m&amp;duration=3"
-        }],
-        "tacUrl": "https://test-payment.payolution.com/payolution-payment/infoport/termsandconditions?channelId=paysafe-installment",
-        "dataPrivacyConsentUrl": "https://test-payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?channelId=paysafe-installment",
-        "planDuration": "3",
-        "sepa": {
-            "bankName": "ING",
-            "country": "NL",
-            "accountHolderName": "John Doe",
-            "bic": "ABNANL2APIP",
-            "iban": "DE89370400440532013000"
-        },
-        "paymentInformation": {
-            "paymentReference": "YTTR-WMQX-KLGW",
-            "iban": "AT611904300234573201456",
-            "bic": "BFRILI22XXX",
-            "accountHolderName": "Test Merchant"
-        },
-        "analysis": [{
-            "key": "PAYOLUTION_CUSTOMER_GROUP",
-            "value": "TOP"
-        }, {
-            "key": "PAYOLUTION_MODULE_NAME",
-            "value": "PaymentModuleName"
-        }, {
-            "key": "PAYOLUTION_INVOICE_ID",
-            "value": "23498739478"
-        }, {
-            "key": "PAYOLUTION_ORDER_ID",
-            "value": "23498739478"
-        }]
-
+    "sepa": {
+        "bankName": "ING",
+        "country": "NL",
+        "accountHolderName": "John Doe",
+        "bic": "ABNANL2APIP",
+        "iban": "DE89370400440532013000"
+    },
+    "analysis": [{
+        "key": "PAYOLUTION_CUSTOMER_GROUP",
+        "value": "TOP"
+    }, {
+        "key": "PAYOLUTION_MODULE_NAME",
+        "value": "PaymentModuleName"
+    }, {
+        "key": "PAYOLUTION_INVOICE_ID",
+        "value": "23498739478"
+    }, {
+        "key": "PAYOLUTION_ORDER_ID",
+        "value": "23498739478"
     }]
 }
 ```
@@ -1626,7 +1592,7 @@ The following custom attributes can be passed in your Paysafe Pay Later <b>Verif
 <a name="payolution.plans" title="payolution.plans Object"></a>
 ## &nbsp;&nbsp; .plans 
 
-* This is a Paysafe Pay Later (Payolution) specific read only response object
+This is a Paysafe Pay Later (Payolution) specific read only response object that contains details about available INSTALLMENT plans.
 
 |Element                        |Type                                 |Description|
 |---                            |---                                  |---|
@@ -1669,7 +1635,7 @@ The following custom attributes can be passed in your Paysafe Pay Later <b>Verif
 <a name="payolution.paymentDetails" title="payolution.paymentDetails Object"></a>
 ## &nbsp;&nbsp;&nbsp;&nbsp; .paymentDetails 
 
-* This is a Paysafe Pay Later (Payolution) specific read only response object
+This is a Paysafe Pay Later (Payolution) specific read only response object that contains payment details for an INSTALLMENT plan.
 
 |Element                        |Type                                    |Description|
 |---                            |---                                     |---|
@@ -1682,8 +1648,6 @@ The following custom attributes can be passed in your Paysafe Pay Later <b>Verif
 |interestRate                   |number                                  |This is interest rate of the payment plan.<br/><i>Read Only</i>|
 |effectiveInterestRate          |number                                  |This is effective interest rate of the payment plan.<br/><i>Read Only</i>|
 |standardCreditInformationUrl   |string                                  |This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.<br/><i>Read Only</i>|
-
-> &#8224; - These fields are only returned for Payolution INSTALLMENT responses.
 
 ```
 "paymentDetails": [{
@@ -1713,15 +1677,13 @@ The following custom attributes can be passed in your Paysafe Pay Later <b>Verif
 <a name="payolution.installments" title="payolution.installments Object"></a>
 ##  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .installments 
 
-* This is a Paysafe Pay Later (Payolution) specific read only response object
+This is a Paysafe Pay Later (Payolution) specific read only response object that contains INSTALLMENT plan options for a request.
 
 |Element                        |Type                   |Description|
 |---                            |---                    |---|
 |                               |**supported resources**|   |
 |amount                         |number                 |This is the amount of the installment payment.<br/><i>Read Only</i>|
 |due                            |string                 |This is the due date of the installment payment.<br/><i>Read Only</i>|
-
-> &#8224; - These fields are only returned for Payolution INSTALLMENT responses.
 
 ```
             {
