@@ -1554,12 +1554,12 @@ The following custom attributes can be passed in your Paysafe Pay Later <b>Verif
 |---                        |---                                      |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
 |                           |**supported resources**                  |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
 |productType                |enum                                     |&#9864;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
-|descriptor                 |string<br/>`length=X`                    |&#9862;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|descriptor                 |string<br/>`length<300=`                 |&#9862;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
 |<paymentVehicle>           |[object](#Payment Vehicle Objects)       |&#9864;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
 |plans                      |[object](#payolution.plans)              |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
-|planDuration               |string<br/>`length=X`                    |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the duration, in months, of the plan selected by the consumer. |
+|planDuration               |string                                   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the duration, in months, of the plan selected by the consumer. |
 |paymentInformation         |[object](#payolution.paymentInformation) |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
-|analysis                   |object                                   |&#9862;          |&#9862;                |&#9862;                |&#8210;           |&#8210;           |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.|
+|analysis                   |object                                   |&#9862;          |&#9862;                |&#9862;                |&#8210;           |&#8210;           |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes. For more info see [here](https://developer.paysafe.com/en/rest-api/alternate-payments/payment-type-considerations/payolution/#analysis) |
 
 ```
 "payolution": {
@@ -1682,7 +1682,7 @@ This is a Paysafe Pay Later (Payolution) specific read only response object that
 |Element                        |Type                   |Description|
 |---                            |---                    |---|
 |                               |**supported resources**|   |
-|amount                         |number                 |This is the amount of the installment payment.<br/><i>Read Only</i>|
+|amount                         |number                 |This is the amount of the installment payment in minor units.<br/><i>Read Only</i>|
 |due                            |string                 |This is the due date of the installment payment.<br/><i>Read Only</i>|
 
 ```
