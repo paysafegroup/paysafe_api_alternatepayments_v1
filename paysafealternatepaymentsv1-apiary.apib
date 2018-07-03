@@ -771,6 +771,8 @@ signature = base64 (digest)
 |email                   |string<br/>`min=6,length<=128` |<b>(Required)</b>This is the consumer's email address.|
 |dateOfBirth             |[object](#date)          |This is the date of birth of the consumer associated to this profile.|
 |gender                  |enum                     |Options:<ul><li>M &ndash; Male</li><li>F &ndash; Female</li><li>O &ndash; Other</li><li>N &ndash; Not Specified</li></ul>|
+|identityDocuments       |array of [object](#identityDocument) | Identity documents associated to this profile.|
+|kycStatus               |enum                     |This is the KYC status of the consumer at the merchant.<br/>Options:<ul><li>UNVERIFIED - consumer details are not verified</li><li>PARTIALLY_VERIFIED - some consumer details are verified (ie: name and dob)</li><li>VERIFIED - consumer is fully verified (name, dob, address, phone, email)</li></ul>|
 |phone                   |string<br/>`max=40`      |This is the consumer's primary phone.|
 |cellphone               |string                   |This is the consumer's cell phone.|
 |locale                  |enum                     |This is the ISO language code representing the preferred language for this profile.|
@@ -802,7 +804,7 @@ signature = base64 (digest)
 |profile                 |object                       |This is the recipients profile.|
 |billingDetails          |object                       |This is the recipients billing details.|
 |shippingDetails         |                             |This is the recipients shipping details.|
-|identityDocuments       |[object]                     |Identity documentation specific to the recipient.  Usage will vary depending upon payment type.|
+|identityDocuments       |array of [object](#identityDocument) | Identity documents associated to this recipient.|
 |\<paymentVehicle\>      |object                       |The associated payment vechicle.  ie: bank account detail for online banking payment and/or credit.|
 
 ```
@@ -4100,7 +4102,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
 
 + `amount`: `100` (number, required) - This is the amount of the request, in minor units.
 
-    _max=99999999999_
+    _max=999999999_
 
 + `verificationId`:`2f6f0150-2f08-43be-ad42-aa89fafde792` (string) - This is the ID returned in the response to a [Verification request](#createverification). **Note:** This parameter is **required** if the *productType* is set to *INSTALLMENTS* for the *payolution* object.
 
