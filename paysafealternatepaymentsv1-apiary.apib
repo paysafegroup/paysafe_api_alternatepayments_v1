@@ -509,6 +509,12 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |AP\_REFUND\_EXPIRED|The Alternate Payments refund request has expired. This will only occur if the refund was left in PENDING or PROCESSING state for an extended period of time and never finished.|
 |AP\_RETURN\_COMPLETED|The downstream PSP has notified of a credit loss.|
 |AP\_RETURN\_REVERSAL\_COMPLETED|The downstream PSP has notified of a late credit and is reversing a previous credit loss notice.|
+|AP\_SA\_CREDIT\_COMPLETED|The Alternate Payments standalone credit was successfully completed.|
+|AP\_SA\_CREDIT\_CANCELLED|The Alternate Payments standalone credit was successfully cancelled.|
+|AP\_SA\_CREDIT\_ERRORED|The Alternate Payments standalone credit has failed due to an error.|
+|AP\_SA\_CREDIT\_EXPIRED|The Alternate Payments standalone credit has expired. This may occur if funds are sent as a wallet payment (ie: Skrill / Neteller) and the recipient has not completed the signup process to accept the payment.|
+|AP\_SA\_CREDIT\_PROCESSING|The Alternate Payments standalone credit was accepted and being processed.|
+|AP\_SA\_CREDIT\_PENDING|The Alternate Payments standalone credit is pending and has not yet been accepted by the recipientdd.|
 |AP\_SETTLEMENT\_PENDING|The Alternate Payments settlement is pending batch processing.|
 |AP\_SETTLEMENT\_PROCESSING|The Alternate Payments settlement request was received and is in progress.|
 |AP\_SETTLEMENT\_COMPLETED|The Alternate Payments settlement was successfully processed.|
