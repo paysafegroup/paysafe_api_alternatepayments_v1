@@ -1389,11 +1389,12 @@ The following custom attributes can be passed in your Giropay <b>Payment (P)</b>
 <br/><br/>
 The following custom attributes can be passed in your Instarem <b>Standalone Credit (SC)</b> request.
 
-|Element                 |Type                          |                 |                       |                       |                  |                  |Description|
-|---                     |---                           |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                        |**supported resources**       |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|descriptor              |string<br/>`length<=200`      |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|purposeCode             |[enum](#instaremPurposeCodes) |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
+|Element                        |Type                          |                 |                       |                       |                  |                  |Description|
+|---                            |---                           |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                               |**supported resources**       |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|descriptor                     |string<br/>`length<=200`      |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|purposeCode                    |[enum](#instaremPurposeCodes) |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
+|senderRecipientRelationship    |string<br/>`length<=255`      |&#8210;          |&#8210;                |&#8210;                |&#9862;           |&#8210;           |A text description of the relationship between the sender and the recipient e.g. "Employee".<br/>Note: This is mandatory for Nepal|
 
 ```
 "instarem": {
