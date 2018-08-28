@@ -725,7 +725,7 @@ signature = base64 (digest)
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
-|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>IDEAL</li><li>INTERAC</li><li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>INTERAC</li><li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -2181,8 +2181,8 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 | | | | |
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|
-|[![iDeal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/ideal.png)](#ideal)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png)](#payolution)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![Interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)](#interac)||
+|[![Interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)](#interac)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png)](#payolution)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|||
 
 
 Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
@@ -4169,6 +4169,7 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
     + Members
         + `BOKU`
         + `GIROPAY`
+        + `INTERAC`
         + `NETELLER`
         + `PAYSAFECARD`
         + `PAYSAFECASH`
