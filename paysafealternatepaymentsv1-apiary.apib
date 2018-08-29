@@ -1865,18 +1865,17 @@ The following custom attributes can be passed in your Paysafecash <b>Payment (P)
 </tr>
 </table>
 
-The following custom attributes can be passed in your Rapid Transfer <b>Payment (P)</b> request.
+The following custom attributes can be passed in your Rapid Transfer <b>Payment (P)</b> request.  If the iban and bic are not provided, then the consumer will be shown a bank picker where they will be able to select their bank by name.  If relevant
+details are provided, then the consumer will be automatically directed to login to their bank.
 
 |Element                        |Type                   |                 |                       |                       |                  |                  |Description|
 |---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
 |                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
 |descriptor                     |string<br/>`length=X`  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
 |sepa                           |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The consumer's SEPA bank account details (if applicable). |
-|sepa.bankName                  |enum                   |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |The consumer's bank.|
 |sepa.country                   |enum                   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
 |sepa.iban                      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The International Bank Account Number (IBAN) of the account.|
 |sepa.bic                       |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The Bank Identifier Code (BIC) of the account.|
-|sepa.accountHolderName         |string                 |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |The account holder's name.|
 
 ```
 "rapidTransfer": {
@@ -2112,9 +2111,9 @@ These errors are specific to the Alternate Payments API.
 
 # Legal and Community
 <ul>
-<li><a href="https://www.paysafe.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
+<li><a href="https://www.paysafe.com/paysafegroup/privacy-policy/" target="_blank">Privacy Policy</a></li>
 <li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
-<li><a href="http://www.paysafe.com/regulatory-disclosure/" target="_blank">Regulatory Disclosures</a></li>
+<li><a href="https://www.paysafe.com/paysafegroup/regulatory-disclosures/" target="_blank">Regulatory Disclosures</a></li>
 <li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
 <li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
 <li><a href="http://community.paysafe.com/spaces/10/index.html" target="_blank">Paysafe Blog</a></li>
