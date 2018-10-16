@@ -10,6 +10,7 @@ variety of non-card regional payment methods, with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2018-10-01            |- Added additional payment vehicles \(indiaFinancialSystem, ach, bacs, becs\)| 
 |v1             |2018-05-16            |- Added Identities, Recipient objects|
 |               |                      |- Rebrand Paysafe Pay Later
 |               |                      |- Added Instarem |
@@ -575,7 +576,7 @@ signature = base64 (digest)
 |city                    |string<br/>`length<=40`  |This is the city in the billing address.|
 |state                   |string<br/>`length<=40`  |See Province Codes or State Codes for Canada or the United States.|
 |country                 |string<br/>`length=2`    |The ISO 3166-1 alpha-2 code for the consumer's billing address (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|zip                     |string<br/>`length<=10`  |This is the postal/zip code in the billing address.|
+|zip                     |string<br/>`length>=3,<=10`  |This is the postal/zip code in the billing address.|
 
 ```
 "billingDetails": {
@@ -1030,7 +1031,7 @@ signature = base64 (digest)
 |consumerIp              |string                 |This is the consumer's IP address.|
 |amount                  |number                 |This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japanese yen, which has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
-|paymentType             |enum                   |This is the payment type for this request.|
+|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>INSTAREM</li><li>SKRILL</li></ul>|
 |profile                 |[object](#profile)     |These are some details about the customer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
@@ -1180,13 +1181,116 @@ signature = base64 (digest)
 
 # Payment Vehicle Objects
 
+<a name="ach" title="ach Object"></a>
+## ach
+
+|Element                 |Type                          |Description |
+|---                     |---                           |--- |
+|accountNumber           |string<br/>`length>=4<=17`    |This is the bank account number.|
+|accountHolderName       |string<br/>`length<=50`       |This is the name of the customer or company.|
+|accountType             |enum<br/>                     |This is the bank account type. <br/>Options:<br/><ul><li>SAVINGS</li><li>CHECKING</li><li>LOAN</li></ul>|
+|routingNumber           |string<br/>`length=9`         |For USD accounts, this is the 9 digit routing number of the bank.|
+|bankName                |string<br/>`length<=255`      |This is the name of the bank.|
+|bic                     |string<br/>`length=8 OR 11`   |This is the bank identification code or SWIFT code.|
+
+```
+"ach": {
+    "accountNumber": "988772192", 
+    "accountHolderName": "XYZ Company",
+    "bankName": "Bank of America",
+    "accountType": "CHECKING",
+    "routingNumber": "211589828",
+    "bic": "USFINV34"
+}
+```
+
+<a name="bacs" title="bacs Object"></a>
+## bacs
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|accountNumber           |string<br/>`length=8`    |This is the bank account number.|
+|accountHolderName       |string<br/>`length<=18`  |This is the name of the consumer or company.|
+|sortCode                |string<br/>`length=6`    |This is the sort code for the consumers bank account.|
+|bankName                |string<br/>`length<=255` |This is the name of the bank.|
+
+```
+"bacs": {
+    "accountNumber": "98877219",
+    "accountHolderName": "XYZ Company",
+    "sortCode": "321654",
+    "bankName": "Lloyds"
+}
+```
+
+<a name="becs" title="becs Object"></a>
+## becs
+
+Australia specific banking scheme.
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|accountNumber           |string<br/>`length<=10`  |This is the bank account number.|
+|accountHolderName       |string<br/>`length<=50`  |This is the name of the consumer or company.|
+|bankName                |string<br/>`length<=255` |This is the name of the bank.|
+|bankStateBranch         |string<br/>`length=6`    |This is the 6-digit branch code assigned to the bank by a central bank, a bank supervisory body or a bank association.|
+
+```
+"becs": {
+        "accountNumber" : "1234567890",
+        "accountHolderName" : “John Doe”,
+        "bankStateBranch": "033088",
+        "bankName": " Westpac Banking Corporation"
+}
+```
+
+<a name="eft" title="eft Object"></a>
+## eft
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|accountNumber           |string<br/>`length=4-12` |This is the bank account number.|
+|accountHolderName       |string<br/>`length<=50`  |This is the name of the consumer or company.|
+|transitNumber           |string<br/>`length=5`    |This is the 5-digit transit number of the consumers bank account.|
+|institutionId           |string<br/>`length=3`    |This is the 3-digit institution number of the consumers bank branch.|
+|bankName                |string<br/>`length<=255` |This is the name of the bank.|
+
+```
+"eft": {
+    "accountNumber": "336612",
+    "accountHolderName": "XYZ Company",
+    "transitNumber": "22446",
+    "institutionId": "001"
+}
+```
+
+<a name="indiaFinancialSystem" title="indiaFinancialSystem Object"></a>
+## regionalBankingSystem
+
+|Element                 |Type                     |Description |
+|---                     |---                      |--- |
+|accountNumber           |string<br/>`length=6-18` |This is the bank account number.|
+|accountHolderName       |string<br/>`length<=50`  |This is the name of the customer or company.|
+|ifsc                    |string<br/>`length=11`   |This is the india financial system bank code.|
+|bankName                |string<br/>`length<=255` |This is the name of the bank.|
+
+
+```
+"indiaFinancialSystem": {
+       "accountNumber": "435645645666",
+       "accountHolderName": "Mahesh J",
+       "ifsc": "ABHY0065204",
+       "bankName": "ABHYUDAYA COOPERATIVE BANK LIMITED"
+}
+```
+
 <a name="regionalBankingSystem" title="regionalBankingSystem Object"></a>
 ## regionalBankingSystem
 
 |Element                 |Type                     |Description |
 |---                     |---                      |--- |
-|accountHolderName       |string<br/>`length<=50`  |<b>(Required)</b> This is the name of the customer or company.|
-|accountNumber           |string<br/>`length<=34`  |<b>(Required)</b> This is the bank account number.|
+|accountNumber           |string<br/>`length<=34`  |This is the bank account number.|
+|accountHolderName       |string<br/>`length<=255` |This is the name of the customer or company.|
 |bankName                |string<br/>`length<=255` |This is the name of the bank.|
 |bankCode                |string<br/>`length<=11`  |This is the bank code assigned to the bank by a central bank, a bank supervisory body or a bank association.|
 |branchCode              |string<br/>`length<=11`  |This is the branch code assigned to the bank by a central bank, a bank supervisory body or a bank association.|
@@ -1194,8 +1298,8 @@ signature = base64 (digest)
 
 ```
 "regionalBankingSystem": {
-    "accountHolderName" : "John Doe",
     "accountNumber" : "2353948539487",
+    "accountHolderName" : "John Doe",
     "bankCode" : "7010",
     "branchCode" : "001",
     "bic": "DEFGDXXX",
@@ -1208,17 +1312,17 @@ signature = base64 (digest)
 
 |Element                 |Type                     |Description |
 |---                     |---                      |--- |
+|accountHolderName       |string<br/>`length<=50`  |This is the name of the consumer or company.|
 |bankName                |string                   |The name of the bank.|
 |country                 |string<br/>`length=2`    |The ISO 3166-1 alpha-2 code for the consumer's country of residence (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|accountHolderName       |string<br/>`length<=50`  |This is the name of the consumer or company.|
 |bic                     |string<br/>`length=8-11` |This is the Bank Identifier Code for the consumer's bank account.|
 |iban                    |string<br/>`length=1-34` |This is the International Bank Account Number for the consumer's bank account.|
 
 ```
 "sepa": {
+    "accountHolderName": "John Doe",
     "bankName": "ING",
     "country": "NL",
-    "accountHolderName": "John Doe",
     "bic": "ABNANL2APIP",
     "iban": "DE89370400440532013000"
 }
@@ -3816,6 +3920,10 @@ Unlike a refund, a Standalone Credit allows you to issue a credit transfer, or r
 
 See [Standalone Credit Objects](#standaloneCredit) for payment type specific details.
 
+| | | | |
+|---|---|---|---|
+|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#pskrill)|[![Instarem](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/instarem.png)](#instarem)|||
+
 ## Create a Standalone Credit [POST /accounts/{accountId}/standalonecredits]
 <a name="createstandalonecredit" title="Create a Standalone Credit"></a>
 
@@ -3927,6 +4035,79 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
                     }
                 ]
             }    
+
+
+## List Standalone Credits by Merchant Reference Number [GET /accounts/{accountId}/standalonecredits/?merchantRefNum={merchantRefNum}]
+<a name="liststandalonecredits" title="List Standalone Credits by Merchant Reference Number"></a>
+
+This returns a collection of standalone credit details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
+
+Click on **List Standalone Credits by Merchant Reference Number** above to look up Standalone Credits using the merchant reference number used in the original request. This returns a collection of Standalone Credit details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+    + merchantRefNum (string, required, `XYZ`) - This is your Standalone Credit identifier.
+
++ Request List Standalone Credits (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "meta": {
+                    "numberOfRecords": 2,
+                    "limit": 10,
+                    "page": 1
+                },
+                "standaloneCredits": [
+                    {
+                        "id": "65574e9a-9e6b-4ce9-8217-63dce791c87b",
+                        "merchantRefNum": "XYZ",
+                        "dupCheck": true,
+                        "amount": 2300,
+                        "currencyCode": "PHP",
+                        "paymentType": "INSTAREM",
+                        "consumerIp": "127.0.0.1",
+                        "txnTime": "2018-10-16T16:22:14Z",
+                        "status": "PENDING",
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001269540/standalonecredits/65574e9a-9e6b-4ce9-8217-63dce791c87b"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "5082938b-1713-443b-974d-a3035c071ed5",
+                        "merchantRefNum": "XYZ",
+                        "dupCheck": true,
+                        "amount": 1000,
+                        "currencyCode": "PHP",
+                        "paymentType": "INSTAREM",
+                        "consumerIp": "127.0.0.1",
+                        "txnTime": "2018-10-16T16:20:12Z",
+                        "status": "COMPLETED",
+                        "links": [
+                            {
+                                "rel": "self",
+                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001269540/standalonecredits/5082938b-1713-443b-974d-a3035c071ed5"
+                            }
+                        ]
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "self",
+                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001269540/standalonecredits?merchantRefNum=GR&limit=10&offset=0&startDate=2018-09-16T16:22:17Z&endDate=2018-10-16T16:22:18Z"
+                    }
+                ]
+            } 
+
 
 # Data Structures
 
