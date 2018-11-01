@@ -663,8 +663,8 @@ signature = base64 (digest)
 
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
-|type                    |string                 |For Individuals:<br/><ul><li>PASSPORT</li><li>IDENTITY\_CARD</li><li>DRIVING\_LICENSE</li><li>SOCIAL\_SECURITY</li><li>NATIONAL\_IDENTITY</li><li>TAX\_IDENTIFICATION</li></ul><br/><br/>For Businesses:<ul><li>REGISTRATION\_ID</li><li>ACRA</li><li>LICENSE\_NUMBER</li><li>REGISTRATION_NUMBER</li></ul>|
-|documentNumber          |string                 |This is the URL to which to send the link. If this is an HTTPS address, please ensure that your certificate is valid – otherwise, the link will cause the browser to display a certificate warning.<br/><i>Read Only</i>|
+|type                    |string                 |<b>(Required)</b> One of the following options:<br/>For Individuals:<br/><ul><li>PASSPORT</li><li>IDENTITY\_CARD</li><li>DRIVING\_LICENSE</li><li>SOCIAL\_SECURITY</li><li>NATIONAL\_IDENTITY</li><li>TAX\_IDENTIFICATION</li></ul><br/><br/>For Businesses:<ul><li>REGISTRATION\_ID</li><li>ACRA</li><li>LICENSE\_NUMBER</li><li>REGISTRATION_NUMBER</li></ul>|
+|documentNumber          |string                 |<b>(Required)</b> This is the unique document identification number.|
 |countryOfIssue          |string<br>`length=2`   |The ISO 3166-1 alpha-2 code (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |issueDate               |[object](#date)        |This is the issue date of the document.|
 |expiryDate              |[object](#date)        |This is the expiration date of the document.|
@@ -726,7 +726,7 @@ signature = base64 (digest)
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
-|paymentType             |enum                   |<b>(Required)</b>Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>INTERAC</li><li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |<b>(Required)</b> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>INTERAC</li><li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
