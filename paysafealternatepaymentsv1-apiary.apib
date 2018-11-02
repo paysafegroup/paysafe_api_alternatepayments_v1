@@ -664,7 +664,7 @@ signature = base64 (digest)
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |type                    |string                 |<b>(Required)</b> One of the following options:<br/>For Individuals:<br/><ul><li>PASSPORT</li><li>IDENTITY\_CARD</li><li>DRIVING\_LICENSE</li><li>SOCIAL\_SECURITY</li><li>NATIONAL\_IDENTITY</li><li>TAX\_IDENTIFICATION</li></ul><br/><br/>For Businesses:<ul><li>REGISTRATION\_ID</li><li>ACRA</li><li>LICENSE\_NUMBER</li><li>REGISTRATION_NUMBER</li></ul>|
-|documentNumber          |string                 |<b>(Required)</b> This is the unique document identification number.|
+|documentNumber          |string<br>`length=50`  |<b>(Required)</b> This is the unique document identification number.|
 |countryOfIssue          |string<br>`length=2`   |The ISO 3166-1 alpha-2 code (e.g., Germany = DE, JP=Japan. CA=Canada).|
 |issueDate               |[object](#date)        |This is the issue date of the document.|
 |expiryDate              |[object](#date)        |This is the expiration date of the document.|
