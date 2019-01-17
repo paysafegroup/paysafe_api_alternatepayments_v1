@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.paysafe.com/alternatepayments/v1/
+HOST: https://api.test.paysafe.com/alternatepayments/v1/
 
 # Paysafe Alternate Payments API
 
@@ -10,9 +10,11 @@ variety of non-card regional payment methods, with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2019-01-14            |- Added paymentHandles
+|               |                      |- Added statusTime, updatedTime to resources|
 |v1             |2018-10-01            |- Added additional payment vehicles \(indiaFinancialSystem, ach, bacs, becs\)| 
 |v1             |2018-05-16            |- Added Identities, Recipient objects|
-|               |                      |- Rebrand Paysafe Pay Later
+|               |                      |- Rebrand Paysafe Pay Later|
 |               |                      |- Added Instarem |
 |v1             |2018-04-02            |- Added Interac|
 |v1             |2018-03-05            |- Removed iDeal|
@@ -722,6 +724,8 @@ signature = base64 (digest)
 |shippingDetails         |[object](#shippingDetails) |These are the shipping details for the payment.|
 |returnLinks             |[array of [object](#returnLinks)]|The URL endpoint to redirect the consumer to. You can customize the return URL based on the transaction status. 'default' is mandatory|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this payment, if applicable.<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
@@ -860,6 +864,8 @@ signature = base64 (digest)
 |currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
 |paymentType             |enum                         |Payment type of the original payment.|
 |txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)             |The associated error details for this Refund, if applicable.<br/><i>Read Only</i>|
 |status                  |enum                         |Options:<br/><ul><li>RECEIVED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)   |Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
@@ -895,6 +901,8 @@ signature = base64 (digest)
 |currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
 |paymentType             |enum                         |Payment type of the original payment.|
 |txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime                     |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime                     |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |status                  |enum                         |Options:<br/><ul><li>COMPLETED</li></ul><br/><i>Read Only</i>|
 
 ```
@@ -920,6 +928,8 @@ signature = base64 (digest)
 |currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
 |paymentType             |enum                         |Payment type of the original payment.|
 |txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |status                  |enum                         |Options:<br/><ul><li>COMPLETED</li></ul><br/><i>Read Only</i>|
 
 ```
@@ -963,6 +973,8 @@ signature = base64 (digest)
 |paymentType             |enum                   |Payment type of the original payment.|
 |[Payment Object](#paymentObjects)|object        |Optional payment object depending upon the paymentType.|
 |txnTime                 |datetime               |This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |availableToRefund       |number                 |This is the amount of this Settlement that is available to Refund, in minor units.<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this Settlement (if applicable).<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
@@ -1035,6 +1047,8 @@ signature = base64 (digest)
 |profile                 |[object](#profile)     |These are some details about the customer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
@@ -1111,6 +1125,8 @@ signature = base64 (digest)
 |currencyCode            |string                 |This is the currency of the request.   Default is the account currency.|
 |returnLinks             |[object](#returnLinks) |The url endpoint to redirect the consumer to. You can customize the return url based on the transaction status. 'default' is mandatory.|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this request, if applicable. <br/>*Read Only* |
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>FAILED</li><li>COMPLETED</li><li>ERROR</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
@@ -1163,6 +1179,8 @@ signature = base64 (digest)
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
 |paymentType             |enum                   |This identifies the type of payment. If not included, it is inferred from the authorization that is being voided (reversed).<br/>Options:<br/><ul><li>PAYOLUTION</li></ul>|
 |txnTime                 |datetime               |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>COMPLETED</li><li>FAILED</li><li>ERROR</li><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
@@ -1361,7 +1379,7 @@ __**LEGEND**__
 </tr>
 <tr>
     <td><b>Supported Functions:</b></td>
-    <td>Payment, Refund, Return</td>
+    <td>Payment, Return</td>
 </tr>
 <tr>
     <td><b>Countries:</b></td>
