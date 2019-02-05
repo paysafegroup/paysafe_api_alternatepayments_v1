@@ -10,8 +10,7 @@ variety of non-card regional payment methods, with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
-|v1             |2019-01-14            |- Added paymentHandles
-|               |                      |- Added statusTime, updatedTime to resources|
+|v1             |2019-02-01            |- Added statusTime, updatedTime to resources|
 |v1             |2018-10-01            |- Added additional payment vehicles \(indiaFinancialSystem, ach, bacs, becs\)| 
 |v1             |2018-05-16            |- Added Identities, Recipient objects|
 |               |                      |- Rebrand Paysafe Pay Later|
@@ -777,7 +776,7 @@ signature = base64 (digest)
 |Element                 |Type                   |Description |
 |---                     |---                    |--- |
 |id                      |string                 |Unique system-generated identifier for this paymentHandle.<br/><i>Read Only</i> |
-|paymentHandleToken      |string                 |This is the existing payment handle id, from which payment instrument and profile details has to be fetched.|
+|paymentHandleToken      |string                 |This is the existing payment handle id, from which payment instrument and profile details has to be fetched.<br/><i>Read Only</i>|
 |merchantRefNum          |string                 |<b>(Required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
 |dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
 |customerIp              |string                 |This is the consumer's IP address.|
