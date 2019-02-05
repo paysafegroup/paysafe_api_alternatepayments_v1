@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://api.paysafe.com/alternatepayments/v1/
+HOST: https://api.test.paysafe.com/alternatepayments/v1/
 
 # Paysafe Alternate Payments API
 
@@ -10,9 +10,10 @@ variety of non-card regional payment methods, with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2019-02-01            |- Added statusTime, updatedTime to resources|
 |v1             |2018-10-01            |- Added additional payment vehicles \(indiaFinancialSystem, ach, bacs, becs\)| 
 |v1             |2018-05-16            |- Added Identities, Recipient objects|
-|               |                      |- Rebrand Paysafe Pay Later
+|               |                      |- Rebrand Paysafe Pay Later|
 |               |                      |- Added Instarem |
 |v1             |2018-04-02            |- Added Interac|
 |v1             |2018-03-05            |- Removed iDeal|
@@ -722,6 +723,8 @@ signature = base64 (digest)
 |shippingDetails         |[object](#shippingDetails) |These are the shipping details for the payment.|
 |returnLinks             |[array of [object](#returnLinks)]|The URL endpoint to redirect the consumer to. You can customize the return URL based on the transaction status. 'default' is mandatory|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this payment, if applicable.<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
@@ -764,6 +767,77 @@ signature = base64 (digest)
       "country": "NL"
     }
   }
+}
+```
+
+<a name="paymentHandle" title="paymentHandle Object"></a>
+## paymentHandle
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|id                      |string                 |Unique system-generated identifier for this paymentHandle.<br/><i>Read Only</i> |
+|paymentHandleToken      |string                 |This is the existing payment handle id, from which payment instrument and profile details has to be fetched.<br/><i>Read Only</i>|
+|merchantRefNum          |string                 |<b>(Required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
+|dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|customerIp              |string                 |This is the consumer's IP address.|
+|amount                  |number                 |<b>(Required)</b> This is the amount of the request, in minor units. For $10.99 USD the value should be 1099.  For 1000 Japenese Yen that has no decimal values, this should be set to 1000.  For 10.139 Tunisian Dinar which has 3 decimals set this value to 10139.|
+|currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.<br/><i>Read Only</i>|
+|profile                 |[object](#profile)     |These are some details about the consumer.|
+|billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
+|shippingDetails         |[object](#shippingDetails) |These are the shipping details for the payment.|
+|returnLinks             |[array of [object](#returnLinks)]|The URL endpoint to redirect the consumer to. You can customize the return URL based on the transaction status. 'default' is mandatory|
+|txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|error                   |[object](#error)       |The associated error details for this payment, if applicable.<br/><i>Read Only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
+|statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|usage                   |enum                   |Options:<br/><ul><li>SINGLE\_USE - The payment handle can be used only once, it gets expired after due time</li><li>MULTI\_USE - The payment handle can be used multiple times for items like recurring/subscription payments.</li></ul><i>Read Only</i>|
+|action                  |enum                   |Options:<br/><ul><li>NONE</li><li>REDIRECT</li><li>AUTHENTICATE</li></ul><i>Read Only</i>|
+|executionMode           |enum                   |Options:<br/><ul><li>ASYNCRONOUS</li><li>SYNCRONOUS</li></ul><i>Read Only</i>|
+|timeToLiveSeconds       |long                   |This is the period of time in seconds that the single use token is valid before expiration.<br/><i>Read Only</i>|
+|paymentType             |enum                   |<b>(Required)</b> Identifies the type of payment. <br/>Options:<br/><ul><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYSAFECASH</li><li>SKRILL</li></ul>|
+|[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
+
+```
+{
+    "id": "3bf8e951-ed05-4368-be3d-c676b49d7d77",
+    "paymentHandleToken": "PHTvbRmDgFbdo8pR",
+    "merchantRefNum": "6839d7b4-6be6-41ab-b07f-e3f1350149f2",
+    "status": "INITIATED",
+    "dupCheck": false,
+    "paymentType": "PAYSAFECASH",
+    "liveMode": true,
+    "usage": "SINGLE_USE",
+    "action": "REDIRECT",
+    "executionMode": "ASYNCHRONOUS",
+    "amount": 4000,
+    "currencyCode": "EUR",
+    "customerIp": "10.123.10.2",
+    "timeToLiveSeconds": 345599,
+    "gatewayResponse": {
+        "id": "4186e034-efca-4c33-9f19-f05f7f43b6cf",
+        "processor": "PAYSAFECARD"
+    },
+    "returnLinks": [
+        {
+            "rel": "default",
+            "href": "http://urlecho.appspot.com/echo?status=200&Content-Type=text%2Fhtml&body=default"
+        },
+        {
+            "rel": "on_cancelled",
+            "href": "http://urlecho.appspot.com/echo?status=200&Content-Type=text%2Fhtml&body=on_cancelled"
+        }
+    ],
+    "txnTime": "2019-01-17T21:13:17Z",    
+    "updatedTime": "2019-01-17T21:13:17Z",
+    "statusTime": "2019-01-17T21:13:17Z",
+    "paysafecash": {
+        "consumerId": "merchantclientid5HzDvoZSodKDJ7X7VQKrtestAutomation",
+        "minAgeRestriction": 18,
+        "kycLevelRestriction": "SIMPLE",
+        "countryRestriction": "DE"
+    }    
 }
 ```
 
@@ -860,6 +934,8 @@ signature = base64 (digest)
 |currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
 |paymentType             |enum                         |Payment type of the original payment.|
 |txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)             |The associated error details for this Refund, if applicable.<br/><i>Read Only</i>|
 |status                  |enum                         |Options:<br/><ul><li>RECEIVED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)   |Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
@@ -895,6 +971,8 @@ signature = base64 (digest)
 |currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
 |paymentType             |enum                         |Payment type of the original payment.|
 |txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime                     |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime                     |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |status                  |enum                         |Options:<br/><ul><li>COMPLETED</li></ul><br/><i>Read Only</i>|
 
 ```
@@ -920,6 +998,8 @@ signature = base64 (digest)
 |currencyCode            |string<br/>`length=3`        |Currency code of the original payment.|
 |paymentType             |enum                         |Payment type of the original payment.|
 |txnTime                 |datetime                     |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |status                  |enum                         |Options:<br/><ul><li>COMPLETED</li></ul><br/><i>Read Only</i>|
 
 ```
@@ -963,6 +1043,8 @@ signature = base64 (digest)
 |paymentType             |enum                   |Payment type of the original payment.|
 |[Payment Object](#paymentObjects)|object        |Optional payment object depending upon the paymentType.|
 |txnTime                 |datetime               |This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |availableToRefund       |number                 |This is the amount of this Settlement that is available to Refund, in minor units.<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this Settlement (if applicable).<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
@@ -1035,6 +1117,8 @@ signature = base64 (digest)
 |profile                 |[object](#profile)     |These are some details about the customer.|
 |billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
@@ -1111,6 +1195,8 @@ signature = base64 (digest)
 |currencyCode            |string                 |This is the currency of the request.   Default is the account currency.|
 |returnLinks             |[object](#returnLinks) |The url endpoint to redirect the consumer to. You can customize the return url based on the transaction status. 'default' is mandatory.|
 |txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this request, if applicable. <br/>*Read Only* |
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>FAILED</li><li>COMPLETED</li><li>ERROR</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
@@ -1163,6 +1249,8 @@ signature = base64 (digest)
 |currencyCode            |string                 |This is the currency of the payment.   Default is the account currency.|
 |paymentType             |enum                   |This identifies the type of payment. If not included, it is inferred from the authorization that is being voided (reversed).<br/>Options:<br/><ul><li>PAYOLUTION</li></ul>|
 |txnTime                 |datetime               |ISO 8601 format (UTC) This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`.<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
 |error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>Read Only</i>|
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>COMPLETED</li><li>FAILED</li><li>ERROR</li><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
@@ -1361,7 +1449,7 @@ __**LEGEND**__
 </tr>
 <tr>
     <td><b>Supported Functions:</b></td>
-    <td>Payment, Refund, Return</td>
+    <td>Payment, Return</td>
 </tr>
 <tr>
     <td><b>Countries:</b></td>
@@ -1609,18 +1697,20 @@ The following custom attributes can be passed in your NETELLER <b>Payment (P)</b
 |Element                        |Type                   |                 |                       |                       |                  |                  |Description|
 |---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
 |                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|consumerId                     |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The NETELELR Email address of the consumer.|
-|consumerVerificationId         |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The consumers NETELLER secure ID, or two step authorization token generated on their device.|
+|consumerId                     |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The NETELELR Email address of the consumer.|
+|consumerVerificationId         |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The consumers NETELLER secure ID, or two step authorization token generated on their device.|
 |recipientDescription           |string<br>`length<=30` |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
 |language                       |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
 |logoUrl                        |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
 |detail1Description             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
 |detail1Text                    |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
+> NOTE: Required parameters may change depending upon which NETELLER integration is being used.  
+
 ```
 "neteller": {
     "consumerId":"neteller.account@example.org",
-    "consumerVerivicationId":"123456",
+    "consumerVerificationId":"123456",
     "recipientDescription":"logo_url_alt_text",
     "language":"EN",
     "logoUrl":"http://www.paysafe.com/icon.jpg",
@@ -2021,14 +2111,14 @@ The following custom attributes can be passed in your Skrill <b>Payment (P)</b> 
 |Element                 |Type                   |                 |                       |                       |                  |                  |Description|
 |---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
 |                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|consumerId              |string                 |&#8210;          |&#9864;                |&#8210;                |&#9864;           |&#9864;           |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
-|emailSubject            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#9864;           |Subject line to use in customer email.|
-|emailMessage            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#9864;           |Message to use in customer email.|
-|recipientDescription    |string<br>`length<=30` |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
-|language                |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
-|logoUrl                 |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
-|detail1Description      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#9864;           |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|consumerId              |string                 |&#8210;          |&#9862;                |&#8210;                |&#9864;           |&#8210;           |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|emailSubject            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |Subject line to use in customer email.|
+|emailMessage            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |Message to use in customer email.|
+|recipientDescription    |string<br>`length<=30` |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
+|language                |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
+|logoUrl                 |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
+|detail1Description      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 
 > Payment
@@ -4127,36 +4217,36 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
 + `boku` (object, optional) - Optional attributes that can be passed when making a BOKU payment request.
     + `descriptor` : `XYZ Merch #438A` (string, required) - The descriptor that will be shown on the consumer's statement.
-    + `consumerId`: `CUS_12345677` (string, required) - Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.
+    + `consumerId` : `CUS_12345677` (string, required) - Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.
     + `consumerCountry` : `US` (string, required) - The ISO 3166-1 alpha-2 code for the consumer's mobile country of registration (e.g., Germany = DE, JP=Japan. CA=Canada).
-    + `consumerMobilePhone`: `17802323333` (string, required) - The consumer's mobile phone number.  Full number including international dialing code (country code).
+    + `consumerMobilePhone` : `17802323333` (string, required) - The consumer's mobile phone number.  Full number including international dialing code (country code).
 
 ## `bokuGatewayResponse`
 
 + `gatewayResponse` (object)- These are the details returned from the external gateway.
 
     _Read Only_
-
+    
     + Properties
-        + `processor`: `BOKU` (string)
-        + `action`: `prepare` (string)
-        + `trx-id`: `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string) -  - The unique identifier for the transaction provided by the gateway.
-        + `result-code`: `0`
-        + `result-msg`: `Operation Successful` (string)
+        + `processor` : `BOKU` (string)
+        + `action` : `prepare` (string)
+        + `trx-id` : `da481fcf-ac0f-4b36-b84b-7e-a5844d3f` (string) -  - The unique identifier for the transaction provided by the gateway.
+        + `result-code` : `0`
+        + `result-msg` : `Operation Successful` (string)
 
 ## `dateOfBirthPayolution`
 
 + `dateOfBirth` (object, required) - This is the consumer's date of birth.
     + Properties
-        + `day`:24 (string, required)
-        + `month`:12 (string, required)
-        + `year`:1981 (string, required)
+        + `day` : 24 (string, required)
+        + `month` : 12 (string, required)
+        + `year` : 1981 (string, required)
 
 ## `giropay`
 
 + `giropay` (object, optional) - Optional attributes that can be passed when making a GIROPAY payment request.
     + Properties
-        + descriptor: `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
+        + descriptor : `XYZ Merch #438A` (string, optional) - The descriptor that will be shown on the consumer's statement.
 
 ## `giropayGatewayResponse`
 
@@ -4165,22 +4255,22 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
     _Read Only_
 
     + Properties
-        + `processor`: `GIROPAY` (string)
-        + `txId`: `SIM001270` (string)
+        + `processor` : `GIROPAY` (string)
+        + `txId` : `SIM001270` (string)
         + `returnCode`: `0`
 
 ## `installment`
 
 + `installments` (object)
-    + `amount`: `1000` (number) - This is the amount of the installment payment.
-    + `due`: `2013-07-16` (string) - This is the due date of the installment payment.
+    + `amount` : `1000` (number) - This is the amount of the installment payment.
+    + `due` : `2013-07-16` (string) - This is the due date of the installment payment.
 
 ## `instarem`
 
 + `instarem` (object, optional) - Optional attributes that can be passed when making a INSTAREM  instrequest.
     + Properties
-        + descriptor: `XYZ Merch #438A` (string, required) - This is the merchant descriptor that will be displayed on the consumer's bank statement.
-        + purposeCode: `IR001` (enum, required) - This is the Instarem purpose code associated with the required.
+        + descriptor : `XYZ Merch #438A` (string, required) - This is the merchant descriptor that will be displayed on the consumer's bank statement.
+        + purposeCode : `IR001` (enum, required) - This is the Instarem purpose code associated with the required.
         
             + Members
                 + `IR001` - Transfer to own account
@@ -4227,8 +4317,8 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
         + `paymentType`: `DD`
 
 ## `link`
-+ rel: self
-+ href: `https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
++ rel : self
++ href : `https://api.test.paysafe.com/alternatepayments/v1/accounts/1466458515/payments/e50e19a6-8edd-44ec-abc4-18d0a97d51d8`
 
 ## `links`
 + links (array[link]) - This is an array of links related to the resource.
@@ -4244,9 +4334,9 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
     + `consumerId`: `john.doe@email.com` (string) : Email address or NETELLER account ID of the consumer who is making the payment. If provided, this field is hidden on the payment form. If left empty, the consumer has to enter their email address.
     + `consumerVerificationId`: `123123` (string) : The consumer's NETELLER secure ID, or two-step authorization token generated on their device.
     + `language`: `EN` (string) : The 2 character preferred language code for the consumer (e.g., EN, FR).
-    + `logoUrl` : `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
-    + `detail1Description` : `description` (string) : You can show additional details about the product in the More Information section in the header of Quick Checkout.
-    + `detail1Text` : `detail text` (string) : The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a consumer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
+    + `logoUrl`: `https://mysite.com/logo.png` (string) : The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. Avoid large images (much greater than 256 by 256px) to minimise the page loading time.
+    + `detail1Description`: `description` (string) : You can show additional details about the product in the More Information section in the header of Quick Checkout.
+    + `detail1Text`: `detail text` (string) : The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file. Using the example values, this would be Product ID: 4509334. <br/>Note: If a consumer makes a purchase using Skrill Wallet this information will also appear in the same field in their account history.
 
 ## `payment`
 
@@ -4275,11 +4365,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     + Default: true
 
-+ `availableToSettle`:`2500` (number) - This is the amount remaining to settle, in minor units.
++ `availableToSettle`: `2500` (number) - This is the amount remaining to settle, in minor units.
 
     _Read Only_
 
-+ `availableToRefund`:`2500` (number) - This is the amount remaining to refund, in minor units.
++ `availableToRefund`: `2500` (number) - This is the amount remaining to refund, in minor units.
 
     _Read Only_
 
@@ -4287,7 +4377,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _max=999999999_
 
-+ `verificationId`:`2f6f0150-2f08-43be-ad42-aa89fafde792` (string) - This is the ID returned in the response to a [Verification request](#createverification). **Note:** This parameter is **required** if the *productType* is set to *INSTALLMENTS* for the *payolution* object.
++ `verificationId`: `2f6f0150-2f08-43be-ad42-aa89fafde792` (string) - This is the ID returned in the response to a [Verification request](#createverification). **Note:** This parameter is **required** if the *productType* is set to *INSTALLMENTS* for the *payolution* object.
 
 + `currencyCode`: `EUR` (string) - This is the currency of the payment. Defaults to the account currency.
 
@@ -4301,7 +4391,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
-+ `status`:`PROCESSING` (enum) - This is the status of the request.
++ `updatedTime`: `2016-01-01T04:5:55Z` (string) - Indicates the last updated time for the resource.
+
+    _Read Only_
+
++ `status`: `PROCESSING` (enum) - This is the status of the request.
 
     _Read Only_
 
@@ -4325,6 +4419,10 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
         + `AUTH_VOIDED`
         + `AUTH_EXPIRED`
 
++ `statusTime`: `2016-01-01T04:55:55Z` (string) - Indicates when the status was last updated.
+
+    _Read Only_
+    
 + Include rapidTransferGatewayResponse
 
 ## paymentDetails
@@ -4469,7 +4567,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
             + FULL
             + SIMPLE
 
-    + `countryRestriction` : `DE` (string) : The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.
+    + `countryRestriction`: `DE` (string) : The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.
 
 ## `paysafecash`
 
@@ -4590,6 +4688,14 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
++ `updatedTime`: `2016-01-01T04:5:55Z` (string) - Indicates the last updated time for the resource.
+
+    _Read Only_
+
++ `statusTime`: `2016-01-01T04:55:55Z` (string) - Indicates when the status was last updated.
+
+    _Read Only_
+
 + `status`: `PROCESSING` (enum) - This is the status of the transaction request.
 
     _Read Only_
@@ -4648,7 +4754,15 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     + Default: `The account currency`
 
-+ `txnTime`: `2017-03-14T20:07:39Z` (string) - This is the date and time the transaction was processed
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `updatedTime`: `2016-01-01T04:5:55Z` (string) - Indicates the last updated time for the resource.
+
+    _Read Only_
+
++ `statusTime`: `2016-01-01T04:55:55Z` (string) - Indicates when the status was last updated.
 
     _Read Only_
 
@@ -4804,9 +4918,18 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 + Include profile
 + Include billingDetails
 
-+ `txnTime`: `2017-01-26T10:32:28Z` (string) - This is the date and time the transaction was processed.
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
 
     _Read Only_
+
++ `updatedTime`: `2016-01-01T04:5:55Z` (string) - Indicates the last updated time for the resource.
+
+    _Read Only_
+
++ `statusTime`: `2016-01-01T04:55:55Z` (string) - Indicates when the status was last updated.
+
+    _Read Only_
+
     
 + `status`:`PROCESSING` (enum) - This is the status of the request.
 
@@ -4853,6 +4976,14 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
++ `updatedTime`: `2016-01-01T04:5:55Z` (string) - Indicates the last updated time for the resource.
+
+    _Read Only_
+
++ `statusTime`: `2016-01-01T04:55:55Z` (string) - Indicates when the status was last updated.
+
+    _Read Only_
+
 + `status`:`PROCESSING` (enum) - This is the status of the request.
 
     _Read Only_
@@ -4891,6 +5022,14 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
     + Default: `The account currency`
 
 + `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `updatedTime`: `2016-01-01T04:5:55Z` (string) - Indicates the last updated time for the resource.
+
+    _Read Only_
+
++ `statusTime`: `2016-01-01T04:55:55Z` (string) - Indicates when the status was last updated.
 
     _Read Only_
 
