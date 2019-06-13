@@ -10,6 +10,7 @@ variety of non-card regional payment methods, with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2019-06-13            |- Added PayPal functionality |
 |v1             |2019-02-01            |- Added statusTime, updatedTime to resources|
 |v1             |2018-10-01            |- Added additional payment vehicles \(indiaFinancialSystem, ach, bacs, becs\)| 
 |v1             |2018-05-16            |- Added Identities, Recipient objects|
@@ -729,7 +730,7 @@ signature = base64 (digest)
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
-|paymentType             |enum                   |<b>(Required)</b> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>INTERAC</li><li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |<b>(Required)</b> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>INTERAC</li><li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>PAYPAL</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -1928,6 +1929,58 @@ This is a Paysafe Pay Later (Payolution) specific read only response object that
 }
 ```
 
+<a name="paypal" title="PayPal Payment Object"></a>
+## paypal 
+
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paypal.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment, Settlement, Refund, Void Authorization</td>
+</tr>
+<tr>
+    <td><b>Countries:</b></td>
+    <td>USA, EU, UK, CAN</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>USD, CAD, EUR, GBP</td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>PayPal Checkout, Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic or Manual Settlement</td>
+</tr>
+</table>
+
+The following custom attributes can be passed in your PayPal <b>Payment (P)</b> request.
+
+|Element                 |Type                    |                 |                       |                       |                  |                  |Description|
+|---                     |---                     |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                        |**Request Type**        |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|consumerId              |string<br/>`length<=255`|&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the email of the customer at login.|
+|consumerMessage         |string<br/>`length<=165`|&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the message that is displayed to the consumer.|
+|recipientDescription    |string<br/>`length<=127`|&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the label that overrides the business name.|
+|language                |string<br/>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The locale of pages that the PayPal payment experience displays.|
+|shippingPreference      |enum                    |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the shipping preference. <br/>Options:<br/><ul><li>GET_FROM_FILE</li><li>NO_SHIPPING</li><li>SET_PROVIDED_ADDRESS</li>|
+|orderDescription        |string                  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the order description that will be displayed on the PayPal page.|
+
+```
+"paypal": {
+    "consumerId": "customer.paypal@email.com",
+    "consumerMessage": "consumer message",
+    "recipientDescription": "Our business ltd.",
+    "language": "US",
+    "shippingPreference": "GET_FROM_FILE",
+    "orderDescription": "The best order"
+}
+```
 
 
 <a name="paysafecard" title="Paysafecard Payment Object"></a>
@@ -2374,7 +2427,7 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|
 |[![Interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)](#interac)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png)](#payolution)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|||
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png)](#payolution)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![PayPal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paypal.png)](#paypal)||
 
 
 Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
@@ -2391,6 +2444,7 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Include giropay
     + Include neteller
     + Include payolution
+    + Include paypal
     + Include paysafecard
     + Include paysafecash
     + Include rapidTransfer
@@ -3406,6 +3460,7 @@ Click on **Settle an Authorized Payment** above to see an example of a settlemen
     + Include settlement
     + Include paymentTypeSettlement
     + Include payolution
+    + Include paypal
     + Include paysafecard
     + Include links
 
@@ -3630,6 +3685,7 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
     + Include paymentTypeRefund
     + Include neteller
     + Include payolution
+    + Include paypal
     + Include skrill
     + Include sofort
     + Include links
@@ -4451,6 +4507,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
         + `PAYSAFECARD`
         + `PAYSAFECASH`
         + `PAYOLUTION`
+        + `PAYPAL`
         + `RAPIDTRANSFER`
         + `SKRILL`
         + `SOFORT`
@@ -4462,6 +4519,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
     + Members
         + `NETELLER`
         + `PAYOLUTION`
+        + `PAYPAL`
         + `SKRILL`
         + `SOFORT`
 
@@ -4479,6 +4537,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     + Members
         + `PAYOLUTION`
+        + `PAYPAL`
         + `PAYSAFECARD`
         + `PAYSAFECASH`
 
@@ -4495,6 +4554,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     + Members
         + `PAYOLUTION`
+        + `PAYPAL`
         + `PAYSAFECARD`
         + `PAYSAFECASH`
 
@@ -4529,6 +4589,27 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 + `analysis` (array) - This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes.
     + `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
     + `value`: `TOP` (string)
+
+## `paypal`
+
++ `paypal` (object)  - Optional attributes that can be passed  when making a PAYPAL payment request.
+
+    + Properties
+        + `consumerId`: `john.doe@email.com` (string) - This is the email of the customer at login.
+            _Length<=255_
+        + `consumerMessage`: `The message for the consumer.` (string) - This is the message that is displayed to the consumer.
+            _Length<=165_
+        + `recipientDescription`: `Our business ltd.` (string) - This is the label that overrides the business description.
+            _Length<=127_
+        + `language`: `US` (string) - This is the locale of pages that the PayPal experience displays.
+            _Length=2_
+        + `shippingPreference`: `GET_FROM_FILE` (enum) - This is the shipping preference.
+
+            + Members
+                + GET_FROM_FILE
+                + NO_SHIPPING
+                + SET_PROVIDED_ADDRESS
+        + `orderDescription`: `Payment for order` (string) - This is the order description that will be displayed on the PayPal page.
 
 ## `paysafecardGatewayResponse`
 
