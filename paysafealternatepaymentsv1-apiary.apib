@@ -4451,9 +4451,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
-+ `status`: `PROCESSING` (enum) - This is the status of the request.
++ `status` (enum) - This is the status of the request.
 
     _Read Only_
+    
+    + Default: `PROCESSING` 
 
     + Members
         + `RECEIVED`
@@ -4465,9 +4467,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
         + `ERROR`
         + `EXPIRED`
 
-+ `statusReason`: `USER_CANCELLED` (enum)
++ `statusReason` (enum) - Description for why the status changed.
 
     _Read Only_
+    
+    + Default: `USER_CANCELLED`
 
     + Members
         + `USER_CANCELLED`
@@ -4603,7 +4607,9 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
             _Length<=127_
         + `language`: `US` (string) - This is the locale of pages that the PayPal experience displays.
             _Length=2_
-        + `shippingPreference`: `GET_FROM_FILE` (enum) - This is the shipping preference.
+        + `shippingPreference` (enum) - This is the shipping preference.
+
+            + Default: `GET_FROM_FILE`
 
             + Members
                 + GET_FROM_FILE
@@ -4642,7 +4648,9 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 + `paysafecard` (object)  - Optional attributes that can be passed  when making a PAYSAFECARD payment request.
     + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons.
     + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country).
-    + `kycLevelRestriction`: `FULL` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
+    + `kycLevelRestriction` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
+
+        + Default: `FULL`
 
         + Members
             + FULL
@@ -4655,8 +4663,10 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 + `paysafecash` (object)  - Optional attributes that can be passed  when making a PAYSAFECASH payment request.
     + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons.
     + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country).
-    + `kycLevelRestriction`: `FULL` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
+    + `kycLevelRestriction` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
 
+        + Default: `FULL`
+        
         + Members
             + FULL
             + SIMPLE
@@ -4777,9 +4787,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
-+ `status`: `PROCESSING` (enum) - This is the status of the transaction request.
++ `status` (enum) - This is the status of the transaction request.
 
     _Read Only_
+
+    + Default: `PROCESSING`
 
     + Members
         + `RECEIVED`
@@ -4851,9 +4863,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
-+ `status`:`COMPLETED` (enum) - This is the status of the request.
++ `status` (enum) - This is the status of the request.
 
     _Read Only_
+
+    + Default: `COMPLETED`
 
     + Members
         + `RECEIVED`
@@ -5012,9 +5026,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
     _Read Only_
 
     
-+ `status`:`PROCESSING` (enum) - This is the status of the request.
++ `status` (enum) - This is the status of the request.
 
     _Read Only_
+    
+    + Default: `PROCESSING`
 
     + Members
         + `RECEIVED`
@@ -5114,9 +5130,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
-+ `status`:`COMPLETED` (enum) - This is the status of the request.
++ `status` (enum) - This is the status of the request.
 
     _Read Only_
+
+    + Default: `COMPLETED`
 
     + Members
         + `RECEIVED`
