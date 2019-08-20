@@ -285,25 +285,25 @@ GET https://api.test.paysafe.com/v1/accounts/{ACCOUNT_ID}/payments?merchantRefNu
 Some resources in the system can transition through various statuses depending on the current state of the resource.  The diagrams below show the
 valid statuses for these complex resources and how they are linked.
 
-*Verifications*
+## Verifications
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/verification_state_transition_diagram.png)
 
-*Payments*
+## Payments
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_state_transition_diagram.png)
 
-*Settlements*
+## Settlements
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/settlement_state_transition_diagram.png)
 
-*Standalone Credits*
+## Standalone Credits
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/standalonecredit_state_transition_diagram.png)
 
-*Refunds*
+## Refunds
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/settlement_state_transition_diagram.png)
 
-*Returns*
+## Returns
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/return_reversal_state_transition_diagram.png)
 
-*Return Reversals*
+## Return Reversals
 ![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/return_state_transition_diagram.png)
 
 
@@ -517,7 +517,7 @@ Notifications are configured by logging into the merchant backoffice and navigat
 |AP\_SA\_CREDIT\_ERRORED|The Alternate Payments standalone credit has failed due to an error.|
 |AP\_SA\_CREDIT\_EXPIRED|The Alternate Payments standalone credit has expired. This may occur if funds are sent as a wallet payment (ie: Skrill / Neteller) and the recipient has not completed the signup process to accept the payment.|
 |AP\_SA\_CREDIT\_PROCESSING|The Alternate Payments standalone credit was accepted and being processed.|
-|AP\_SA\_CREDIT\_PENDING|The Alternate Payments standalone credit is pending and has not yet been accepted by the recipientdd.|
+|AP\_SA\_CREDIT\_PENDING|The Alternate Payments standalone credit is pending and has not yet been accepted by the recipient.|
 |AP\_SETTLEMENT\_PENDING|The Alternate Payments settlement is pending batch processing.|
 |AP\_SETTLEMENT\_PROCESSING|The Alternate Payments settlement request was received and is in progress.|
 |AP\_SETTLEMENT\_COMPLETED|The Alternate Payments settlement was successfully processed.|
