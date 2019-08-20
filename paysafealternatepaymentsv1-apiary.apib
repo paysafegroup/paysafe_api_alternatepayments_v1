@@ -10,6 +10,7 @@ variety of non-card regional payment methods, with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2019-06-13            |- Added PayPal functionality |
 |v1             |2019-02-01            |- Added statusTime, updatedTime to resources|
 |v1             |2018-10-01            |- Added additional payment vehicles \(indiaFinancialSystem, ach, bacs, becs\)| 
 |v1             |2018-05-16            |- Added Identities, Recipient objects|
@@ -729,7 +730,7 @@ signature = base64 (digest)
 |status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>INITIATED</li><li>PROCESSING</li><li>COMPLETED</li><li>CANCELLED</li><li>FAILED</li><li>ERROR</li><li>EXPIRED</li></ul><br/><i>Read Only</i>|
 |statusReason            |enum                   |Options:<br/><ul><li>USER\_CANCELLED</li><li>MERCHANT\_CANCELLED</li><li>AUTH\_VOIDED</li><li>AUTH\_EXPIRED</li></ul><br/><i>Read Only</i>|
 |gatewayResponse         |[object](#gatewayResponse)|Details from the raw response returned by the gateway.<br/><i>Read Only</i>|
-|paymentType             |enum                   |<b>(Required)</b> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>INTERAC</li><li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
+|paymentType             |enum                   |<b>(Required)</b> Identifies the type of payment. <br/>Options:<br/><ul><li>BOKU</li><li>GIROPAY</li><li>INTERAC</li><li><li>NETELLER</li><li>PAYSAFECARD</li><li>PAYOLUTION</li><li>PAYPAL</li><li>RAPIDTRANSFER</li><li>SKRILL</li><li>SOFORT</li></ul>|
 |[Payment Object](#paymentObjects)|object        |Payment object with additional attributes for the requested paymentType.|
 
 ```
@@ -1174,6 +1175,59 @@ signature = base64 (digest)
             "href": "http://api.paysafe.com/alternatepayments/v1/accounts/1520356513/standalonecredits/21fa4850-0c82-4c67-997d-2c9654de91cd"
         }
     ]
+}
+```
+
+<a name="standaloneCreditBatch" title="standaloneCreditBatch Object"></a>
+## standaloneCreditBatch
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>Read Only</i> |
+|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
+|dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|totalAmount             |number                 |<b>(required)</b> This is the total sum of all amounts of batch items, in minor units.<br/>For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/><b>NOTE:</b> If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.|
+|currencyCode            |string                 |This is the currency of the merchant account and is returned in the response. |
+|paymentType             |enum                   |Payment type for this request.|
+|profile                 |[object](#profile)     |These are some details about the customer.|
+|billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
+|txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>Read Only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED - Some standalone credits were successfully processed.</li><li>FAILED-All standalone credits have failed</li><li>ERROR</li></ul><br/><i>Read Only</i>|
+|standaloneCredits       |[object](#standaloneCredits)|<b>(required)</b> The collection of standalone credits to be processed.|
+
+```
+{
+   "merchantReferenceNum":"abc",
+   "paymentType":"PAYPAL",
+   "numberOfItems" : 2,
+   "totalAmount" : 400,
+   "currencyCode": "EUR"
+   "standaloneCredits":[
+      {
+         "merchantRefNum":"XYZ3331102",
+         "amount":300,
+         "currencyCode": "EUR",
+         "paymentType":"PAYPAL",
+         "consumerIp":"206.172.46.138",
+         "paypal":{
+            "...":"john.doe@mail.com",
+            "..."
+         }
+      },
+      {
+         "merchantRefNum":"DD1141",
+         "amount":100,
+         "currencyCode": "EUR",
+         "consumerIp":"206.172.46.131",
+         "paypal":{
+            "...":"jeff.smith@mail.com",
+            "..."
+         }
+      }
+   ]
 }
 ```
 
@@ -1733,7 +1787,7 @@ The following custom attributes can be passed in your NETELLER <b>Payment (P)</b
 </tr>
 <tr>
     <td><b>Countries:</b></td>
-    <td>DE, AT, CH, NL, UK, CA</td>
+    <td>DE, AT, CH, NL, UK</td>
 </tr>
 <tr>
     <td><b>Currencies:</b></td>
@@ -1928,6 +1982,58 @@ This is a Paysafe Pay Later (Payolution) specific read only response object that
 }
 ```
 
+<a name="paypal" title="PayPal Payment Object"></a>
+## paypal 
+
+<table>
+<tr>
+    <td><b>Brand Logo:</b></td>
+    <td><img src="https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paypal.png"/></td>
+</tr>
+<tr>
+    <td><b>Supported Functions:</b></td>
+    <td>Payment, Settlement, Refund, Void Authorization</td>
+</tr>
+<tr>
+    <td><b>Countries:</b></td>
+    <td>USA, EU, UK, CAN</td>
+</tr>
+<tr>
+    <td><b>Currencies:</b></td>
+    <td>USD, CAD, EUR, GBP</td>
+</tr>
+<tr>
+    <td><b>Integration Type:</b></td>
+    <td>PayPal Checkout, Consumer Redirect</td>
+</tr>
+<tr>
+    <td><b>Settlement Types:</b></td>
+    <td>Automatic or Manual Settlement</td>
+</tr>
+</table>
+
+The following custom attributes can be passed in your PayPal <b>Payment (P)</b> request.
+
+|Element                 |Type                    |                 |                       |                       |                  |                  |Description|
+|---                     |---                     |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
+|                        |**Request Type**        |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
+|consumerId              |string<br/>`length<=255`|&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the email of the customer at login.|
+|consumerMessage         |string<br/>`length<=165`|&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the message that is displayed to the consumer.|
+|recipientDescription    |string<br/>`length<=127`|&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the label that overrides the business name.|
+|language                |string<br/>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The locale of pages that the PayPal payment experience displays.|
+|shippingPreference      |enum                    |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the shipping preference. <br/>Options:<br/><ul><li>GET_FROM_FILE</li><li>NO_SHIPPING</li><li>SET_PROVIDED_ADDRESS</li>|
+|orderDescription        |string                  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the order description that will be displayed on the PayPal page.|
+
+```
+"paypal": {
+    "consumerId": "customer.paypal@email.com",
+    "consumerMessage": "consumer message",
+    "recipientDescription": "Our business ltd.",
+    "language": "US",
+    "shippingPreference": "GET_FROM_FILE",
+    "orderDescription": "The best order"
+}
+```
 
 
 <a name="paysafecard" title="Paysafecard Payment Object"></a>
@@ -2374,7 +2480,7 @@ See [Payment Objects](#paymentObjects) for payment type specific details, or sel
 |---|---|---|---|
 |[![Paysafecard](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecard.png)](#paysafecard)|[![Skrill](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/skrill.png)](#skrill)|[![Neteller](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/neteller.png)](#neteller)|[![Payolution](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/rapidtransfer.png)](#rapidtransfer)|
 |[![Interac](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/interac.png)](#interac)|[![Sofort](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/Klarna_text.png)](#sofort)|[![Giropay](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/giropay.png)](#giropay)|[![Boku](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/boku.png)](#boku)|
-|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png)](#payolution)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|||
+|[![RapidTransfer](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafepaylater.png)](#payolution)|[![Paysafecash](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paysafecash.png)](#paysafecash)|[![PayPal](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_icons/paypal.png)](#paypal)||
 
 
 Click on **Create an Authorized Payment** above to see two examples of a Payment Authorization request:
@@ -2391,6 +2497,7 @@ Click on **Create an Authorized Payment** above to see two examples of a Payment
     + Include giropay
     + Include neteller
     + Include payolution
+    + Include paypal
     + Include paysafecard
     + Include paysafecash
     + Include rapidTransfer
@@ -3406,6 +3513,7 @@ Click on **Settle an Authorized Payment** above to see an example of a settlemen
     + Include settlement
     + Include paymentTypeSettlement
     + Include payolution
+    + Include paypal
     + Include paysafecard
     + Include links
 
@@ -3630,6 +3738,7 @@ Click on **Refund a Payment** above to see how to submit a Refund request agains
     + Include paymentTypeRefund
     + Include neteller
     + Include payolution
+    + Include paypal
     + Include skrill
     + Include sofort
     + Include links
@@ -4395,9 +4504,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
-+ `status`: `PROCESSING` (enum) - This is the status of the request.
++ `status` (enum) - This is the status of the request.
 
     _Read Only_
+    
+    + Default: `PROCESSING` 
 
     + Members
         + `RECEIVED`
@@ -4409,9 +4520,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
         + `ERROR`
         + `EXPIRED`
 
-+ `statusReason`: `USER_CANCELLED` (enum)
++ `statusReason` (enum) - Description for why the status changed.
 
     _Read Only_
+    
+    + Default: `USER_CANCELLED`
 
     + Members
         + `USER_CANCELLED`
@@ -4451,6 +4564,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
         + `PAYSAFECARD`
         + `PAYSAFECASH`
         + `PAYOLUTION`
+        + `PAYPAL`
         + `RAPIDTRANSFER`
         + `SKRILL`
         + `SOFORT`
@@ -4462,6 +4576,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
     + Members
         + `NETELLER`
         + `PAYOLUTION`
+        + `PAYPAL`
         + `SKRILL`
         + `SOFORT`
 
@@ -4479,6 +4594,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     + Members
         + `PAYOLUTION`
+        + `PAYPAL`
         + `PAYSAFECARD`
         + `PAYSAFECASH`
 
@@ -4495,6 +4611,7 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     + Members
         + `PAYOLUTION`
+        + `PAYPAL`
         + `PAYSAFECARD`
         + `PAYSAFECASH`
 
@@ -4530,6 +4647,29 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
     + `key`: `PAYOLUTION_CUSTOMER_GROUP` (string)
     + `value`: `TOP` (string)
 
+## `paypal`
+
++ `paypal` (object)  - Optional attributes that can be passed  when making a PAYPAL payment request.
+
+    + Properties
+        + `consumerId`: `john.doe@email.com` (string) - This is the email of the customer at login.
+            _Length<=255_
+        + `consumerMessage`: `The message for the consumer.` (string) - This is the message that is displayed to the consumer.
+            _Length<=165_
+        + `recipientDescription`: `Our business ltd.` (string) - This is the label that overrides the business description.
+            _Length<=127_
+        + `language`: `US` (string) - This is the locale of pages that the PayPal experience displays.
+            _Length=2_
+        + `shippingPreference` (enum) - This is the shipping preference.
+
+            + Default: `GET_FROM_FILE`
+
+            + Members
+                + GET_FROM_FILE
+                + NO_SHIPPING
+                + SET_PROVIDED_ADDRESS
+        + `orderDescription`: `Payment for order` (string) - This is the order description that will be displayed on the PayPal page.
+
 ## `paysafecardGatewayResponse`
 
 + `gatewayResponse` (object) - These are the details returned from the external gateway.
@@ -4561,7 +4701,9 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 + `paysafecard` (object)  - Optional attributes that can be passed  when making a PAYSAFECARD payment request.
     + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons.
     + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country).
-    + `kycLevelRestriction`: `FULL` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
+    + `kycLevelRestriction` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
+
+        + Default: `FULL`
 
         + Members
             + FULL
@@ -4574,8 +4716,10 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 + `paysafecash` (object)  - Optional attributes that can be passed  when making a PAYSAFECASH payment request.
     + `consumerId`: `john.doe@email.com` (string) : The unique identifier of the customer at the merchant. If any personal data (e.g. customer's user name, email address, etc.) is used here, it has to be encrypted or hashed for security reasons.
     + `ageRestriction`: 18 (number) : Restricts payments to my paysafecard customers only, who are equal to or older than the specified age. Please note\: This means that it is required that the customer has a registered my paysafecard account to make the payment. By default registering for account requires a min age of 18 (may vary per country).
-    + `kycLevelRestriction`: `FULL` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
+    + `kycLevelRestriction` (enum) - These values refer to the KYC level of the customer's my paysafecard account. Depending on the country, my paysafecard accounts are offered with SIMPLE and/or FULL customer identification.
 
+        + Default: `FULL`
+        
         + Members
             + FULL
             + SIMPLE
@@ -4696,9 +4840,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
-+ `status`: `PROCESSING` (enum) - This is the status of the transaction request.
++ `status` (enum) - This is the status of the transaction request.
 
     _Read Only_
+
+    + Default: `PROCESSING`
 
     + Members
         + `RECEIVED`
@@ -4770,9 +4916,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
-+ `status`:`COMPLETED` (enum) - This is the status of the request.
++ `status` (enum) - This is the status of the request.
 
     _Read Only_
+
+    + Default: `COMPLETED`
 
     + Members
         + `RECEIVED`
@@ -4931,9 +5079,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
     _Read Only_
 
     
-+ `status`:`PROCESSING` (enum) - This is the status of the request.
++ `status` (enum) - This is the status of the request.
 
     _Read Only_
+    
+    + Default: `PROCESSING`
 
     + Members
         + `RECEIVED`
@@ -4944,6 +5094,62 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
         + `FAILED`
         + `ERROR`
         + `EXPIRED`
+
+
+## `standaloneCreditBatch`
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ggf697ba` (string) - This is the ID returned in the response. 
+
+    _Read Only_
+
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
+
+    + Default: true
+
++ `totalAmount`: `100050` (number, required) - This is the total sum of all amounts of batch items, in minor units
+
+    For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.
+    NOTE: If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.
+
+    _max=99999999999_
+
++ `currencyCode`: `EUR` (string) - This is the currency of the merchant account, e.g. USD or CAD and is returned in the response.
+
+    _Read Only_
+
++ Include paymentTypeStandaloneCredit
++ Include profile
++ Include billingDetails
+
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `updatedTime`: `2016-01-01T04:5:55Z` (string) - Indicates the last updated time for the resource.
+
+    _Read Only_
+
++ `statusTime`: `2016-01-01T04:55:55Z` (string) - Indicates when the status was last updated.
+
+    _Read Only_
+    
++ `status` (enum) - This is the status of the request.
+
+    _Read Only_
+    
+    + Default: `PROCESSING`
+
+    + Members
+        + `RECEIVED`
+        + `PENDING`
+        + `PROCESSING`
+        + `COMPLETED`
+        + `FAILED`
+        + `ERROR`
 
 
 ## `verification`
@@ -5033,9 +5239,11 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     _Read Only_
 
-+ `status`:`COMPLETED` (enum) - This is the status of the request.
++ `status` (enum) - This is the status of the request.
 
     _Read Only_
+
+    + Default: `COMPLETED`
 
     + Members
         + `RECEIVED`
