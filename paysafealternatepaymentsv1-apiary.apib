@@ -1178,6 +1178,59 @@ signature = base64 (digest)
 }
 ```
 
+<a name="standaloneCreditBatch" title="standaloneCreditBatch Object"></a>
+## standaloneCreditBatch
+
+|Element                 |Type                   |Description |
+|---                     |---                    |--- |
+|id                      |string                 |This is the ID returned in the response. This ID can be used for future associated requests.<br/><i>Read Only</i> |
+|merchantRefNum          |string                 |<b>(required)</b> This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request unless you set *dupCheck* to false.|
+|dupCheck                |boolean                |This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request. Default is *true*.|
+|totalAmount             |number                 |<b>(required)</b> This is the total sum of all amounts of batch items, in minor units.<br/>For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.<br/><b>NOTE:</b> If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.|
+|currencyCode            |string                 |This is the currency of the merchant account and is returned in the response. |
+|paymentType             |enum                   |Payment type for this request.|
+|profile                 |[object](#profile)     |These are some details about the customer.|
+|billingDetails          |[object](#billingDetails) |These are the billing details for the payment.|
+|txnTime                 |datetime               |ISO 8601 format (UTC) </b>This is the date and time the transaction was processed, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|updatedTime             |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|statusTime              |datetime               |ISO 8601 format (UTC) </b>This is the date and time the resource status was last updated, e.g., `2014-01-26T10:32:28Z`<br/><i>Read Only</i>|
+|error                   |[object](#error)       |The associated error details for this payment (if applicable).<br/><i>Read Only</i>|
+|status                  |enum                   |Options:<br/><ul><li>RECEIVED</li><li>PENDING</li><li>PROCESSING</li><li>COMPLETED - Some standalone credits were successfully processed.</li><li>FAILED-All standalone credits have failed</li><li>ERROR</li></ul><br/><i>Read Only</i>|
+|standaloneCredits       |[object](#standaloneCredits)|<b>(required)</b> The collection of standalone credits to be processed.|
+
+```
+{
+   "merchantReferenceNum":"abc",
+   "paymentType":"PAYPAL",
+   "numberOfItems" : 2,
+   "totalAmount" : 400,
+   "currencyCode": "EUR"
+   "standaloneCredits":[
+      {
+         "merchantRefNum":"XYZ3331102",
+         "amount":300,
+         "currencyCode": "EUR",
+         "paymentType":"PAYPAL",
+         "consumerIp":"206.172.46.138",
+         "paypal":{
+            "...":"john.doe@mail.com",
+            "..."
+         }
+      },
+      {
+         "merchantRefNum":"DD1141",
+         "amount":100,
+         "currencyCode": "EUR",
+         "consumerIp":"206.172.46.131",
+         "paypal":{
+            "...":"jeff.smith@mail.com",
+            "..."
+         }
+      }
+   ]
+}
+```
+
 <a name="verification" title="verification Object"></a>
 ## verification
 
@@ -1734,7 +1787,7 @@ The following custom attributes can be passed in your NETELLER <b>Payment (P)</b
 </tr>
 <tr>
     <td><b>Countries:</b></td>
-    <td>DE, AT, CH, NL, UK, CA</td>
+    <td>DE, AT, CH, NL, UK</td>
 </tr>
 <tr>
     <td><b>Currencies:</b></td>
@@ -5041,6 +5094,62 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
         + `FAILED`
         + `ERROR`
         + `EXPIRED`
+
+
+## `standaloneCreditBatch`
+
++ `id`: `25f6dadf-176a-415f-95c9-6ff39ggf697ba` (string) - This is the ID returned in the response. 
+
+    _Read Only_
+
++ `merchantRefNum`: `P1234` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request.
+
+    _length<=255_
+
++ `dupCheck`: `true` (boolean, optional) - This validates that this request is not a duplicate. A request is considered a duplicate if the *merchantRefNum* has already been used in a previous request.
+
+    + Default: true
+
++ `totalAmount`: `100050` (number, required) - This is the total sum of all amounts of batch items, in minor units
+
+    For example, to process US $10.99, this value should be 1099. To process 1000 Japanese yen, this value should be 1000. To process 10.139 Tunisian dinar, this value should be 10139.
+    NOTE: If the merchant account is set up for a currency that has 3 decimal units, our system will half round up the least significant digit. Therefore, a transaction of 10.139 Tunisian dinar would be processed as 10.14.
+
+    _max=99999999999_
+
++ `currencyCode`: `EUR` (string) - This is the currency of the merchant account, e.g. USD or CAD and is returned in the response.
+
+    _Read Only_
+
++ Include paymentTypeStandaloneCredit
++ Include profile
++ Include billingDetails
+
++ `txnTime`: `2015-12-11T16:33:49Z` (string) - This is the date and time the transaction was processed.
+
+    _Read Only_
+
++ `updatedTime`: `2016-01-01T04:5:55Z` (string) - Indicates the last updated time for the resource.
+
+    _Read Only_
+
++ `statusTime`: `2016-01-01T04:55:55Z` (string) - Indicates when the status was last updated.
+
+    _Read Only_
+    
++ `status` (enum) - This is the status of the request.
+
+    _Read Only_
+    
+    + Default: `PROCESSING`
+
+    + Members
+        + `RECEIVED`
+        + `PENDING`
+        + `PROCESSING`
+        + `COMPLETED`
+        + `FAILED`
+        + `ERROR`
 
 
 ## `verification`
