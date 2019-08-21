@@ -1610,15 +1610,42 @@ The following custom attributes can be passed in your Giropay <b>Payment (P)</b>
 </tr>
 <tr>
     <td><b>Supported Functions:</b></td>
-    <td>Standalone Credit</td>
+    <td>Standalone Credit, Standalone Credit Return</td>
 </tr>
 <tr>
     <td><b>Countries:</b></td>
-    <td>HK, LK</td>
+    <td>
+        <ul>
+            <li>Sri Lanka, Hong Kong, Thailand, Indonesia, Philippines, Bangladesh, Nepal, Singapore, Malaysia, Vietnam, New Zealand, Norway, Sweden, Denmark (regionalBankingObject)</li>
+            <li>India (indiaFinanciaSystem)</li>
+            <li>EU countries(without Sweden and Denmark), Montenegro, Switzerland (sepa)</li>
+            <li>UK (bacs)</li>
+            <li>Australia (becs)</li>
+            <li>Montenegro</li>
+        </ul>
+    </td>
 </tr>
 <tr>
     <td><b>Currencies:</b></td>
-    <td>HKD, LKR</td>
+    <td>
+        <ul>
+            <li>HKD Hong Kong</li>
+            <li>LKR Sri Lanka</li>
+            <li>MYR Malaysia</li>
+            <li>EUR Greece, Montenegro</li>
+            <li>THB Thailand</li>
+            <li>PKR Pakistan</li>
+            <li>VND Vietnam</li>
+            <li>IDR Indonesia</li>
+            <li>PHP Phillipines</li>
+            <li>SGD Singapore</li>
+            <li>BDT Bangladesh</li>
+            <li>NPR Nepal</li>
+            <li>AUD Australia</li>
+            <li>CAD Canada</li>
+            <li>INR India</li>
+        </li>
+    </td>
 </tr>
 <tr>
     <td><b>Integration Type:</b></td>
@@ -1640,6 +1667,8 @@ The following custom attributes can be passed in your Instarem <b>Standalone Cre
 |descriptor                     |string<br/>`length<=200`      |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
 |purposeCode                    |[enum](#instaremPurposeCodes) |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
 |senderRecipientRelationship    |string<br/>`length<=255`      |&#8210;          |&#8210;                |&#8210;                |&#9862;           |&#8210;           |A text description of the relationship between the sender and the recipient e.g. "Employee".<br/>Note: This is mandatory for Nepal|
+|sourceOfFunds                  |string<br/>`length<=255`      |&#8210;          |&#8210;                |&#8210;                |&#9862;           |&#8210;           |A text description of the source of funds e.g. "Salary".<br/>Note: This is mandatory for South Korea.|
+|consumerId                     |string<br/>`length<=255`      |&#8210;          |&#8210;                |&#8210;                |&#9862;           |&#8210;           |Unique id to identify the sender.<br/>Note: This is mandatory for South Korea.|
 
 ```
 "instarem": {
