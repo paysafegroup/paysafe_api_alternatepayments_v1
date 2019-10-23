@@ -10,6 +10,8 @@ variety of non-card regional payment methods, with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
+|v1             |2019-10-22            |- Updated NETELLER payments integration to hosted redirect. |
+|                                      |- Added PaymentHandle support. |
 |v1             |2019-06-13            |- Added PayPal|
 |v1             |2019-02-01            |- Added statusTime, updatedTime to resources|
 |v1             |2018-10-01            |- Added additional payment vehicles \(indiaFinancialSystem, ach, bacs, becs\)| 
@@ -1485,7 +1487,10 @@ __**LEGEND**__
 |&#8210;         |Not Applicable|
 |                |              |
 |**Abbreviation**|**Request Type**|
+|RG              |Registration  |
 |V               |Verification  |
+|PH (P)          |PaymentHandle for Payment |
+|PH (SC)         |PaymentHandle for StandaloneCredit |
 |P               |Payment       |
 |S               |Settlement    |
 |SC              |Standalone Credit|
@@ -1528,13 +1533,13 @@ Boku is a leading direct carrier billing mobile payments company that is integra
 <br/><br/>
 The following values should be passed in your Boku <b>Payment (P)</b> request.
 
-|Element                 |Type                    |                 |                       |                       |                  |                  |Description|
-|---                     |---                     |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                        |**Request Type**        |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|descriptor              |string<br/>`length<=20` |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |Descriptor to display on customer's statement.|
-|consumerId              |string<br/>`length<=255`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
-|consumerCountry         |string                  |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
-|consumerMobilePhone     |string                  |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The customer's mobile phone number.|
+|Element                 |Type                    |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                     |---                     |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                        |**Request Type**        |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|descriptor              |string<br/>`length<=20` |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |Descriptor to display on customer's statement.|
+|consumerId              |string<br/>`length<=255`|&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |Consumer identifier in merchant system.  This value is used to perform payment transaction risk checks which are intended to limit fraud targeted at using many MSISDNs by the same consumer account in a merchant system.|
+|consumerCountry         |string                  |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code for the country of registration for the customer's mobile phone (e.g., Germany = DE, JP=Japan. CA=Canada).|
+|consumerMobilePhone     |string                  |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |The customer's mobile phone number.|
 
 ```
 "boku": {
@@ -1580,14 +1585,14 @@ Giropay is an interbank system and the official implementation of German banks f
 <br/><br/>
 The following custom attributes can be passed in your Giropay <b>Payment (P)</b> request.
 
-|Element                 |Type                   |                 |                       |                       |                  |                  |Description|
-|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|descriptor              |string<br/>`length<=16`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|sepa                    |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The consumer's SEPA bank account details.|
-|sepa.accountHolderName  |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The account holder's name.|
-|sepa.bic                |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The Bank Identifier Code (BIC) of the account.|
-|sepa.iban               |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The International Bank Account Number (IBAN) of the account.|
+|Element                 |Type                    |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                     |---                     |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                        |**Request Type**        |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|descriptor              |string<br/>`length<=16` |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|sepa                    |[object](#sepa)         |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The consumer's SEPA bank account details.|
+|sepa.accountHolderName  |string                  |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The account holder's name.|
+|sepa.bic                |string                  |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The Bank Identifier Code (BIC) of the account.|
+|sepa.iban               |string                  |&#8210;           |&#8210;          |&#8210;                  |&#9862;                |&#8210;           |&#8210;           |&#8210;           |The International Bank Account Number (IBAN) of the account.|
 
 ```
 "giropay": {
@@ -1661,14 +1666,14 @@ The following custom attributes can be passed in your Giropay <b>Payment (P)</b>
 <br/><br/>
 The following custom attributes can be passed in your Instarem <b>Standalone Credit (SC)</b> request.
 
-|Element                        |Type                          |                 |                       |                       |                  |                  |Description|
-|---                            |---                           |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                               |**supported resources**       |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|descriptor                     |string<br/>`length<=200`      |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
-|purposeCode                    |[enum](#instaremPurposeCodes) |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
-|senderRecipientRelationship    |string<br/>`length<=255`      |&#8210;          |&#8210;                |&#8210;                |&#9862;           |&#8210;           |A text description of the relationship between the sender and the recipient e.g. "Employee".<br/>Note: This is mandatory for Nepal|
-|sourceOfFunds                  |string<br/>`length<=255`      |&#8210;          |&#8210;                |&#8210;                |&#9862;           |&#8210;           |A text description of the source of funds e.g. "Salary".<br/>Note: This is mandatory for South Korea.|
-|consumerId                     |string<br/>`length<=255`      |&#8210;          |&#8210;                |&#8210;                |&#9862;           |&#8210;           |Unique id to identify the sender.<br/>Note: This is mandatory for South Korea.|
+|Element                        |Type                          |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                            |---                           |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                               |**Request Type**              |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|descriptor                     |string<br/>`length<=200`      |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#9864;           |&#8210;           |This is the merchant descriptor that will be displayed on the customer's bank statement.|
+|purposeCode                    |[enum](#instaremPurposeCodes) |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#9864;           |&#8210;           |This is the purpose code for the payment from the following list - [Instarem Purpose Codes](#instaremPurposeCodes)|
+|senderRecipientRelationship    |string<br/>`length<=255`      |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#9862;           |&#8210;           |A text description of the relationship between the sender and the recipient e.g. "Employee".<br/>Note: This is mandatory for Nepal|
+|sourceOfFunds                  |string<br/>`length<=255`      |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#9862;           |&#8210;           |A text description of the source of funds e.g. "Salary".<br/>Note: This is mandatory for South Korea.|
+|consumerId                     |string<br/>`length<=255`      |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#9862;           |&#8210;           |Unique id to identify the sender.<br/>Note: This is mandatory for South Korea.|
 
 ```
 "instarem": {
@@ -1777,16 +1782,15 @@ The following custom attributes can be passed in your Instarem <b>Standalone Cre
 
 The following custom attributes can be passed in your NETELLER <b>Payment (P)</b> request.
 
-|Element                        |Type                   |                 |                       |                       |                  |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|consumerId                     |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The NETELELR Email address of the consumer.|
-|consumerVerificationId         |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The consumers NETELLER secure ID, or two step authorization token generated on their device.|
-|recipientDescription           |string<br>`length<=30` |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. |
-|language                       |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
-|logoUrl                        |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
-|detail1Description             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text                    |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|Element                        |Type                          |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                            |---                           |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                               |**Request Type**              |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|consumerId                     |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |The NETELELR Email address of the consumer.|
+|emailMessage                   |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#8210;           |&#8210;           |Message to use in customer email.|
+|recipientDescription           |string<br>`length<=30`        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. <br/><i>Only applicable for NETELLER via SkrillQuickCheckout integrations</i> |
+|logoUrl                        |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time. <br/><i>Only applicable for NETELLER via SkrillQuickCheckout integrations</i>|
+|detail1Description             |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text                    |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 > NOTE: Required parameters may change depending upon which NETELLER integration is being used.  
 
@@ -1834,16 +1838,16 @@ The following custom attributes can be passed in your NETELLER <b>Payment (P)</b
 
 The following custom attributes can be passed in your Paysafe Pay Later <b>Verification (V)</b> or <b>Payment (P)</b> request.
 
-|Element                    |Type                                     |                 |                       |                       |                  |                  |Description|
-|---                        |---                                      |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                           |**supported resources**                  |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|productType                |enum                                     |&#9864;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
-|descriptor                 |string<br/>`length<300=`                 |&#9862;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|<paymentVehicle>           |[object](#Payment Vehicle Objects)       |&#9864;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
-|plans                      |[object](#payolution.plans)              |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
-|planDuration               |string                                   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the duration, in months, of the plan selected by the consumer. |
-|paymentInformation         |[object](#payolution.paymentInformation) |&#8210;          |&#8210;                |&#8210;                |&#8210;           |&#8210;           |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
-|analysis                   |object                                   |&#9862;          |&#9862;                |&#9862;                |&#8210;           |&#8210;           |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes. For more info see [here](https://developer.paysafe.com/en/rest-api/alternate-payments/payment-type-considerations/payolution/#analysis) |
+|Element                        |Type                                     |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                            |---                                      |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                               |**Request Type**                         |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|productType                    |enum                                     |&#8210;           |&#9864;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |**Note:** You must have a separate merchant account for each product type, i.e., one for INVOICE and one for INSTALLMENTS. Possible values are:<ul><li>INVOICE &ndash; Use for regular authorization request to be followed up with a Settlement.</li><li>INSTALLMENTS &ndash; Use when consumer has opted for installment payments.</li></ul> |
+|descriptor                     |string<br/>`length<300=`                 |&#8210;           |&#9862;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|<paymentVehicle>               |[object](#Payment Vehicle Objects)       |&#8210;           |&#9864;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |These are consumer bank details, used for Direct Debit INSTALLMENT payments. |
+|plans                          |[object](#payolution.plans)              |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#8210;           |&#8210;           |If the consumer is eligible, this object contains installments with amount and due date plus some additional parameters like interest, etc., for the Payment Authorization.<br/><i>Read Only</i>|
+|planDuration                   |string                                   |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |This is the duration, in months, of the plan selected by the consumer. |
+|paymentInformation             |[object](#payolution.paymentInformation) |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#8210;           |&#8210;           |This is the information that tells the consumer where to send the payment, when they have opted for installment payments.<br/><i>Read Only</i>|
+|analysis                       |object                                   |&#8210;           |&#9862;          |&#8210;                  |&#8210;                |&#9862;           |&#9862;           |&#8210;           |&#8210;           |This object is a list of key,value pairs containing additional information for analysis and to improve Payolution's risk assessment processes. For more info see [here](https://developer.paysafe.com/en/rest-api/alternate-payments/payment-type-considerations/payolution/#analysis) |
 
 ```
 "payolution": {
@@ -2043,15 +2047,15 @@ This is a Paysafe Pay Later (Payolution) specific read only response object that
 
 The following custom attributes can be passed in your PayPal <b>Payment (P)</b> request.
 
-|Element                 |Type                    |                 |                       |                       |                  |                  |Description|
-|---                     |---                     |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                        |**Request Type**        |_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|consumerId              |string<br/>`length<=255`|&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the email of the customer at login.|
-|consumerMessage         |string<br/>`length<=165`|&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the message that is displayed to the consumer.|
-|recipientDescription    |string<br/>`length<=127`|&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the label that overrides the business name.|
-|language                |string<br/>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The locale of pages that the PayPal payment experience displays.|
-|shippingPreference      |enum                    |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the shipping preference. <br/>Options:<br/><ul><li>GET_FROM_FILE</li><li>NO_SHIPPING</li><li>SET_PROVIDED_ADDRESS</li>|
-|orderDescription        |string                  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the order description that will be displayed on the PayPal page.|
+|Element                        |Type                                     |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                            |---                                      |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                               |**Request Type**                         |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|consumerId                     |string<br/>`length<=255`                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |This is the email of the customer at login.|
+|consumerMessage                |string<br/>`length<=165`                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |This is the message that is displayed to the consumer.|
+|recipientDescription           |string<br/>`length<=127`                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |This is the label that overrides the business name.|
+|language                       |string<br/>`length=2`                    |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The locale of pages that the PayPal payment experience displays.|
+|shippingPreference             |enum                                     |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |This is the shipping preference. <br/>Options:<br/><ul><li>GET_FROM_FILE</li><li>NO_SHIPPING</li><li>SET_PROVIDED_ADDRESS</li>|
+|orderDescription               |string                                   |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |This is the order description that will be displayed on the PayPal page.|
 
 ```
 "paypal": {
@@ -2097,13 +2101,13 @@ The following custom attributes can be passed in your PayPal <b>Payment (P)</b> 
 
 The following custom attributes can be passed in your Paysafecard <b>Payment (P)</b> request.
 
-|Element                        |Type                   |                 |                       |                       |                  |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|consumerId                     |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
-|ageRestriction                 |number                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |Minimum age restriction for the transaction.|
-|kycLevelRestriction            |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
-|countryRestriction             |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
+|Element                        |Type                   |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                            |---                    |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                               |**Request Type**       |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|consumerId                     |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
+|ageRestriction                 |number                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |Minimum age restriction for the transaction.|
+|kycLevelRestriction            |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
+|countryRestriction             |string<br>`length=2`   |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
 
 ```
 "paysafecard": {
@@ -2146,13 +2150,13 @@ The following custom attributes can be passed in your Paysafecard <b>Payment (P)
 
 The following custom attributes can be passed in your Paysafecash <b>Payment (P)</b> request.
 
-|Element                        |Type                   |                 |                       |                       |                  |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|consumerId                     |string                 |&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
-|ageRestriction                 |number                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |Minimum age restriction for the transaction.|
-|kycLevelRestriction            |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
-|countryRestriction             |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
+|Element                        |Type                   |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                            |---                    |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                               |**Request Type**       |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|consumerId                     |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |The unique identifier of the consumer at the merchant. For security purposes, if any personal data is used (e.g., consumer's user name, email address, etc.), it has to be encrypted or hashed.|
+|ageRestriction                 |number                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |Minimum age restriction for the transaction.|
+|kycLevelRestriction            |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The KYC level that will be required for the transaction. Options:<ul><li>FULL</li><li>SIMPLE</li></ul>|
+|countryRestriction             |string<br>`length=2`   |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code of the country to which the transaction will be restricted.|
 
 ```
 "paysafecash": {
@@ -2196,14 +2200,14 @@ The following custom attributes can be passed in your Paysafecash <b>Payment (P)
 The following custom attributes can be passed in your Rapid Transfer <b>Payment (P)</b> request.  If the iban and bic are not provided, then the consumer will be shown a bank picker where they will be able to select their bank by name.  If relevant
 details are provided, then the consumer will be automatically directed to login to their bank.
 
-|Element                        |Type                   |                 |                       |                       |                  |                  |Description|
-|---                            |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                               |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|descriptor                     |string<br/>`length=X`  |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|sepa                           |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The consumer's SEPA bank account details (if applicable). |
-|sepa.country                   |enum                   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code for the consumer's bank (e.g., Germany = DE, JP=Japan, CA=Canada).|
-|sepa.iban                      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The International Bank Account Number (IBAN) of the account.|
-|sepa.bic                       |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The Bank Identifier Code (BIC) of the account.|
+|Element                        |Type                   |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                            |---                    |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                               |**Request Type**       |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|descriptor                     |string<br/>`length=X`  |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                           |[object](#sepa)        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The consumer's SEPA bank account details \(if applicable\). |
+|sepa.country                   |enum                   |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The ISO 3166-1 alpha-2 code for the consumer's bank \(e.g., Germany = DE, JP=Japan, CA=Canada\).|
+|sepa.iban                      |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The International Bank Account Number (IBAN) of the account.|
+|sepa.bic                       |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The Bank Identifier Code (BIC) of the account.|
 
 ```
 "rapidTransfer": {
@@ -2243,20 +2247,21 @@ details are provided, then the consumer will be automatically directed to login 
 
 The following custom attributes can be passed in your Skrill <b>Payment (P)</b> or <b>Standalone Credit (SC)</b> request.
 
-|Element                 |Type                   |                 |                       |                       |                  |                  |Description|
-|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|consumerId              |string                 |&#8210;          |&#9862;                |&#8210;                |&#9864;           |&#8210;           |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
-|emailSubject            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |Subject line to use in customer email.|
-|emailMessage            |string                 |&#8210;          |&#8210;                |&#8210;                |&#9864;           |&#8210;           |Message to use in customer email.|
-|recipientDescription    |string<br>`length<=30` |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
-|language                |string<br>`length=2`   |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
-|logoUrl                 |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
-|detail1Description      |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text             |string                 |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|Element                |Type                   |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                    |---                    |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                       |**Request Type**       |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|consumerId             |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#9864;           |&#8210;           |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|emailSubject           |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#9864;           |&#8210;           |Subject line to use in customer email.|
+|emailMessage           |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#9864;           |&#8210;           |Message to use in customer email.|
+|recipientDescription   |string<br>`length<=30` |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
+|language               |string<br>`length=2`   |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
+|logoUrl                |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
+|detail1Description     |string                 |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#8210;           |&#8210;           |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text            |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 
 > Payment
+
 ```
 "skrill": {
     "consumerId": "john.doe@email.com",
@@ -2269,6 +2274,7 @@ The following custom attributes can be passed in your Skrill <b>Payment (P)</b> 
 ```
 
 > Standalone Credit
+
 ```
 "skrill": {
     "consumerId": "john.doe@email.com",
@@ -2309,11 +2315,11 @@ The following custom attributes can be passed in your Skrill <b>Payment (P)</b> 
 
 The following custom attributes can be passed in your Klarna <b>Payment (P)</b> request.
 
-|Element                 |Type                   |                 |                       |                       |                  |                  |Description|
-|---                     |---                    |:---:            |:---:                  |:---:                  |:---:             |:---:             |---|
-|                        |**supported resources**|_**V**_          |_**P**_                |_**S**_                |_**SC**_          |_**RF**_          |   |
-|descriptor              |string<br/>`length<=43`|&#8210;          |&#9864;                |&#8210;                |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
-|sepa                    |[object](#sepa)        |&#8210;          |&#9862;                |&#8210;                |&#8210;           |&#8210;           |The customer's SEPA bank account details.|
+|Element                |Type                   |                  |                 |                         |                       |                  |                  |                  |                  |Description|
+|---                    |---                    |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
+|                       |**Request Type**       |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
+|descriptor             |string<br/>`length<=43`|&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |This is the merchant descriptor that will be displayed on the consumer's bank statement.|
+|sepa                   |[object](#sepa)        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The customer's SEPA bank account details.|
 
 
 ```
@@ -4408,7 +4414,9 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 + `instarem` (object, optional) - Optional attributes that can be passed when making a INSTAREM  instrequest.
     + Properties
         + descriptor : `XYZ Merch #438A` (string, required) - This is the merchant descriptor that will be displayed on the consumer's bank statement.
-        + purposeCode : `IR001` (enum, required) - This is the Instarem purpose code associated with the required.
+        + purposeCode (enum, required) - This is the Instarem purpose code associated with the required.
+
+            + Default: `IR001`
         
             + Members
                 + `IR001` - Transfer to own account
@@ -4786,7 +4794,9 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
     + `email`: `stan.smith@email.com` (string, required) - This is the consumer's email address.
         _Length<=255_
     + Include dateOfBirthPayolution
-    + `gender`: `M` (enum) - This is the consumer's gender.
+    + `gender` (enum) - This is the consumer's gender.
+    
+        + Default: `M`
 
         + Members
             + M - Male
@@ -4891,7 +4901,10 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
 + `returnLinks` (array) - This is an array of return links.
     + (object)
-        + `rel`: `default` (enum, required) - The final transaction status that determines where to return the consumer to. ('default' is mandatory)
+        + `rel` (enum, required) - The final transaction status that determines where to return the consumer to. ('default' is mandatory)
+        
+            + Default: `default`
+            
             + Members
                 + `default` - The default return url, will be used if specific status return url is not defined.
                 + `on_pending`
