@@ -10,8 +10,9 @@ variety of non-card regional payment methods, with a single integration.
 
 |API Version    |Release Date          |Details|
 |---            |---                   |---|
-|v1             |2019-10-22            |- Updated NETELLER payments integration to hosted redirect. |
-|                                      |- Added PaymentHandle support. |
+|v1             |2019-10-22            |- Updated NETELLER payments integration to hosted flow for SCA requirement|
+|               |                      |- Added PaymentHandle support |
+|               |                      |- Added StandaloneCreditReturn|
 |v1             |2019-06-13            |- Added PayPal|
 |v1             |2019-02-01            |- Added statusTime, updatedTime to resources|
 |v1             |2018-10-01            |- Added additional payment vehicles \(indiaFinancialSystem, ach, bacs, becs\)| 
@@ -288,25 +289,61 @@ Some resources in the system can transition through various statuses depending o
 valid statuses for these complex resources and how they are linked.
 
 ## Verifications
-![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/verification_state_transition_diagram.png)
 
+|Initial Status|Transition Status|Final Status|
+|---|---|---|
+|RECEIVED|N/A|FAILED<br/>COMPLETED<br/>ERROR|
+         
+         
 ## Payments
-![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/payment_state_transition_diagram.png)
 
+|Initial Status|Transition Status|Final Status|
+|---|---|---|
+|RECEIVED|INITIATED<br/>PENDING<br/>PROCESSING<br/>COMPLETED+|FAILED<br/>COMPLETED<br/>EXPIRED<br/>ERROR<br/>CANCELLED|
+
+\+ - COMPLETED Payment (Authorization on 2 step payment flows) may transition to CANCELLED if cancellation occurs before funds are committed.
+
+         
 ## Settlements
-![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/settlement_state_transition_diagram.png)
+
+|Initial Status|Transition Status|Final Status|
+|---|---|---|
+|RECEIVED|PENDING<br/>PROCESSING|FAILED<br/>COMPLETED<br/>EXPIRED<br/>ERROR<br/>CANCELLED|
+
 
 ## Standalone Credits
-![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/standalonecredit_state_transition_diagram.png)
+
+|Initial Status|Transition Status|Final Status|
+|---|---|---|
+|RECEIVED|PENDING<br/>PROCESSING|FAILED<br/>COMPLETED<br/>EXPIRED<br/>ERROR<br/>CANCELLED|
+
+
+## Standalone Credit Returns
+
+|Initial Status|Transition Status|Final Status|
+|---|---|---|
+|N/A|N/A|COMPLETED|
 
 ## Refunds
-![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/settlement_state_transition_diagram.png)
+
+|Initial Status|Transition Status|Final Status|
+|---|---|---|
+|RECEIVED|PENDING<br/>PROCESSING|FAILED<br/>COMPLETED<br/>EXPIRED<br/>ERROR<br/>CANCELLED|
+
 
 ## Returns
-![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/return_reversal_state_transition_diagram.png)
+
+|Initial Status|Transition Status|Final Status|
+|---|---|---|
+|N/A|N/A|COMPLETED|
+
 
 ## Return Reversals
-![](https://github.com/paysafegroup/paysafe_api_alternatepayments_v1/raw/master/images/return_state_transition_diagram.png)
+
+|Initial Status|Transition Status|Final Status|
+|---|---|---|
+|N/A|N/A|COMPLETED|
+
 
 
 # Currencies
@@ -1785,21 +1822,19 @@ The following custom attributes can be passed in your NETELLER <b>Payment (P)</b
 |Element                        |Type                          |                  |                 |                         |                       |                  |                  |                  |                  |Description|
 |---                            |---                           |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
 |                               |**Request Type**              |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
-|consumerId                     |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9864;           |&#8210;           |&#8210;           |&#8210;           |The NETELELR Email address of the consumer.|
-|emailMessage                   |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#8210;           |&#8210;           |Message to use in customer email.|
-|recipientDescription           |string<br>`length<=30`        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. <br/><i>Only applicable for NETELLER via SkrillQuickCheckout integrations</i> |
-|logoUrl                        |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time. <br/><i>Only applicable for NETELLER via SkrillQuickCheckout integrations</i>|
-|detail1Description             |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text                    |string                        |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|consumerId                     |string                        |&#8210;           |&#8210;          |&#9862;                  |&#9864;                |&#9862;           |&#8210;           |&#9864;           |&#8210;           |The NETELELR Email address of the consumer.|
+|emailMessage                   |string                        |&#8210;           |&#8210;          |&#8210;                  |&#9862;                |&#8210;           |&#8210;           |&#9862;           |&#8210;           |Message to use in customer email.|
+|recipientDescription           |string<br>`length<=30`        |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |A description to be shown on the NETELLER payment page in the logo area if there is no logo\_url parameter. If no value is submitted and there is no logo, the pay\_to\_email value is shown as the recipient of the payment. <br/><i>Only applicable for NETELLER via SkrillQuickCheckout integrations</i> |
+|logoUrl                        |string                        |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the NETELLER page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high.<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time. <br/><i>Only applicable for NETELLER via SkrillQuickCheckout integrations</i>|
+|detail1Description             |string                        |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text                    |string                        |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Description in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 > NOTE: Required parameters may change depending upon which NETELLER integration is being used.  
 
 ```
 "neteller": {
     "consumerId":"neteller.account@example.org",
-    "consumerVerificationId":"123456",
     "recipientDescription":"logo_url_alt_text",
-    "language":"EN",
     "logoUrl":"http://www.paysafe.com/icon.jpg",
     "detail1Description":"Details 1 description",
     "detail1Text":"Details 1 text"
@@ -2250,14 +2285,14 @@ The following custom attributes can be passed in your Skrill <b>Payment (P)</b> 
 |Element                |Type                   |                  |                 |                         |                       |                  |                  |                  |                  |Description|
 |---                    |---                    |:---:             |:---:            |:---:                    |:---:                  |:---:             |:---:             |:---:             |:---:             |---|
 |                       |**Request Type**       |_**RG**_          |_**V**_          |_**PH (P)**_             |_**PH (SC)**_          |_**P**_           |_**S**_           |_**SC**_          |_**RF**_          |   |
-|consumerId             |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#9864;           |&#8210;           |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
-|emailSubject           |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#9864;           |&#8210;           |Subject line to use in customer email.|
-|emailMessage           |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#8210;           |&#8210;           |&#9864;           |&#8210;           |Message to use in customer email.|
-|recipientDescription   |string<br>`length<=30` |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
-|language               |string<br>`length=2`   |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
-|logoUrl                |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
-|detail1Description     |string                 |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#8210;           |&#8210;           |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
-|detail1Text            |string                 |&#8210;           |&#8210;          |&#8210;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
+|consumerId             |string                 |&#8210;           |&#8210;          |&#9862;                  |&#9864;                |&#9862;           |&#8210;           |&#9864;           |&#8210;           |Email address of the customer who is making or receiving the payment. If provided, this field is hidden on the payment form. If left empty, the customer has to enter their email address.|
+|emailSubject           |string                 |&#8210;           |&#8210;          |&#9862;                  |&#9864;                |&#8210;           |&#8210;           |&#9864;           |&#8210;           |Subject line to use in customer email.|
+|emailMessage           |string                 |&#8210;           |&#8210;          |&#8210;                  |&#9864;                |&#8210;           |&#8210;           |&#9864;           |&#8210;           |Message to use in customer email.|
+|recipientDescription   |string<br>`length<=30` |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |A description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.|
+|language               |string<br>`length=2`   |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The 2-character preferred language code for the consumer (e.g., EN, FR).|
+|logoUrl                |string                 |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The URL of the logo which you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit. To avoid scaling distortion, the minimum size should be as follows:<br>If the logo width > height - at least 107px wide.<br>If logo width > height - at least 65px high<br>Avoid large images (much greater than 256 by 256px) to minimize the page loading time.|
+|detail1Description     |string                 |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |You can show additional details about the product in the More information section in the header of Quick Checkout.|
+|detail1Text            |string                 |&#8210;           |&#8210;          |&#9862;                  |&#8210;                |&#9862;           |&#8210;           |&#8210;           |&#8210;           |The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.|
 
 
 > Payment
@@ -2464,6 +2499,364 @@ This call returns a status of READY if the API is available.
             {
                 "status" : "READY"
             }
+            
+            
+            
+
+# PaymentHandles [/paymenthandles]
+
+### Create a Payment Handle [POST]
+<a name="paymenthandlerequest" title="Create a Payment Handle"></a>
+
+A Payment Handle is basically a token that represents a payment method that you set up for a customer. Once the Payment Handle is created, you then include the paymentHandleToken returned in the Payment Handle request response in a new payment request.
+
+> Note: A Payment Handle can be used in a Payment request only if it has the status of PAYABLE.
+
+Click on **Create a Payment Handle** above to see the following examples of how to create a Payment Handle object:
+
+* A Payment Handle for a Paysafecard payment
+* A Payment Handle for a Paysafecash payment
+* A Payment Handle for a Instant ACH payment
+
+ > **Note:** The status of Payment Handles that require the customer to be redirected to a *redirect_payment* URL will have the *status* of INITIATED until the customer verifies the payment instrument. 
+ This is the case, for example, for alternate payment methods like Paysafecash and Paysafecard, and for credit cards that must be authenticated for 3D Secure, where the request amount is more than the maximum configured in the Business Portal.
+
+
++ Attributes 
+    + Include PaymentHandleRequest
+
++ Request Create Payment Handle for Paysafecard (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            
+    + Body
+
+```
+            {
+                "merchantRefNum": "merchantRefNum-201",
+                "transactionType": "PAYMENT",
+                "paysafecard": {
+                    "consumerId": "consumerid001",
+                    "minAgeRestriction": 18,
+                    "kycLevelRestriction": "SIMPLE",
+                    "countryRestriction": "DE"
+                },
+                "paymentType": "PAYSAFECARD",
+                "amount": 500,
+                "currencyCode": "USD",
+                "customerIp": "172.0.0.1",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "merchantDescriptor": {
+                    "dynamicDescriptor": "OnlineStore",
+                    "phone": "12345678"
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://usgaminggambling.com/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://usgaminggambling.com/payment/return/failed",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "default",
+                        "href": "https://usgaminggambling.com/payment/",
+                        "method": "GET"
+                    }
+                ]
+            }
+```
+
++ Response 200 (application/json)
+
+    + Body
+
+```
+            {
+                "id": "82d57742-e2db-48ea-a726-a60e6f8265a3",
+                "paymentType": "PAYSAFECARD",
+                "paymentHandleToken": "PHQhlWpTRKzBXubN",
+                "merchantRefNum": "5493aaf1a1d6dd13d2b53412f0ec",
+                "currencyCode": "USD",
+                "dupCheck": true,
+                "status": "INITIATED",
+                "liveMode": true,
+                "usage": "SINGLE_USE",
+                "action": "REDIRECT",
+                "executionMode": "SYNCHRONOUS",
+                "amount": 500,
+                "merchantDescriptor": {
+                    "dynamicDescriptor": "OnlineStore",
+                    "phone": "12345678"
+                },
+                "billingDetails": {
+                    "street2": "Unit 201",
+                    "zip": "M5H 2N2",
+                    "city": "Toronto",
+                    "country": "CA"
+                },
+                "customerIp": "172.0.0.1",
+                "timeToLiveSeconds": 899,
+                "gatewayResponse": {
+                    "id": "11822017-3701-41df-aab5-2d24a28ac5e0",
+                    "processor": "PAYSAFECARD"
+                },
+                "paysafecard": {
+                    "consumerId": "merchantclientid",
+                    "minAgeRestriction": 18,
+                    "kycLevelRestriction": "SIMPLE",
+                    "countryRestriction": "DE"
+                },
+                "returnLinks": [{
+                        "rel": "default",
+                        "href": "https://usgaminggambling.com/payment/"
+                    },
+                    {
+                        "rel": "on_completed",
+                        "href": "https://usgaminggambling.com/payment/return/success"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://usgaminggambling.com/payment/return/failed"
+                    }
+                ],
+                "txnTime": "2019-01-24T10:39:50Z",
+                "updatedTime": "2019-01-24T10:39:50Z",
+                "statusTime": "2019-01-24T10:39:50Z",
+                "links": [{
+                    "rel": "redirect_payment",
+                    "href": "https://customer.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_00LwEhZ8WtIy8PmIhRCUi3JScUti6jKi_EUR&amount=0.01&currency=EUR&customerHash=741e624cf6ae4fbca4338cb5597fe531"
+                }]
+            }
+```
+
++ Request Create Payment Handle for Paysafecash (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            
+    + Body
+
+```
+            {
+                "merchantRefNum": "merchantRefNum-201",
+                "transactionType": "PAYMENT",
+                "paysafecash": {
+                    "consumerId": "consumerid001",
+                    "minAgeRestriction": 18,
+                    "kycLevelRestriction": "SIMPLE",
+                    "countryRestriction": "DE"
+                },
+                "paymentType": "PAYSAFECASH",
+                "amount": 500,
+                "currencyCode": "USD",
+                "customerIp": "172.0.0.1",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "merchantDescriptor": {
+                    "dynamicDescriptor": "OnlineStore",
+                    "phone": "12345678"
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://usgaminggambling.com/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://usgaminggambling.com/payment/return/failed",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "default",
+                        "href": "https://usgaminggambling.com/payment/",
+                        "method": "GET"
+                    }
+                ]
+            }
+```
+
++ Response 200 (application/json)
+
+    + Body
+    
+```
+            {
+                "id": "82d57742-e2db-48ea-a726-a60e6f8265a3",
+                "paymentType": "PAYSAFECARD",
+                "paymentHandleToken": "PHQhlWpTRKzBXubN",
+                "merchantRefNum": "5493aaf1a1d6dd13d2b53412f0ec",
+                "currencyCode": "USD",
+                "dupCheck": true,
+                "status": "INITIATED",
+                "liveMode": true,
+                "usage": "SINGLE_USE",
+                "action": "REDIRECT",
+                "executionMode": "SYNCHRONOUS",
+                "amount": 500,
+                "merchantDescriptor": {
+                    "dynamicDescriptor": "OnlineStore",
+                    "phone": "12345678"
+                },
+                "billingDetails": {
+                    "street2": "Unit 201",
+                    "zip": "M5H 2N2",
+                    "city": "Toronto",
+                    "country": "CA"
+                },
+                "customerIp": "172.0.0.1",
+                "timeToLiveSeconds": 345599,
+                "gatewayResponse": {
+                    "id": "11822017-3701-41df-aab5-2d24a28ac5e0",
+                    "processor": "PAYSAFECARD"
+                },
+                "paysafecard": {
+                    "consumerId": "merchantclientid",
+                    "minAgeRestriction": 18,
+                    "kycLevelRestriction": "SIMPLE",
+                    "countryRestriction": "DE"
+                },
+                "returnLinks": [{
+                        "rel": "default",
+                        "href": "https://usgaminggambling.com/payment/"
+                    },
+                    {
+                        "rel": "on_completed",
+                        "href": "https://usgaminggambling.com/payment/return/success"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://usgaminggambling.com/payment/return/failed"
+                    }
+                ],
+                "txnTime": "2019-01-24T10:39:50Z",
+                "updatedTime": "2019-01-24T10:39:50Z",
+                "statusTime": "2019-01-24T10:39:50Z",
+                "links": [{
+                    "rel": "redirect_payment",
+                    "href": "https://customer.at.paysafecard.com/rest/payment/panel?mid=1090001806&mtid=pay_1090001806_00LwEhZ8WtIy8PmIhRCUi3JScUti6jKi_EUR&amount=0.01&currency=EUR&customerHash=741e624cf6ae4fbca4338cb5597fe531"
+                }]
+            }
+```            
+
+
++ Request Create Payment Handle for InstantACH (application/json)
+
+    + Headers
+
+            Authorization: "Basic YOUR-BASE64-ENCODED-API-KEY"
+            
+    + Body
+
+```
+            {
+                "merchantRefNum": "merchantRefNum-321",
+                "transactionType": "PAYMENT",
+                "paymentType": "INSTANTACH",
+                "amount": 100,
+                "currencyCode": "USD",
+                "customerIp": "172.0.0.1",
+                "billingDetails": {
+                    "nickName": "Home",
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "merchantDescriptor": {
+                    "dynamicDescriptor": "OnlineStore",
+                    "phone": "12345678"
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://usgaminggamblig/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://usgaminggamblig/payment/return/failed",
+                        "method": "GET"
+                    }
+                ]
+            }
+```
+
+
++ Response 200 (application/json)
+
+    + Body
+
+```
+            {
+                "id": "64b614b8-753d-4404-b491-2dd8b817c40b",
+                "paymentType": "INSTANTACH",
+                "paymentHandleToken": "PHsLl14Tfi4l22gs",
+                "merchantRefNum": " merchantRefNum-321",
+                "currencyCode": "USD",
+                "dupCheck": true,
+                "txnTime": "2019-06-24T14:18:33.000+0000",
+                "billingDetails": {
+                    "street": "100 Queen",
+                    "street2": "Unit 201",
+                    "city": "Toronto",
+                    "zip": "M5H 2N2",
+                    "country": "CA"
+                },
+                "customerIp": "172.0.0.1",
+                "status": "INITIATED",
+                "links": [{
+                    "rel": "redirect_payment",
+                    "href": "https://api.qa.paysafe.com/alternatepayments/v1/redirect?accountId=1010608990&paymentHandleId=64b614b8-753d-4404-b491-2dd8b817c40b&token=eyJhbGciOiJIUzI1NiJ9.eyJhY2QiOiIxMDEwNjA4OTkwIiwicHlkIjoiNjRiNjE0YjgtNzUzZC00NDA0LWI0OTEtMmRkOGI4MTdjNDBiIiwiZXhwIjoxNTYxMzg3NzEzfQ.LGZ8K3yYqR0_J7iNicVCfcmZFIo8xkiX0hg4WpnHm_c"
+                }],
+                "liveMode": true,
+                "usage": "SINGLE_USE",
+                "action": "REDIRECT",
+                "executionMode": "SYNCHRONOUS",
+                "amount": 100,
+                "merchantDescriptor": {
+                    "dynamicDescriptor": "OnlineStore",
+                    "phone": "12345678"
+                },
+                "timeToLiveSeconds": 899,
+                "gatewayResponse": {
+                    "sid": "9e55a0ac44474c2d9f3813d7f65b07c4",
+                    "processor": "SKRILL_QCO"
+                },
+                "returnLinks": [{
+                        "rel": "on_completed",
+                        "href": "https://usgaminggamblig/payment/return/success",
+                        "method": "GET"
+                    },
+                    {
+                        "rel": "on_failed",
+                        "href": "https://usgaminggamblig/payment/return/failed",
+                        "method": "GET"
+                    }
+                ],
+                "transactionType": "PAYMENT",
+                "updatedTime": "2019-06-24T14:18:33Z",
+                "statusTime": "2019-06-24T14:18:33Z"
+            }
+```            
 
 # Payments [/payments]
 <a name="payments" title="Payments"></a>
@@ -4270,18 +4663,21 @@ Click on **Get Standalone Credit by ID** above to see how to retrieve details fo
             }    
 
 
-## List Standalone Credits by Merchant Reference Number [GET /accounts/{accountId}/standalonecredits/?merchantRefNum={merchantRefNum}]
-<a name="liststandalonecredits" title="List Standalone Credits by Merchant Reference Number"></a>
+# Standalone Credit Returns [/standalonecreditreturns]
+<a name="standalonecreditreturns" title="Standalone Credit Returns"></a>
 
-This returns a collection of standalone credit details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
+Standalone Credit Returns will be automatically created by Paysafe if we receive a chargeback or return notification from the service provider.
 
-Click on **List Standalone Credits by Merchant Reference Number** above to look up Standalone Credits using the merchant reference number used in the original request. This returns a collection of Standalone Credit details, as *merchantRefNum* could be used for multiple requests when *dupCheck* is disabled.
+## Get Standalone Credit Return by ID [GET /accounts/{accountId}/standalonecreditreturns/{standaloneCreditReturnId}]
+<a name="getstandalonecreditreturn" title="Get Standalone Credit Return by Id"></a>
+
+Click on **Get Standalone Credit Return by Idr** above to look up Standalone Credit Return Id.
 
 + Parameters
     + accountId (string, required, `1234567891`) - This is your unique account identifier.
-    + merchantRefNum (string, required, `XYZ`) - This is your Standalone Credit identifier.
+    + standaloneCreditReturnId (string, required, `c56eeb98-482b-43ff-8994-6ed7e056ae6e`) - This is your Standalone Credit identifier.
 
-+ Request List Standalone Credits (application/json)
++ Request Get Standalone Credit Return by Id (application/json)
 
     + Headers
 
@@ -4291,55 +4687,59 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
 
     + Body
 
+```
             {
-                "meta": {
-                    "numberOfRecords": 2,
-                    "limit": 10,
-                    "page": 1
-                },
-                "standaloneCredits": [
-                    {
-                        "id": "65574e9a-9e6b-4ce9-8217-63dce791c87b",
-                        "merchantRefNum": "XYZ",
-                        "dupCheck": true,
-                        "amount": 2300,
-                        "currencyCode": "PHP",
-                        "paymentType": "INSTAREM",
-                        "consumerIp": "127.0.0.1",
-                        "txnTime": "2018-10-16T16:22:14Z",
-                        "status": "PENDING",
-                        "links": [
-                            {
-                                "rel": "self",
-                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001269540/standalonecredits/65574e9a-9e6b-4ce9-8217-63dce791c87b"
-                            }
-                        ]
-                    },
-                    {
-                        "id": "5082938b-1713-443b-974d-a3035c071ed5",
-                        "merchantRefNum": "XYZ",
-                        "dupCheck": true,
-                        "amount": 1000,
-                        "currencyCode": "PHP",
-                        "paymentType": "INSTAREM",
-                        "consumerIp": "127.0.0.1",
-                        "txnTime": "2018-10-16T16:20:12Z",
-                        "status": "COMPLETED",
-                        "links": [
-                            {
-                                "rel": "self",
-                                "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001269540/standalonecredits/5082938b-1713-443b-974d-a3035c071ed5"
-                            }
-                        ]
-                    }
-                ],
-                "links": [
-                    {
-                        "rel": "self",
-                        "href": "https://api.test.paysafe.com/alternatepayments/v1/accounts/1001269540/standalonecredits?merchantRefNum=GR&limit=10&offset=0&startDate=2018-09-16T16:22:17Z&endDate=2018-10-16T16:22:18Z"
-                    }
-                ]
+                "id": "c56eeb98-482b-43ff-8994-6ed7e056ae6e",
+                "amount": 400,
+                "currencyCode": "EUR",
+                "paymentType": "INSTAREM",
+                "txnTime": "2016-11-23T20:49:58Z",
+                "liveMode": true,
+                "status": "COMPLETED",
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.paysafe.com/alternatepayments/v1/accounts/12345678/standalonecreditreturns/c56eeb98-482b-43ff-8994-6ed7e056ae6e"
+                }]
             } 
+```
+
+## List Standalone Credit Returns for a Standalone Credit [GET /accounts/{accountId}/standalonecredits/{standaloneCreditId}/standalonecreditreturns]
+<a name="getstandalonecreditreturns" title="Get Standalone Credit Returns for a Standalone Credit"></a>
+
++ Parameters
+    + accountId (string, required, `1234567891`) - This is your unique account identifier.
+
++ Request Get Standalone Credit Return by Id (application/json)
+
+    + Headers
+
+            Authorization: Basic YOUR-BASE64-ENCODED-API-KEY
+
++ Response 200 (application/json)
+
+    + Body
+
+```
+            {
+                "standalonecreditreturns": [{
+                    "id": "c56eeb98-482b-43ff-8994-6ed7e056ae6e",
+                    "amount": 400,
+                    "currencyCode": "EUR",
+                    "paymentType": "INSTAREM",
+                    "txnTime": "2016-11-23T20:49:58Z",
+                    "liveMode": true,
+                    "status": "COMPLETED",
+                    "links": [{
+                        "rel": "self",
+                        "href": "https://api.paysafe.com/alternatepayments/v1/accounts/12345678/standalonecreditreturns/c56eeb98-482b-43ff-8994-6ed7e056ae6e"
+                    }]
+                }],
+                "links": [{
+                    "rel": "self",
+                    "href": "https://api.paysafe.com/alternatepayments/v1/accounts/12345678/standalonecredits/9442c2a5-9b3e-454f-b41c-77d8d553f407/standalonecreditreturns?limit=10&offset=0&startDate=2016-11-23T20:45:20Z&endDate=2016-11-23T21:06:16Z"
+                }]
+            }
+```
 
 
 # Data Structures
@@ -4448,6 +4848,15 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
                 + `IR01810` - Delivery fees for goods
                 + `IR01811` - General Goods Trades - Offine trade
 
+
+## Metadata Object
++ `meta` (object) 
+    _Read Only_
+
+    + Properties
+        + `numberOfRecords`:`1` (number) - This is the number of records returned in the lookup.
+        + `limit`:`10` (number) - This is the number of records returned per page. 
+        + `page`:`1` (number) - This is the page of records on which the lookup starts.
 
 ## `payolutionGatewayResponse`
 
@@ -4588,6 +4997,127 @@ Click on **List Standalone Credits by Merchant Reference Number** above to look 
         + `interestRate`:`8.75` (number) - This is the interest rate of the payment plan.
         + `effectiveInterestRate`:`9.00` (number) - This is the effective interest rate of the payment plan.
         + `standardCreditInformationUrl`:`https://test-payment.payolution.com/payolution-payment/rest/query/customerinfo/pdf?trxId=Tx-pekwnp638te&duration=3` (string) - This is a URL pointing to a PDF file containing the full credit information in the standard European consumer credit information form.
+
+## PaymentHandleRequest (object)
+
++ `id`:`26359efd-7cfb-4014-a13d-1724e3ff17fa` (string) - This is the ID returned in the response. This ID can be used for future associated requests, e.g., to look up the Payment Handle. 
+    _Read Only, length<=36_
++ `merchantRefNum`:`merchantRefNum-101` (string, required) - This is the merchant reference number created by the merchant and submitted as part of the request. It must be unique for each request.
+    _length<=255_
++ `transactionType`: (enum, required) - This specifies the transaction type for which the Payment Handle is created.
+    + Members
+        + PAYMENT - Payment Handle is created to continue the Payment.
+        + STANDALONE_CREDIT - Payment Handle is created to continue the Standalone Credit.
+        + ORIGINAL_CREDIT - Payment Handle is created to continue the Original Credit.
+        + VERIFICATION - Payment Handle is created to continue the Verification request.
++ `accountId`:`9876543210` (string) - This is the merchant account number used for the request. Include this optional parameter if you have more than one merchant account for the currency/payment type combination you are specifying.
+    _length<=10_
++ `status`:`PAYABLE` (enum) - This is the status of the transaction request.
+    _Read Only_
+    + Members
+        + INITIATED - The transaction was initiated with the downstream provider.
+        + PAYABLE - The merchant can use the Payment Handle for a Payment request.
+        + PROCESSING - The Payment Handle was authorized by customer, awaiting PSP response.
+        + FAILED - The transaction failed due to either an error or being declined. 
+        + EXPIRED - The Payment Handle expired because the merchant did not proceed with the Payment request. 
+        + COMPLETED - The Payment request was initiated successfully using the Payment Handle.
++ `usage`:`SINGLE_USE` (enum) - This specifies how the Payment Handle will be used for Payments.
+    _Read Only_
+    + Members
+        + SINGLE_USE - The Payment Handle can be used for one transaction only and expires if not used.
++ `paymentType`: (enum, required) - This is the payment type associated with this Payment Handle. If applicable, you need to pass the corresponding payment type object as listed after this parameter.
+    + Members
+        + PAYSAFECASH
+        + PAYSAFECARD
+        + SIGHTLINE
+        + SKRILL
+        + VIPPREFERRED
+        + INSTANTACH
++ Include Payment Instrument
++ `action`:`NONE` (enum) - This specifies the next step of the user journey once they proceed to the Payment.
+    _Read Only_
+    + Members
+        + NONE - No action is required, e.g., for a standard credit card Payment.
+        + REDIRECT -The user must be redirected in order to complete a Payment, e.g., when an alternate payment method like Paysafecard is used.
++ `executionMode`:`SYNCHRONOUS` (enum) - This specifies the action of the merchant server in order to complete the Payment.
+    + Members
+        + ASYNCHRONOUS - The Payment request is not completed immediately and the merchant [must rely on webhooks](#paymentswebhooks) to retrieve the status of the Payment request.
+        + SYNCHRONOUS - The status of the Payment request will be returned synchronously to the merchant, e.g., a credit card request.
++ `amount`:`1000` (string) - This is the amount of the request, in minor units. **Note:** This field is mandatory if *transactionType* is included. The *amount* specified in the Payment Handle request must match the *amount* specified in the Payments API request the *paymentHandleToken* is used for.
+    _Max =99999999999_
++ `currencyCode`:`CAD` (string) - This is the [currency of the merchant account](#currencycodes), e.g., USD or CAD. **Note:** This field is mandatory if *transactionType* is included. The *currencyCode* specified in the Payment Handle request must match the *currencyCode* specified in the Payments API request the *paymentHandleToken* is used for.
+    _Read Only, max=3_
++ `paymentHandleTokenFrom`:`SCyGZDlUuZ9zxjyd` (string) - This is an [existing Customer Payment Handle](#createcustomerpaymenthandlerequest), from which the payment instrument and profile details are retrieved. If this parameter is included you can omit the *billingDetails* object.
+    _length<=36_
++ cvv:`123` (string) - This is the 3- or 4-digit security code that appears on the card following the card number.  **Note:** The *cvv* value is **required** if you include the parameter *paymentHandleTokenFrom*.
+    _length=3-4_
++ `paymentHandleToken`:`SCO3wKcIyLoQbQvw` (string) - This is the payment token generated by Paysafe that will be used by merchants for Payment API requests.
+    _Read Only, length<=36_
++ Include profile
++ Include billingDetails
++ `returnLinks` (object) - The URL endpoints to redirect the customer to after a redirection to an alternative payment or 3D Secure site. You can customize the return URL based on the transaction status. 
+    + `rel`(enum) - This is the link type, allowing different endpoints to be targeted depending on the end state of the transaction. The link relation describes how this link relates to the previous call. 
+        + default (string, required) - The default return URL that will be used if specific status return URL is not defined.
+        + on_completed (string) - Will be returned to this URL if the payment is completed.
+        + on_failed (string) - Will be returned to this URL if the payment fails.
+    + `href` - The actual URL
+    + `method` - The HTTP method
++ links (object) - This is an array of links related to the resource.
+    + `rel`: `redirect_payment` (enum)
+    + `href`:`http://api.paysafe.com/card/redirect/372b5ee7-6360-4403-b444-164f8f1d2709`
+    + `method`:`GET`
++ `customerIp`:`111.111.111.111` (string) - This is the customer's IP address.
+    _length<=39_
++ `timeToLiveSeconds`:`899` (number) - This is the period of time, in seconds, the *paymentHandleToken* is valid before expiration. 
+    _Read Only, length<=899_
++ Include Metadata Object
+
+## `Payment Instrument`
+
++ One of
+
+    + paysafecard (object) - These are the details of the [paysafecard](#paysafecardobject) used for the request. Only one payment instrument object (e.g., *card* or *paysafecard* or *sightline*) can be included in the request.
+        + Properties
+            + `consumerId`:`merchantclientid` (string, required) - This is the merchant's unique identifier of the customer. For security purposes, if any personal data is used (e.g., customer's user name, email address, etc.), it has to be encrypted or hashed.
+            + `ageRestriction`:`18` (number) - This is the minimum age restriction for the transaction.
+            + `kycLevelRestriction`:`SIMPLE` (string) - This is the KYC level that will be required for the transaction. Possible values are FULL and SIMPLE.
+            + `countryRestriction`:`DE` (string) - This is the code of the country to which the transaction will be restricted. See [Country Codes](#countrycodes).
+                _length=2_
+
+    + paysafecash (object) - These are the details of the [paysafecash account](#paysafecashobject) used for the request. Only one payment instrument object (e.g., *card* or *paysafecash* or *sightline*) can be included in the request.
+        + Properties
+            + `consumerId`:`merchantclientid` (string, required) - This is the merchant's unique identifier of the customer. For security purposes, if any personal data is used (e.g., customer's user name, email address, etc.), it has to be encrypted or hashed.
+            + `ageRestriction`:`18` (number) - This is the minimum age restriction for the transaction.
+            + `kycLevelRestriction`:`SIMPLE` (string) - This is the KYC level that will be required for the transaction. Possible values are FULL and SIMPLE.
+            + `countryRestriction`:`DE` (string) - This is the code of the country to which the transaction will be restricted. See [Country Codes](#countrycodes).
+                _length=2_
+
+    + skrill (object) - These are the details of the [skrill account](#skrillobject) used for the request. Only one payment instrument object (e.g., *card* or *skrill*) can be included in the request. Skrill Object is required only for withdrawal request.
+        + Properties
+            + `consumerId`:`john.doe@email.com` (string, required) - This is the email address of the customer who is receiving the payment. Required for withdrawal request.
+                _length<=50_
+            + `emailSubject`:`Skrill payment` (string, required) - This is the Subject line to use in the customer email. Required for withdrawal request.
+                _length<=30_
+            + `emailMessage`:`Email text` (string, required) - This is the message to use in the customer email. Required for withdrawal request.
+                _length<=50_
+            + `recipientDescription`:`logo_url_alt_text` (string, optional) - This is a description to be shown on the Skrill payment page in the logo area if there is no *logo\_url* parameter. If no value is submitted and there is no logo, the *pay\_to\_email* value is shown as the recipient of the payment.
+                _length<=30_
+            + `language`:`EN` (string, optional) - This is the 2-character preferred language code for the consumer (e.g., EN, FR).
+                _length=2_
+            + `logoUrl`:`http://www.yoursite.com/icon.jpg` (string, optional) - This is the URL of the logo that you would like to appear in the top right of the Skrill page. The logo must be accessible via HTTPS or it will not be shown. The logo will be resized to fit.
+            + `detail1Description`: `Details 1 description` (string, optional) - You can show additional details about the product in the More information section in the header of Quick Checkout.
+            + `detail1Text`:`Details 1 text` (string, optional) - The detail1Text is shown next to the detail1Dscription in the More Information section in the header of the payment form with the other payment details. The detail1Description combined with the detail1Text is shown in the more information field of the merchant account history CSV file.
+            + `descriptor`:`Merchant's trading name` (string, optional) - This is the merchant descriptor that will be displayed on the consumer's bank statement.
+            
+    + sightline (object) - These are the details of the [Play+ account](#sightlineobject) used for the request. Only one payment instrument object (e.g., *card* or *sightline*) can be included in the request.
+        + Properties
+            + `consumerId`:`12312313` (string, required) - This is the Loyalty Membership Number unique to the customer to be enrolled with Play+ (Sightline). This is to be provided by the merchant. 
+            + `paymentToken`:`CNjEzMTM4NDg1` (string) - This is the payment token for a card. This will be present if registration is occurring as part of the salvage flow or for a funding the Play+ (Sightline) card flow.
+            + `paymentHandleToken`:`SCO3wKcIyLoQbQvw` (string) - This is the payment token for a card. This will be present if registration is occurring as part of the salvage flow or for a funding the Play+ (Sightline) card flow.
+            + `balance`:`20000` (string) - This is the balance on the Play+ (Sightline) prepaid card.
+            + `last4ssn`:`6789` (string) - This is the last 4 digits of the customer's SSN, required to make the payments call. This is required only for a Payment transaction.
+            + `card`: (object) - This is the card object. This will be present if customer registers with Play+ as part of the card recovery flow or when a customer adds fund to Play+ (Sightline).
+
 
 ## `paymentType`
 
