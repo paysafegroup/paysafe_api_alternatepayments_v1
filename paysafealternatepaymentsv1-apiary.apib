@@ -38,7 +38,7 @@ variety of non-card regional payment methods, with a single integration.
 
 
 
-# Technical Introduction
+#Introduction
 This section provides a technical introduction to the Paysafe Alternate Payments API.
 
 ## API Endpoints
@@ -112,7 +112,7 @@ For additional details, please refer to [http://en.wikipedia.org/wiki/Basic_acce
 
 
 <a name="pagination" title="Pagination"></a>
-## Pagination
+# Pagination
 
 API calls that return multiple resources will wrap the response as a named JSON array.  For example, a collection of "payment" objects would
 be returned as "payments". By default, 10 items at a time will be returned and you can navigate to the next set of resources using the
@@ -188,21 +188,20 @@ Sample Response with List Data
 
 
 <a name="globalinvalidcharacters" title="Global Invalid Characters"></a>
-## Global Invalid Characters
+# Global Invalid Characters
 
-You must not include any of the characters in the following table as values in any of your request parameters. If you do, your request will result in an error.
+You must not include any of the characters in this [table](https://developer.paysafe.com/en/resources-and-support/global-invalid-characters/) as values in any of your request parameters. If you do, your request will result in an error.
 
-|    Character    |    HEX    |    Description                     |
-|-----------------|-----------|------------------------------------|
-| "               | 22        | Double quotes (or speech marks)    |
-| ;               | 3B        | Semicolon                          |
-| ^               | 5E        | Caret, circumflex                  |
-| *               | 2A        | Asterisk                           |
-| <               | 3C        | Less than (or open angled bracket) |
-| /               | 2F        | Slash or divide                    |
-| [               | 5B        | Opening bracket                    |
-| ]               | 5D        | Closing bracket                    |
-| \               | 5C        | Backslash                          |
+<a name="isostandards" title="ISO Standards"></a>
+# ISO Standards
+
+ISO standars add value by providing the common business process data semantics to be used in the API based exchanges. This [section](https://developer.paysafe.com/en/resources-and-support/iso-standards/) presents you codes for four areas - Currency, Province, State, and Country. 
+
+> When specifying amounts in your API calls be aware of the number of decimal places (minor units) that 
+> each currency supports.  You must change the formatting of the amount based on the minor units for the 
+> specific currency.  For example, Japanese Yen does not have minor units so the amount should be specified as 
+> such.  ie: 50 JPY would pass 50 in the amount, 50.00 USD would be an amount of 5000, and 50.000 TND would be 50000.
+
 
 
 ## HTTP Responses
@@ -343,180 +342,6 @@ valid statuses for these complex resources and how they are linked.
 |Initial Status|Transition Status|Final Status|
 |---|---|---|
 |N/A|N/A|COMPLETED|
-
-
-
-# Currencies
-<a name="currencies"></a>
-
-> When specifying amounts in your API calls be aware of the number of decimal places (minor units) that 
-> each currency supports.  You must change the formatting of the amount based on the minor units for the 
-> specific currency.  For example, Japanese Yen does not have minor units so the amount should be specified as 
-> such.  ie: 50 JPY would pass 50 in the amount, 50.00 USD would be an amount of 5000, and 50.000 TND would be 50000.
-
-|Currency Code|Description            |Decimal Places<br/>(Minor Units)|
-|---          |---                    |---|
-|Afghananistan Afghani|AFN|2|
-|Albanian Lek|ALL|2|
-|Algerian Dinar|DZD|2|
-|Angolan Kwanza|AOA|2|
-|Argentine Peso|ARS|2|
-|Armenian Dram|AMD|2|
-|Aruban Florin|AWG|2|
-|Australian Dollar|AUD|2|
-|Azerbaijani Manat|AZN|2|
-|Bahamian Dollar|BSD|2|
-|Bahraini Dinar|BHD|3|
-|Bangladeshi Taka|BDT|2|
-|Barbados Dollar|BBD|2|
-|Belarusian Ruble|BYR|0|
-|Belize Dollar|BZD|2|
-|Bermudian Dollar|BMD|2|
-|Bhutanese Ngultrum|BTN|2|
-|Bolivian Mvdol (funds code)|BOV|2|
-|Boliviano|BOB|2|
-|Bosnia and Herzegovina Convertible Mark|BAM|2|
-|Botswana Pula|BWP|2|
-|Brazilian Real|BRL|2|
-|Brunei Dollar|BND|2|
-|Bulgarian Lev|BGN|2|
-|Burundian Franc|BIF|0|
-|CFA Franc BCEAO|XOF|0|
-|CFA Franc BEAC|XAF|0|
-|CFP Franc (Franc Pacifique)|XPF|0|
-|Cambodian Riel|KHR|2|
-|Canadian Dollar|CAD|2|
-|Cayman Islands Dollar|KYD|2|
-|Chilean Peso|CLP|0|
-|Chinese Yuan Renminbi|CNY|2|
-|Colombian Peso|COP|2|
-|Comorian Franc|KMF|0|
-|Congolese Franc|CDF|2|
-|Costa Rican Colon|CRC|2|
-|Croatian Kuna|HRK|2|
-|Cuban Pero Convertible|CUC|2|
-|Cuban Peso|CUP|2|
-|Czech Koruna|CZK|2|
-|Danish Krone|DKK|2|
-|Djibouti Franc|DJF|0|
-|Dominican Peso|DOP|2|
-|East Caribbean Dollar|XCD|2|
-|Egyptian Pound|EGP|2|
-|Eritrean Nakfa|ERN|2|
-|Ethiopian Birr|ETB|2|
-|Euro|EUR|2|
-|Falkland Islands Pound|FKP|2|
-|Fiji Dollar|FJD|2|
-|Gambian Dalasi|GMD|2|
-|Georgian Lari|GEL|2|
-|Ghanaian Cedi|GHS|2|
-|Gibraltar Pound|GIP|2|
-|Guatemalan Quetzal|GTQ|2|
-|Guinean Franc|GNF|0|
-|Guyanese Dollar|GYD|2|
-|Haitian Gourde|HTG|2|
-|Honduran Lempira|HNL|2|
-|Hong Kong Dollar|HKD|2|
-|Hungarian Forint|HUF|2|
-|Icelandic Krona|ISK|0|
-|Indian Rupee|INR|2|
-|Indonesian Rupiah|IDR|2|
-|Iranian Rial|IRR|2|
-|Iraqi Dinar|IQD|3|
-|Israeli New Sheqel|ILS|2|
-|Jamaican Dollar|JMD|2|
-|Japanese Yen|JPY|0|
-|Jordanian Dinar|JOD|3|
-|Kazakhstani Tenge|KZT|2|
-|Kenyan Shilling|KES|2|
-|Kuwaiti Dinar|KWD|3|
-|Kyrgyzstani Som|KGS|2|
-|Lao Kip|LAK|2|
-|Lebanese Pound|LBP|2|
-|Lesotho Loti|LSL|2|
-|Liberian Dollar|LRD|2|
-|Libyan Dinar|LYD|3|
-|Macanese Pataca|MOP|2|
-|Macedonian Denar|MKD|2|
-|Malagasy Ariary|MGA|1|
-|Malawian Kwacha|MWK|2|
-|Malaysian Ringgit|MYR|2|
-|Maldivian Rufiyaa|MVR|2|
-|Mauritanian Ouguiya|MRO|1|
-|Mauritian Rupee|MUR|2|
-|Mexican Unidad de Inversion (UDI) (funds code)|MXV|2|
-|Mexican Peso|MXN|2|
-|Moldovan Leu|MDL|2|
-|Mongolian Tugrik|MNT|2|
-|Moroccan Dirham|MAD|2|
-|Mozambican Metical|MZN|2|
-|Myanmar Kyat|MMK|2|
-|Namibian Dollar|NAD|2|
-|Nepalese Rupee|NPR|2|
-|Netherlands Antillean Guilder|ANG|2|
-|New Taiwan Dollar|TWD|2|
-|New Zealand Dollar|NZD|2|
-|Nicaraguan Cordoba|NIO|2|
-|Nigerian Naira|NGN|2|
-|North Korean Won|KPW|2|
-|Norwegian Krone|NOK|2|
-|Omani Rial|OMR|3|
-|Pakistani Rupee|PKR|2|
-|Panamanian Balboa|PAB|2|
-|Papua New Guinean Kina|PGK|2|
-|Paraguayan Guarani|PYG|0|
-|Peruvian Nuevo sol|PEN|2|
-|Philippine Peso|PHP|2|
-|Polish Zloty|PLN|2|
-|Pound Sterling|GBP|2|
-|Qatari Riyal|QAR|2|
-|Romanian Leu|RON|2|
-|Russian Ruble|RUB|2|
-|Rwandan Franc|RWF|0|
-|Saint Helena Pound|SHP|2|
-|Samoan Tala|WST|2|
-|Saudi Riyal|SAR|2|
-|Serbian Dinar|RSD|2|
-|Seychelles Rupee|SCR|2|
-|Sierra Leonean Leone|SLL|2|
-|Singapore Dollar|SGD|2|
-|Solomon Islands Dollar|SBD|2|
-|Somali Shilling|SOS|2|
-|South African Rand|ZAR|2|
-|South Korean Won|KRW|0|
-|South Sudanese Pound|SSP|2|
-|Sri Lankan Rupee|LKR|2|
-|Sudanese Pound|SDG|2|
-|Surinamese Dollar|SRD|2|
-|Swazi Lilangeni|SZL|2|
-|Swedish Krona/kronor|SEK|2|
-|Swiss Franc|CHF|2|
-|Syrian Pound|SYP|2|
-|Tajikistani Somoni|TJS|2|
-|Tanzanian Shilling|TZS|2|
-|Thai Baht|THB|2|
-|Tongan Paanga|TOP|2|
-|Trinidad and Tobago Dollar|TTD|2|
-|Tunisian Dinar|TND|3|
-|Turkish Lira|TRY|2|
-|Turkmenistani Manat|TMT|2|
-|Ugandan Shilling|UGX|0|
-|Ukrainian Hryvnia|UAH|2|
-|Unidad de Fomento (funds code)|CLF|4|
-|Unidad de Valor Real (UVR) (funds code)|COU|2|
-|United Arab Emirates Dirham|AED|2|
-|United States Dollar|USD|2|
-|Uruguay Peso en Unidades|UYI|0|
-|Uruguayan Peso|UYU|2|
-|Uzbekistan Sum|UZS|2|
-|Vanuatu Vatu|VUV|0|
-|Venezuelan Bolivar|VEF|2|
-|Vietnamese Dong|VND|0|
-|Yemeni Rial|YER|2|
-|Zambian Kwacha|ZMW|2|
-
-
-***
 
 # Notifications
 
@@ -2483,9 +2308,6 @@ These errors are specific to the Alternate Payments API.
 <li><a href="https://www.paysafe.com/paysafegroup/privacy-policy/" target="_blank">Privacy Policy</a></li>
 <li><a href="https://developer.paysafe.com/en/resources-and-support/terms-of-use/" target="_blank">Terms of Use</a></li>
 <li><a href="https://www.paysafe.com/paysafegroup/regulatory-disclosures/" target="_blank">Regulatory Disclosures</a></li>
-<li><a href="http://community.paysafe.com/spaces/11/index.html" target="_blank">FAQs</a></li>
-<li><a href="http://community.paysafe.com/index.html" target="_blank">Community</a></li>
-<li><a href="http://community.paysafe.com/spaces/10/index.html" target="_blank">Paysafe Blog</a></li>
 </ul>
 
 # Verify That the Service Is Accessible [GET /monitor]
